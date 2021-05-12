@@ -14,6 +14,13 @@ namespace post_p
   int
   postprocessing::maxAttachments() const
   { return max_attachments_; }
+  
+  double
+  postprocessing::lo_hi(const int axis, const int limit) const
+  { return lo_hi_[limit+2*axis]; }
+  double&
+  postprocessing::lo_hi(const int axis, const int limit)
+  { return lo_hi_[limit+2*axis]; }
 
   double
   postprocessing::L(const int axis) const
@@ -51,11 +58,39 @@ namespace post_p
   { return pos_[axis+D_*i]; }
 
   int
+  postprocessing::cluster_percolation(const int i, const int axis) const
+  { return cluster_percolation_[axis+D_*i]; }
+  int&
+  postprocessing::cluster_percolation(const int i, const int axis)
+  { return cluster_percolation_[axis+D_*i]; }
+
+  int
   postprocessing::numAttachments(const int i) const
   { return num_attachments_[i]; }
   int&
   postprocessing::numAttachments(const int i)
   { return num_attachments_[i]; }
+
+  int
+  postprocessing::original_seed(const int i) const
+  { return original_seed_[i]; }
+  int&
+  postprocessing::original_seed(const int i)
+  { return original_seed_[i]; }
+
+  int
+  postprocessing::current_seed(const int i) const
+  { return current_seed_[i]; }
+  int&
+  postprocessing::current_seed(const int i)
+  { return current_seed_[i]; }
+
+  double
+  postprocessing::diameter(const int i) const
+  { return diameter_[i]; }
+  double&
+  postprocessing::diameter(const int i)
+  { return diameter_[i]; }
 
   int
   postprocessing::unfoldedAttachments(const int i) const
@@ -91,6 +126,13 @@ namespace post_p
   double&
   postprocessing::delta_coords(const int i, const int axis)
   { return delta_coords_[axis+D_*i]; }
+
+  int
+  postprocessing::delta_hist(const int i) const
+  { return delta_hist_[i]; }
+  int&
+  postprocessing::delta_hist(const int i)
+  { return delta_hist_[i]; }
 
   double
   postprocessing::sq_unfolded(const int i) const

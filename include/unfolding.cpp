@@ -5,56 +5,45 @@ namespace post_p
 
 void postprocessing::dump_unfolded_file()
 {
-    init_unfolding();
-    bool percolation_test = check_percolation();
+    bool percolation_test;
+    percolation_test = check_percolation();
 
-    if (percolation_test)
-        std::cout<<"cluster is percolating, can't unfold"<<std::endl;
-
-    else {
-        FILE *f;
-        char filename[300];
-
-        f = fopen("./results/unfolded_coords.csv", "w");
-
-        for (int i = 0; i < numParticles(); i++){
-            for (int axis = 0; axis < dim(); axis++){
-
-                if (axis == (dim()-1)){
-                    fprintf(f, "%lf\n", unfolded_coords(i,axis));
-                }
-            
-                else{
-                    fprintf(f, "%lf,", unfolded_coords(i,axis));
-                }
-            }
-        }
-
-        fclose(f);
+    if (percolation_test){
+        create_results_dir();
+        dump_percolation_file();
     }
 
+    else {
+        create_results_dir();
+        save_unfolded_config();
+    }
 
 }
 
 void postprocessing::init_unfolding()
 {
 
-    is_placed_       = (bool*)malloc(sizeof(bool) * numParticles());
-    unfolded_coords_ = (double*)malloc(sizeof(double) * numParticles() * dim());
-    unfolded_num_attachments_ = (int*)malloc(sizeof(int) * numParticles());
+    for (int i = 0; i < numParticles(); i++){
+        for (int axis = 0; axis < dim(); axis++){
+            cluster_percolation(i,axis)=0;
+        }
+    }
 
-    is_placed_flag_       = true;
-    unfolded_coords_flag_ = true;
+    totalClusters_ = 0;
 
     for (int i = 0; i < numParticles(); i++) {
         is_placed(i) = false;
         unfoldedAttachments(i) = 0;
+        for (int axis = 0; axis < dim(); axis++)
+            unfolded_coords(i,axis) = 0.;
     }
 
-    for (int axis = 0; axis < dim(); axis++)
-        unfolded_coords(0,axis) = 0.;
-
-    unfold(0,0);
+    for (int i = 0; i < numParticles(); i++){
+        if (is_placed(i) == false){
+            unfold(i,i);
+            totalClusters_+=1;
+        }
+    }
 
 }
 
@@ -64,8 +53,12 @@ void postprocessing::unfold(const int prev, const int next)
     for (int axis = 0; axis < dim(); axis++)
         posDiff(axis) = get_periodic_image(pos(next,axis) - pos(prev,axis), axis);
 
-    for (int axis = 0; axis < dim(); axis++)
-        unfolded_coords(next,axis) = unfolded_coords(prev,axis) + posDiff(axis);
+    for (int axis = 0; axis < dim(); axis++){
+        if (prev == next)
+            unfolded_coords(next,axis) = pos(prev,axis) + posDiff(axis);
+        else
+            unfolded_coords(next,axis) = unfolded_coords(prev,axis) + posDiff(axis);
+    }
 
     is_placed(next) = true;
 
@@ -77,6 +70,17 @@ void postprocessing::unfold(const int prev, const int next)
             unfoldedAttachments(next)      = unfoldedAttachments(next) + 1;
             unfoldedAttachments(temp_next) = unfoldedAttachments(temp_next) + 1;
             unfold(next, temp_next);
+        }
+
+        else {
+            
+            for (int axis = 0; axis < dim(); axis++) {
+                posDiff(axis) = unfolded_coords(temp_next, axis) - unfolded_coords(next, axis);
+                if ((posDiff(axis) > halfL(axis)) || (posDiff(axis) < -halfL(axis))){
+                    cluster_percolation(totalClusters_,axis) = 1;
+                }
+            }
+
         }
 
     }

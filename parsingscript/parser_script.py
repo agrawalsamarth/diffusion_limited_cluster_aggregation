@@ -17,6 +17,16 @@ def parse_config_file(filepath):
     if (os.path.isdir(folder) == False):
         command = 'mkdir '+folder
         os.system(command)
+        
+    config_filename = filepath.split('/')
+    config_filename = config_filename[-1].split('.')
+    foldername      = config_filename[0]
+    
+    folder = folder + foldername + "/"
+    
+    if (os.path.isdir(folder) == False):
+        command = 'mkdir '+folder
+        os.system(command)
     
     fp = open(filepath, 'r')
     line = fp.readline().strip()    
@@ -40,94 +50,148 @@ def parse_config_file(filepath):
         
         if desc == 'maxAttachments':
             maxAttachments = int(val)
-    
             
-        if desc == 'x0_lo':
-            x0_lo = val
-        
-        if desc == 'x0_hi':
-            x0_hi = val
+        if desc == 'lattice':
+            lattice = (int)(val)
             
-        if desc == 'x1_lo':
-            x1_lo = val
+        if desc == 'iters':
+            iters = (int)(val)
             
-        if desc == 'x1_hi':
-            x1_hi = val
+        if desc == 'seedMass':
+            seedMass = val
             
-        if desc == 'x2_lo':
-            x2_lo = val
+        if desc == 'alpha':
+            alpha = val
             
-        if desc == 'x2_hi':
-            x2_hi = val
-            
-        if desc == 'x0_periodic':
-            x0_p = int(val)
-            
-        if desc == 'x1_periodic':
-            x1_p = int(val)
-            
-        if desc == 'x2_periodic':
-            x2_p = int(val)
-            
+        if desc == 'folded':
+            folded = (int)(val)
         
         count += 1
     
     fp.close()
+
+    if 'N' in locals():
+        filename = folder+'N.csv'
+        fp = open(filename, 'w')
+        #N = (int)(N)
+        fp.write(str(N))   
+        fp.close()
+
+    if 'D' in locals():    
+        filename = folder+'D.csv'
+        fp = open(filename, 'w')
+        #D = (int)(D)
+        fp.write(str(D))
+        fp.close()
+
+    if 'maxAttachments' in locals():    
+        filename = folder+'max_attachments.csv'
+        fp = open(filename, 'w')
+        #maxAttachments = (int)(maxAttachments)
+        fp.write(str(maxAttachments))    
+        fp.close()
+
+    if 'lattice' in locals():    
+        filename = folder+'lattice.csv'
+        fp = open(filename, 'w')
+        fp.write(str(lattice))   
+        fp.close()
+
+    if 'iters' in locals():    
+        filename = folder+'iters.csv'
+        fp = open(filename, 'w')
+        fp.write(str(iters))
+        fp.close()
+
+    if 'seedMass' in locals():    
+        filename = folder+'seedMass.csv'
+        fp = open(filename, 'w')
+        fp.write(str(seedMass))    
+        fp.close()
+
+    if 'alpha' in locals():
+        filename = folder+'alpha.csv'
+        fp = open(filename, 'w')
+        fp.write(str(alpha))    
+        fp.close()
     
-    filename = folder+'N.csv'
-    fp = open(filename, 'w')
-    N = (int)(N)
-    fp.write(str(N))   
-    fp.close()
+    if 'folded' in locals():
+        filename = folder+'folded.csv'
+        fp = open(filename, 'w')
+        fp.write(str(folded))    
+        fp.close()
     
-    filename = folder+'D.csv'
-    fp = open(filename, 'w')
-    D = (int)(D)
-    fp.write(str(D))
-    fp.close()
+    lo_hi    = np.zeros((D,2))
+    periodic = np.zeros((D,1)) 
     
-    filename = folder+'max_attachments.csv'
-    fp = open(filename, 'w')
-    maxAttachments = (int)(maxAttachments)
-    fp.write(str(maxAttachments))    
-    fp.close()
+    fp = open(filepath, 'r')
     
-    L    = np.zeros((D,1))
-    L[0] = (x0_hi - x0_lo)
-    L[1] = (x1_hi - x1_lo)
-    if (D==3):
-        L[2] = (x2_hi - x2_lo)
+    count = 0
     
-    filename = folder+'L.csv'
-    fp = open(filename, 'w')
+    periodic_list = []
     
-    for i in range(D):
-        fp.write(str(L[i][0])+'\n')
+    for axis in range(D):
+        periodic_list.append('x'+str(axis)+'_periodic')
+        
+    lo_list = []
+
+    for axis in range(D):
+        lo_list.append('x'+str(axis)+'_lo')
+        
+    hi_list = []
+
+    for axis in range(D):
+        hi_list.append('x'+str(axis)+'_hi')
+        
+    while count < headers:
+    
+        line = fp.readline().strip()
+        txt  = line.split('=')
+        desc = txt[0]
+        val  = float(txt[1])
+        
+        if desc in periodic_list:
+        
+            axis = periodic_list.index(desc)
+            periodic[axis] = val
+            
+        if desc in lo_list:
+            
+            axis = lo_list.index(desc)
+            lo_hi[axis][0] = val
+                
+        if desc in hi_list:
+            
+            axis = hi_list.index(desc)  
+            lo_hi[axis][1] = val
+            
+        count += 1
         
     fp.close()
     
-    p    = np.zeros((D,1))
-    p[0] = (x0_p)
-    p[1] = (x1_p)
-    if (D==3):
-        p[2] = (x2_p)
-
-    p = p.astype(int)
+    filename = folder+'lo_hi.csv'
+    fp = open(filename, 'w')
     
+    for i in range(D):
+        fp.write(str(lo_hi[i][0])+','+str(lo_hi[i][1])+'\n')
+        
+    fp.close()
+    
+    periodic = periodic.astype(int)
     filename = folder+'periodic.csv'
     fp = open(filename, 'w')
     
     for i in range(D):
-        fp.write(str(p[i][0])+'\n')
+        fp.write(str(periodic[i][0])+'\n')
         
     fp.close()
     
     data_df   = pd.read_csv(filepath, skiprows=headers)
 
-    if (D==3):    
-        ext_cols  = ['x', 'y', 'z']
-    if (D==2):
-        ext_cols  = ['x', 'y']
+    ext_cols  = []
+    
+    for axis in range(D):
+        ext_cols.append('x'+str(axis))
     
     sample_df = pd.DataFrame(data_df, columns = ext_cols)
     
@@ -145,6 +209,34 @@ def parse_config_file(filepath):
     
     filename = folder+'num_attachments.csv'
     sample_df.to_csv(filename, index=False, header=False)
+
+    ext_cols  = ['assignedSeedStatus']
+    sample_df = pd.DataFrame(data_df, columns = ext_cols)
+    
+    for col in ext_cols:
+        sample_df[col] = sample_df[col].astype(int)
+    
+    filename = folder+'original_seed.csv'
+    sample_df.to_csv(filename, index=False, header=False)
+    
+    ext_cols  = ['currentSeedStatus']
+    sample_df = pd.DataFrame(data_df, columns = ext_cols)
+    
+    for col in ext_cols:
+        sample_df[col] = sample_df[col].astype(int)
+    
+    filename = folder+'current_seed.csv'
+    sample_df.to_csv(filename, index=False, header=False)
+    
+    ext_cols  = ['diameter']
+    sample_df = pd.DataFrame(data_df, columns = ext_cols)
+    
+    for col in ext_cols:
+        sample_df[col] = sample_df[col]
+    
+    filename = folder+'diameter.csv'
+    sample_df.to_csv(filename, index=False, header=False)
+
     
     columns   = data_df.columns
     att_str   = 'att_'
