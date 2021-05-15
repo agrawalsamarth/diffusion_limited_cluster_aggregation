@@ -13,6 +13,8 @@ import numpy as np
 def parse_config_file(filepath):
     
     folder = './parsed_file/'
+    params_flag = True
+    col_flag    = True
 
     if (os.path.isdir(folder) == False):
         command = 'mkdir '+folder
@@ -35,6 +37,12 @@ def parse_config_file(filepath):
     
     count = 1
     
+    N_flag = False
+    D_flag = False
+    maxAttachments_Flag = False
+    lattice_Flag = False
+    folded_Flag  = False
+    
     while count < headers:
         
         line = fp.readline().strip()
@@ -44,15 +52,23 @@ def parse_config_file(filepath):
         
         if desc == 'N':
             N = int(val)
+            N_flag = True
     
         if desc == 'D':
             D = int(val)
+            D_flag = True
         
         if desc == 'maxAttachments':
             maxAttachments = int(val)
+            maxAttachments_Flag = True
             
         if desc == 'lattice':
             lattice = (int)(val)
+            lattice_Flag = True
+            
+        if desc == 'folded':
+            folded = (int)(val)
+            folded_Flag = True
             
         if desc == 'iters':
             iters = (int)(val)
@@ -63,9 +79,12 @@ def parse_config_file(filepath):
         if desc == 'alpha':
             alpha = val
             
-        if desc == 'folded':
-            folded = (int)(val)
-        
+        if desc == 'phi':
+            phi = val
+            
+        if desc == 'columns':
+            columns = val
+            
         count += 1
     
     fp.close()
@@ -120,9 +139,43 @@ def parse_config_file(filepath):
         fp = open(filename, 'w')
         fp.write(str(folded))    
         fp.close()
-    
+        
+    if 'phi' in locals():
+        filename = folder+'phi.csv'
+        fp = open(filename, 'w')
+        fp.write(str(phi))    
+        fp.close()
+        
+    if 'columns' in locals():
+        filename = folder+'columns.csv'
+        fp = open(filename, 'w')
+        fp.write(str(columns))    
+        fp.close()
+        
+    if N_flag == False:
+        print("Please provide N\n")
+        params_flag = False
+    if D_flag == False:
+        print("Please provide D\n")
+        params_flag = False
+    if maxAttachments_Flag == False:
+        print("Please provide maxAttachments\n")
+        params_flag = False
+    if lattice_Flag == False:
+        print("Please provide lattice\n")
+        params_flag = False
+    if folded_Flag == False:
+        print("Please provide folded\n")
+        params_flag = False
+        
+    if params_flag == False:
+        return params_flag
+            
     lo_hi    = np.zeros((D,2))
-    periodic = np.zeros((D,1)) 
+    periodic = np.zeros((D,1))
+    
+    lo_hi_flag    = np.zeros((D,2))
+    periodic_flag = np.zeros((D,1))
     
     fp = open(filepath, 'r')
     
@@ -154,20 +207,34 @@ def parse_config_file(filepath):
         
             axis = periodic_list.index(desc)
             periodic[axis] = val
+            periodic_flag[axis] = 1
             
         if desc in lo_list:
             
             axis = lo_list.index(desc)
-            lo_hi[axis][0] = val
+            lo_hi[axis][0]      = val
+            lo_hi_flag[axis][0] = 1
                 
         if desc in hi_list:
             
             axis = hi_list.index(desc)  
-            lo_hi[axis][1] = val
+            lo_hi[axis][1]      = val
+            lo_hi_flag[axis][1] = 1
             
         count += 1
         
     fp.close()
+    
+    for axis in range(D):
+        if periodic_flag[axis] == 0:
+            print('Please provide x'+str(axis)+'_periodic\n')
+                  
+    for axis in range(D):
+        if lo_hi_flag[axis][0] == 0:
+            print('Please provide x'+str(axis)+'_lo\n')
+        if lo_hi_flag[axis][1] == 0:
+            print('Please provide x'+str(axis)+'_hi\n')
+
     
     filename = folder+'lo_hi.csv'
     fp = open(filename, 'w')
@@ -187,11 +254,17 @@ def parse_config_file(filepath):
     fp.close()
     
     data_df   = pd.read_csv(filepath, skiprows=headers)
+    col_names = data_df.columns
 
     ext_cols  = []
     
     for axis in range(D):
         ext_cols.append('x'+str(axis))
+        
+    for coord in ext_cols:
+        if (coord not in col_names):
+            print('Please provide '+coord)
+            params_flag = False
     
     sample_df = pd.DataFrame(data_df, columns = ext_cols)
     
@@ -204,14 +277,25 @@ def parse_config_file(filepath):
     ext_cols  = ['attachments']
     sample_df = pd.DataFrame(data_df, columns = ext_cols)
     
+    for coord in ext_cols:
+        if (coord not in col_names):
+            print('Please provide '+coord+'\n')
+            params_flag = False
+    
     for col in ext_cols:
         sample_df[col] = sample_df[col].astype(int)
     
     filename = folder+'num_attachments.csv'
     sample_df.to_csv(filename, index=False, header=False)
+    
 
     ext_cols  = ['assignedSeedStatus']
     sample_df = pd.DataFrame(data_df, columns = ext_cols)
+    
+    for seed in ext_cols:
+        if (seed not in col_names):
+            print('Please provide '+seed+'\n')
+            params_flag = False
     
     for col in ext_cols:
         sample_df[col] = sample_df[col].astype(int)
@@ -222,6 +306,11 @@ def parse_config_file(filepath):
     ext_cols  = ['currentSeedStatus']
     sample_df = pd.DataFrame(data_df, columns = ext_cols)
     
+    for seed in ext_cols:
+        if (seed not in col_names):
+            print('Please provide '+seed+'\n')
+            params_flag = False
+    
     for col in ext_cols:
         sample_df[col] = sample_df[col].astype(int)
     
@@ -231,22 +320,26 @@ def parse_config_file(filepath):
     ext_cols  = ['diameter']
     sample_df = pd.DataFrame(data_df, columns = ext_cols)
     
-    for col in ext_cols:
-        sample_df[col] = sample_df[col]
+    for dia in ext_cols:
+        if (seed not in col_names):
+            print('Please provide '+dia+'\n')
+            params_flag = False
     
     filename = folder+'diameter.csv'
     sample_df.to_csv(filename, index=False, header=False)
-
     
-    columns   = data_df.columns
-    att_str   = 'att_'
+    for i in range(1,maxAttachments+1):
     
-    for col in columns:
+        att_col = 'att_'+str(i)
+       
+        if (att_col not in col_names):
+            print('Please provide '+att_col+'\n')
+            params_flag = False
         
-        if att_str in col:
-            ext_cols  = [col]
-            sample_df = pd.DataFrame(data_df, columns = ext_cols)
-            sample_df[col] = sample_df[col].fillna(N).astype(int)
-            filename = folder+col+'.csv'
-            sample_df.to_csv(filename, index=False, header=False)
+        sample_df = pd.DataFrame(data_df, columns = [att_col])
+        sample_df[att_col] = sample_df[att_col].fillna(N).astype(int)
+        filename = folder+att_col+'.csv'
+        sample_df.to_csv(filename, index=False, header=False)
+        
+    return params_flag
             

@@ -98,8 +98,10 @@ class postprocessing
     int     folded_;
     int     lattice_;
     int     iters_;
+    int     columns_;
     double  seed_mass_;
     double  alpha_;
+    double  phi_;
     double *lo_hi_;
     double *L_;
     double *halfL_;
@@ -149,6 +151,8 @@ class postprocessing
     bool    iters_flag_ = false;
     bool    seed_mass_flag_ = false;
     bool    alpha_flag_ = false;
+    bool    phi_flag_   = false;
+    bool    columns_flag_ = false;
 
 };
 

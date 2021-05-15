@@ -117,6 +117,51 @@ void postprocessing::read_params()
     }
 
     free(filepath_);
+
+    strcpy(filename, "lattice.csv");
+    create_filepath(parsed_folder_, filename);
+    f = fopen(filepath_,"r");
+    
+    if (f != NULL){
+
+        fscanf_test     = fscanf(f, "%d", &int_temp);
+        lattice_      = int_temp;
+        lattice_flag_ = true;
+        fclose(f);
+    }
+
+    free(filepath_);
+
+    strcpy(filename, "phi.csv");
+    create_filepath(parsed_folder_, filename);
+    f = fopen(filepath_,"r");
+    
+    if (f != NULL){
+
+        fscanf_test     = fscanf(f, "%lf", &double_temp);
+        phi_            = double_temp;
+        phi_flag_       = true;
+        fclose(f);
+
+    }
+
+    free(filepath_);
+
+    strcpy(filename, "columns.csv");
+    create_filepath(parsed_folder_, filename);
+    f = fopen(filepath_,"r");
+    
+    if (f != NULL){
+
+        fscanf_test     = fscanf(f, "%d", &int_temp);
+        columns_        = int_temp;
+        columns_flag_   = true;
+        fclose(f);
+
+    }
+
+    free(filepath_);
+   
    
 
 }

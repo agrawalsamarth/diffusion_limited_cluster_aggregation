@@ -16,6 +16,15 @@ void postprocessing::get_headers()
     if (D_flag_)
         headers_++;
 
+    if (phi_flag_)
+        headers_++;
+
+    if (seed_mass_flag_)
+        headers_++;
+
+    if (columns_flag_)
+        headers_++;
+
     if (max_attachments_flag_)
         headers_++;
 
@@ -33,6 +42,8 @@ void postprocessing::get_headers()
 
     if (periodic_flag_)
         headers_ += dim();
+
+    
 
 
 }

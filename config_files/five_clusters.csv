@@ -1,6 +1,5 @@
-headers=18
+headers=17
 lattice=1
-L=128
 N=1024
 D=2
 phi=0.000488

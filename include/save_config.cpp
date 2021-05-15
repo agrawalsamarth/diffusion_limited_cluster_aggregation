@@ -35,6 +35,9 @@ void postprocessing::save_config()
     if (folded_flag_)
         fprintf(f, "folded=%d\n", folded_);
 
+    if (phi_flag_)
+        fprintf(f, "phi=%lf\n", phi_);
+
 
     if (iters_flag_)
     {
@@ -58,6 +61,14 @@ void postprocessing::save_config()
         for (int axis = 0; axis < dim(); axis++){
             fprintf(f, "x%d_periodic=%d\n",axis,periodic(axis));
         }
+    }
+
+    if (seed_mass_flag_){
+        fprintf(f, "seedMass=%lf\n", seed_mass_);
+    }
+
+    if (columns_flag_){
+        fprintf(f, "columns=%d\n", columns_);
     }
 
     //fprintf(f, "id,x,y,z,assignedSeedStatus,currentSeedStatus,diameter,attachments,");
@@ -131,7 +142,7 @@ void postprocessing::save_unfolded_config()
     FILE *f;
     int num_atts;
     char filename[] = "unfolded_config.csv";
-
+  
     create_filepath(folder_name_, filename);
     f= fopen(filepath_,"w");
 
@@ -158,6 +169,10 @@ void postprocessing::save_unfolded_config()
     if (folded_flag_)
         fprintf(f, "folded=0\n");
 
+    if (phi_flag_)
+        fprintf(f, "phi=%lf\n", phi_);
+
+
     if (iters_flag_)
     {
         fprintf(f, "iters=%d\n", iters_);
@@ -167,6 +182,7 @@ void postprocessing::save_unfolded_config()
     {
         fprintf(f, "alpha=%lf\n", alpha_);
     }
+
 
     if (L_flag_){
         for (int axis = 0; axis < dim(); axis++){
@@ -181,11 +197,20 @@ void postprocessing::save_unfolded_config()
         }
     }
 
+    if (seed_mass_flag_){
+        fprintf(f, "seedMass=%lf\n", seed_mass_);
+    }
+
+    if (columns_flag_){
+        fprintf(f, "columns=%d\n", columns_);
+    }
+
+    //fprintf(f, "id,x,y,z,assignedSeedStatus,currentSeedStatus,diameter,attachments,");
+
     fprintf(f, "id,");
 
     for (int axis = 0; axis < dim(); axis++)
         fprintf(f, "x%d,", axis);
-
     
     fprintf(f, "assignedSeedStatus,");
     fprintf(f, "currentSeedStatus,");
@@ -204,7 +229,7 @@ void postprocessing::save_unfolded_config()
         fprintf(f, "%d,", i);
 
         for (int axis = 0; axis < dim(); axis++)
-            fprintf(f, "%lf,", unfolded_coords(i,axis));
+            fprintf(f, "%lf,", pos(i,axis));
 
         fprintf(f,"%d,",original_seed(i));
         fprintf(f,"%d,",current_seed(i));
@@ -243,7 +268,6 @@ void postprocessing::save_unfolded_config()
 
     fclose(f);
     free(filepath_);
-
 }
 
 
