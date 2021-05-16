@@ -24,11 +24,12 @@ else:
     config_filename = filepath.split('/')
     config_filename = config_filename[-1].split('.')
     foldername      = config_filename[0]
-    parse_config_file(filepath)
+    parse_test      = parse_config_file(filepath)
     
-    out_filename = './modules/'+modulename+'.out'
-    if (os.path.isfile(out_filename) == False):
-        os.system('g++ -I ./include/ -std=c++11 -O3 ./modules/'+modulename+'.cpp -o ./modules/'+modulename+'.out')
-    
-    command     = out_filename +' '+ foldername
-    os.system(command)
+    if parse_test:
+        out_filename = './modules/'+modulename+'.out'
+        if (os.path.isfile(out_filename) == False):
+            os.system('g++ -I ./include/ -std=c++11 -O3 ./modules/'+modulename+'.cpp -o ./modules/'+modulename+'.out')
+        
+        command     = out_filename +' '+ foldername
+        os.system(command)
