@@ -15,7 +15,10 @@ namespace post_p
         num_attachments_ = (int*)malloc(sizeof(int) * numParticles());
         original_seed_   = (int*)malloc(sizeof(int) * numParticles());
         current_seed_    = (int*)malloc(sizeof(int) * numParticles());
-        attachment_      = (int*)malloc(sizeof(int) * numParticles() * maxAttachments());
+
+        if (max_attachments_ > 0)
+            attachment_      = (int*)malloc(sizeof(int) * numParticles() * maxAttachments());
+        
         diameter_        = (double*)malloc(sizeof(double) * numParticles());
 
         posDiff_         = (double*)malloc(sizeof(double) * dim());

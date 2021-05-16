@@ -81,8 +81,11 @@ void postprocessing::save_config()
     fprintf(f, "assignedSeedStatus,");
     fprintf(f, "currentSeedStatus,");
     fprintf(f, "diameter,");
-    fprintf(f, "attachments,");
-
+    if (max_attachments_ > 0)
+        fprintf(f, "attachments,");
+    else
+        fprintf(f, "attachments\n");
+        
     for (int att = 1; att <= maxAttachments(); att++){
         if (att == maxAttachments())
             fprintf(f, "att_%d\n", att);
@@ -100,7 +103,10 @@ void postprocessing::save_config()
         fprintf(f,"%d,",original_seed(i));
         fprintf(f,"%d,",current_seed(i));
         fprintf(f,"%lf,",diameter(i));
-        fprintf(f,"%d,",numAttachments(i));
+        if (max_attachments_ > 0)
+            fprintf(f,"%d,",numAttachments(i));
+        else
+            fprintf(f,"%d",numAttachments(i));
 
         num_atts = numAttachments(i);
 
@@ -111,7 +117,7 @@ void postprocessing::save_config()
                 if (j != (num_atts-1))
                     fprintf(f, "%d,", attachment(i,j));
                 else
-                    fprintf(f, "%d\n", attachment(i,j));
+                    fprintf(f, "%d", attachment(i,j));
 
             }
 
@@ -122,11 +128,13 @@ void postprocessing::save_config()
                 else if ((j >= num_atts) && (j != (maxAttachments()-1)))
                     fprintf(f, "NaN,");
                 else
-                    fprintf(f, "NaN\n");
+                    fprintf(f, "NaN");
 
             }
 
         }
+
+        fprintf(f,"\n");
 
 
 
@@ -215,7 +223,10 @@ void postprocessing::save_unfolded_config()
     fprintf(f, "assignedSeedStatus,");
     fprintf(f, "currentSeedStatus,");
     fprintf(f, "diameter,");
-    fprintf(f, "attachments,");
+    if (max_attachments_ > 0)
+        fprintf(f, "attachments,");
+    else
+        fprintf(f, "attachments\n");
 
     for (int att = 1; att <= maxAttachments(); att++){
         if (att == maxAttachments())
@@ -234,7 +245,10 @@ void postprocessing::save_unfolded_config()
         fprintf(f,"%d,",original_seed(i));
         fprintf(f,"%d,",current_seed(i));
         fprintf(f,"%lf,",diameter(i));
-        fprintf(f,"%d,",numAttachments(i));
+        if (max_attachments_ > 0)
+            fprintf(f,"%d,",numAttachments(i));
+        else
+            fprintf(f,"%d",numAttachments(i));
 
         num_atts = numAttachments(i);
 
@@ -245,7 +259,7 @@ void postprocessing::save_unfolded_config()
                 if (j != (num_atts-1))
                     fprintf(f, "%d,", attachment(i,j));
                 else
-                    fprintf(f, "%d\n", attachment(i,j));
+                    fprintf(f, "%d", attachment(i,j));
 
             }
 
@@ -256,11 +270,13 @@ void postprocessing::save_unfolded_config()
                 else if ((j >= num_atts) && (j != (maxAttachments()-1)))
                     fprintf(f, "NaN,");
                 else
-                    fprintf(f, "NaN\n");
+                    fprintf(f, "NaN");
 
             }
 
         }
+
+        fprintf(f, "\n");
 
 
 

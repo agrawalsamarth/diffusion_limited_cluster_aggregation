@@ -6,16 +6,33 @@ namespace post_p
 void postprocessing::dump_unfolded_file()
 {
     bool percolation_test;
-    percolation_test = check_percolation();
 
-    if (percolation_test){
-        create_results_dir();
-        dump_percolation_file();
+    if (max_attachments_ > 0){
+        percolation_test = check_percolation();
+
+        if (percolation_test){
+            create_results_dir();
+            dump_percolation_file();
+        }
+
+        else {
+            create_results_dir();
+            save_unfolded_config();
+        }
     }
 
-    else {
+    else{
+
+        for (int i = 0; i < numParticles(); i++){
+            for (int axis = 0; axis < dim(); axis++){
+                unfolded_coords(i,axis) = pos(i,axis);
+            }
+        }
+
         create_results_dir();
         save_unfolded_config();
+
+
     }
 
 }

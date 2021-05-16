@@ -35,7 +35,8 @@ postprocessing::~postprocessing()
         free(num_attachments_);
         free(original_seed_);
         free(current_seed_);
-        free(attachment_);
+        if (max_attachments_ > 0)
+            free(attachment_);
         free(diameter_);
 
         free(posDiff_);

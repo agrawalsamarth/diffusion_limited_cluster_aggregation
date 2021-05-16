@@ -21,8 +21,8 @@ def parse_config_file(filepath):
         os.system(command)
         
     config_filename = filepath.split('/')
-    config_filename = config_filename[-1].split('.')
-    foldername      = config_filename[0]
+    config_filename = config_filename[-1].replace('.csv', '')
+    foldername      = config_filename
     
     folder = folder + foldername + "/"
     
