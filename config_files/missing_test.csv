@@ -1,8 +1,5 @@
-headers=18
+headers=15
 lattice=1
-L=128
-N=1024
-D=2
 phi=0.000488
 folded=1
 x0_lo=-0.500000
