@@ -229,7 +229,7 @@ void postprocessing::save_unfolded_config()
         fprintf(f, "%d,", i);
 
         for (int axis = 0; axis < dim(); axis++)
-            fprintf(f, "%lf,", pos(i,axis));
+            fprintf(f, "%lf,", unfolded_coords(i,axis));
 
         fprintf(f,"%d,",original_seed(i));
         fprintf(f,"%d,",current_seed(i));
