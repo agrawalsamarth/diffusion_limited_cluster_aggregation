@@ -46,6 +46,8 @@ postprocessing::~postprocessing()
         free(unfolded_num_attachments_);
         free(cluster_percolation_);
 
+        free(r_ij_);
+
 }
 
 }

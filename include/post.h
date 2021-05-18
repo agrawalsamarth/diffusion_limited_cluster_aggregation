@@ -53,8 +53,6 @@ class postprocessing
     double& unfolded_coords(const int i, const int axis);
     double  delta_coords(const int i, const int axis) const;
     double& delta_coords(const int i, const int axis);
-    double  sq_unfolded(const int i) const;
-    double& sq_unfolded(const int i);
     int  delta_hist(const int i) const;
     int& delta_hist(const int i);
     int  cluster_percolation(const int i, const int axis) const;
@@ -70,8 +68,8 @@ class postprocessing
 
     void dump_rij_file();
     void calc_rij();
-    void dump_hist_file(double bin_size);
-    void calc_hist(double bin_size, int num_bins);
+    void dump_rij_hist_file(double bin_size);
+    void calc_rij_hist(double bin_size);
     void dump_unfolded_file();
     void init_unfolding();
     void unfold(const int prev, const int next);
@@ -82,8 +80,8 @@ class postprocessing
     void calc_unfolded_rij();
     void dump_unfolded_hist_file(double bin_size);
     void calc_unfolded_hist(double bin_size);
-    void dump_unfolded_scattering_function();
-    void calc_unfolded_scattering_function();
+    void dump_scattering_function(double q_min, double q_max, int num_q);
+    void calc_scattering_function(double q_min, double q_max, int num_q);
     void save_config();
     void save_unfolded_config();
     void get_headers();
@@ -114,7 +112,7 @@ class postprocessing
     int    *original_seed_;
     int    *current_seed_;
     double *r_ij_;
-    double *hist_;
+    double *r_ij_hist_;
     bool   *is_placed_;
     double *unfolded_coords_;
     int     temp_next;
@@ -123,17 +121,14 @@ class postprocessing
     double  q_max;
     double  dq;
     int     num_q;
-    double *sq_unfolded_;
+    double *sq_;
     int    *unfolded_num_attachments_;
     int    *delta_hist_;
     int     max_delta_;
     int    *cluster_percolation_;
     int     totalClusters_;
-
-    bool    r_ij_flag_ = false;
-    bool    hist_flag_ = false;
-    bool    is_placed_flag_ = false;
-    bool    unfolded_coords_flag_ = false;
+    int     N_pairs_;
+    int     r_ij_hist_bins_;
 
     char   *folder_name_;
     char   *child_folder_;
@@ -171,7 +166,6 @@ class postprocessing
 #include "create_dir.cpp"
 #include "create_filepath.cpp"
 #include "memory_allocation_function.cpp"
-//#include "print_positions.cpp"
-//#include "calc_scattering.cpp"
-//
+#include "calc_rij.cpp"
+#include "calc_scattering.cpp"
 #endif

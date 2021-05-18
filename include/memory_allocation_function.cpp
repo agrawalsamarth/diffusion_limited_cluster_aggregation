@@ -28,7 +28,7 @@ namespace post_p
         unfolded_num_attachments_ = (int*)malloc(sizeof(int) * numParticles());
         cluster_percolation_      = (int*)malloc(sizeof(int) * numParticles() * dim());
 
-
+        r_ij_ = (double*)malloc(sizeof(double) * N_pairs_);
 
     }
 

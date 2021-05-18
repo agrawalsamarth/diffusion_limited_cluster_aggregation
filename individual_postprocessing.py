@@ -27,9 +27,14 @@ else:
     parse_test      = parse_config_file(filepath)
     
     if parse_test:
+        
         out_filename = './modules/'+modulename+'.out'
         if (os.path.isfile(out_filename) == False):
             os.system('g++ -I ./include/ -std=c++11 -O3 ./modules/'+modulename+'.cpp -o ./modules/'+modulename+'.out')
         
         command     = out_filename +' '+ foldername
+        
+        for i in range(3,argsize):
+            command = command + ' ' + sys.argv[i]
+        
         os.system(command)

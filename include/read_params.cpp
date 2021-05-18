@@ -24,6 +24,8 @@ void postprocessing::read_params()
 
     free(filepath_);
 
+    N_pairs_ = ((N_*(N_-1))/2);
+
     strcpy(filename, "D.csv");
     create_filepath(parsed_folder_, filename);
     f = fopen(filepath_,"r");

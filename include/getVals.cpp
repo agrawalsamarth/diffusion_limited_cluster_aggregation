@@ -134,11 +134,4 @@ namespace post_p
   postprocessing::delta_hist(const int i)
   { return delta_hist_[i]; }
 
-  double
-  postprocessing::sq_unfolded(const int i) const
-  { return sq_unfolded_[i]; }
-  double&
-  postprocessing::sq_unfolded(const int i)
-  { return sq_unfolded_[i]; }
-
 }
