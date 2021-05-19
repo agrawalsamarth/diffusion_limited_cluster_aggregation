@@ -38,7 +38,10 @@ void postprocessing::dump_rog()
 double postprocessing::calc_rog()
 {
 
-    double mean[D_] = {0.};
+    double mean[D_];
+
+    for (int axis = 0; axis < dim(); axis++)
+        mean[axis] = 0.;
 
     for (int i = 0; i < numParticles(); i++){
         for (int axis = 0; axis < dim(); axis++){
