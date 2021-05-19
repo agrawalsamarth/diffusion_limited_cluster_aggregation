@@ -87,6 +87,8 @@ class postprocessing
     void get_headers();
     bool check_percolation();
     void dump_percolation_file();
+    void dump_rog();
+    double calc_rog();
 
     private:
 
@@ -168,4 +170,5 @@ class postprocessing
 #include "memory_allocation_function.cpp"
 #include "calc_rij.cpp"
 #include "calc_scattering.cpp"
+#include "rog.cpp"
 #endif

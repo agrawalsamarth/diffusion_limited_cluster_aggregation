@@ -1,0 +1,68 @@
+#include "post.h"
+
+namespace post_p{
+
+void postprocessing::dump_rog()
+{
+
+    bool percolation_test;
+
+    percolation_test = check_percolation();
+
+    if (percolation_test){
+        create_results_dir();
+        dump_percolation_file();
+    }
+
+    else {
+        
+        if (totalClusters_ == 1){
+            create_results_dir();
+            FILE *f;
+            char filename[] = "radius_of_gyration.csv";  
+            create_filepath(folder_name_, filename);
+            f= fopen(filepath_,"w");
+            fprintf(f, "Radius_of_Gyration\n%lf\n", calc_rog());
+            fclose(f);
+        }
+
+        else {
+            std::cout<<"There are multiple clusters in the system, cannot calculate Radius of Gyration"<<std::endl;
+        }
+
+    }
+
+
+}
+
+double postprocessing::calc_rog()
+{
+
+    double mean[D_] = {0.};
+
+    for (int i = 0; i < numParticles(); i++){
+        for (int axis = 0; axis < dim(); axis++){
+            mean[axis] += unfolded_coords(i,axis); 
+        }
+    }
+
+    for (int axis = 0; axis < dim(); axis++)
+        mean[axis] = mean[axis]/(1. * numParticles());
+
+    double rog = 0.;
+
+    for (int i = 0; i < numParticles(); i++){
+        for (int axis = 0; axis < dim(); axis++){
+            rog += (unfolded_coords(i,axis) - mean[axis]) * (unfolded_coords(i,axis) - mean[axis]);
+        }
+    }
+
+    rog = rog/(1. * numParticles());
+    rog = sqrt(rog);
+
+    return rog;
+
+
+}
+
+}
