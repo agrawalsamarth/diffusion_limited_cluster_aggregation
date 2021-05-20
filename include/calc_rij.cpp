@@ -46,27 +46,58 @@ void postprocessing::calc_rij()
     int counter = 0;
     double r_temp;
 
-    for (int i = 0; i < numParticles(); i++) {
-        for (int j = i+1; j < numParticles(); j++){
+    if (folded_ == 1) {
 
-            for (int axis = 0; axis < dim(); axis++)
-                posDiff(axis) = 0.;
+        for (int i = 0; i < numParticles(); i++) {
+            for (int j = i+1; j < numParticles(); j++){
 
-            for (int axis = 0; axis < dim(); axis++){
-                posDiff(axis) += get_periodic_image(1.*(pos(i,axis) - pos(j,axis)), axis);
+                for (int axis = 0; axis < dim(); axis++)
+                    posDiff(axis) = 0.;
+
+                for (int axis = 0; axis < dim(); axis++){
+                    posDiff(axis) += get_periodic_image(1.*(pos(i,axis) - pos(j,axis)), axis);
+                }
+
+                r_temp = 0.;
+
+                for (int axis = 0; axis < dim(); axis++)
+                    r_temp += (posDiff(axis) * posDiff(axis));
+
+                r_temp = sqrt(r_temp);
+
+                r_ij_[counter] = r_temp;
+                counter++;
+
             }
-
-            r_temp = 0.;
-
-            for (int axis = 0; axis < dim(); axis++)
-                r_temp += (posDiff(axis) * posDiff(axis));
-
-            r_temp = sqrt(r_temp);
-
-            r_ij_[counter] = r_temp;
-            counter++;
-
         }
+
+    }
+
+    else {
+
+        for (int i = 0; i < numParticles(); i++) {
+            for (int j = i+1; j < numParticles(); j++){
+
+                for (int axis = 0; axis < dim(); axis++)
+                    posDiff(axis) = 0.;
+
+                for (int axis = 0; axis < dim(); axis++){
+                    posDiff(axis) += 1.*(pos(i,axis) - pos(j,axis));
+                }
+
+                r_temp = 0.;
+
+                for (int axis = 0; axis < dim(); axis++)
+                    r_temp += (posDiff(axis) * posDiff(axis));
+
+                r_temp = sqrt(r_temp);
+
+                r_ij_[counter] = r_temp;
+                counter++;
+
+            }
+        }
+
     }
 
 }
@@ -74,7 +105,26 @@ void postprocessing::calc_rij()
 void postprocessing::calc_rij_hist(double bin_size)
 {
     calc_rij();
-    double r_max    = halfL(0);
+    double r_max = 0.;
+
+    for (int i = 0; i < N_pairs_; i++){
+        if (r_ij_[i] > r_max){
+            r_max = r_ij_[i];
+        }
+    }
+
+    if (folded_ == 1){
+
+        for (int axis = 0; axis < dim(); axis++){
+            if (periodic(axis) == 1){
+                if (halfL(axis) < r_max){
+                    r_max = halfL(axis);
+                }
+            }
+        }
+
+    }
+
     r_ij_hist_bins_ = (((int)(r_max/bin_size))+1);
     r_ij_hist_      = (double*)malloc(sizeof(double)*r_ij_hist_bins_);
 

@@ -23,6 +23,7 @@ class postprocessing
     int dim() const;
     int numParticles() const;
     int maxAttachments() const;
+    int totalClusters() const;
     double  lo_hi(const int axis, const int limit) const;
     double& lo_hi(const int axis, const int limit);
     double  L(const int axis) const;

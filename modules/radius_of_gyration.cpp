@@ -3,6 +3,26 @@
 int main(int argc, char *argv[])
 {
     post_p::postprocessing test(argv[1]);
-    test.dump_rog();
+
+    bool percolation_test;
+    percolation_test = test.check_percolation();
+
+    if(percolation_test){
+        std::cout<<"cluster is percolating, radius of gyration is undefined."<<std::endl;
+        return 0;
+    }
+
+    else {
+        
+        if (test.totalClusters() == 1){
+            test.dump_rog();
+        }
+
+        else {
+            std::cout<<"there are multiple clusters, radius of gyration is undefined"<<std::endl;
+        }
+
+    }
+
     return 0;
 }

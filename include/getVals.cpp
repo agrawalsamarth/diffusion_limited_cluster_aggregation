@@ -14,6 +14,10 @@ namespace post_p
   int
   postprocessing::maxAttachments() const
   { return max_attachments_; }
+
+  int
+  postprocessing::totalClusters() const
+  { return totalClusters_;}
   
   double
   postprocessing::lo_hi(const int axis, const int limit) const
