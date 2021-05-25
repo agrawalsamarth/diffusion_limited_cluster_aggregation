@@ -30,7 +30,7 @@ void postprocessing::dump_rij_hist_file(double bin_size)
     create_filepath(folder_name_, filename);
     f= fopen(filepath_,"w");
 
-    fprintf(f, "r_ij,P(r)\n");
+    fprintf(f, "r,F(r)\n");
 
     for (int i = 0; i < r_ij_hist_bins_; i++){
         fprintf(f, "%lf,%lf\n", (1.*i*bin_size + 0.5 * bin_size), r_ij_hist_[i]/(1. * N_pairs_));

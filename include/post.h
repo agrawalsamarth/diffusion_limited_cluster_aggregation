@@ -4,6 +4,9 @@
 #include <cstring>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <vector>
+#include <sstream>
+#include <fstream>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -19,6 +22,8 @@ class postprocessing
     void read_params();
     void read_config();
     void memory_allocation_function();
+
+    std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
 
     int dim() const;
     int numParticles() const;

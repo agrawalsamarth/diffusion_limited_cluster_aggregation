@@ -36,7 +36,7 @@ void postprocessing::calc_scattering_function(double q_min, double q_max, int nu
     sq_ = (double*)malloc(sizeof(double)*num_q);
 
     for (int i = 0; i < num_q; i++)
-        sq_[i] = 1.;
+        sq_[i] = 0.5;
 
     for (int i = 0; i < num_q; i++){
 
