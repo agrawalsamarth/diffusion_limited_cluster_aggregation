@@ -17,13 +17,16 @@ class postprocessing
 {
     public:
 
-    postprocessing(char *user_folder);
+    postprocessing(char *config_filename);
     ~postprocessing();
     void read_params();
     void read_config();
     void memory_allocation_function();
 
     std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
+    void read_params_parser(char *config_filename);
+    void read_config_parser(char *config_filename);
+    void name_postp_dir(char *config_filename);
 
     int dim() const;
     int numParticles() const;
@@ -98,6 +101,7 @@ class postprocessing
 
     private:
 
+    int     headers_;
     int     N_;
     int     D_;
     int     max_attachments_;
@@ -139,11 +143,8 @@ class postprocessing
     int     r_ij_hist_bins_;
 
     char   *folder_name_;
-    char   *child_folder_;
     char   *filepath_;
-    char   *parsed_folder_;
-
-    int     headers_;
+    
     bool    lattice_flag_ = false;
     bool    N_flag_ = false;
     bool    D_flag_ = false;
@@ -163,8 +164,8 @@ class postprocessing
 
 #include "init.cpp"
 #include "getVals.cpp"
-#include "read_params.cpp"
-#include "read_config.cpp"
+//#include "read_params.cpp"
+//#include "read_config.cpp"
 #include "periodic_image.cpp"
 #include "save_config.cpp"
 #include "unfolding.cpp"
@@ -177,4 +178,8 @@ class postprocessing
 #include "calc_rij.cpp"
 #include "calc_scattering.cpp"
 #include "rog.cpp"
+#include "string_split.cpp"
+#include "name_postp_dir.cpp"
+#include "read_params_parser.cpp"
+#include "read_config_parser.cpp"
 #endif

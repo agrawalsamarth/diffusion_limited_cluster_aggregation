@@ -38,6 +38,7 @@ void postprocessing::dump_rij_hist_file(double bin_size)
 
     fclose(f);
     free(r_ij_hist_);
+    free(filepath_);
 
 }
 

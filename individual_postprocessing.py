@@ -9,14 +9,33 @@ Created on Mon May  3 15:11:49 2021
 import pandas as pd
 import os
 import sys
-from parsingscript.parser_script import parse_config_file
 
 argsize  = len(sys.argv)
 
 if argsize < 3:
     print("Too few arguments try again.")
-
+    
 else:
+    
+    filepath   = sys.argv[1]
+    modulename = sys.argv[2]
+    
+    if (os.path.isfile(filepath)):
+        
+        out_filename = './modules/'+modulename+'.out'
+        
+        if (os.path.isfile(out_filename) == False):
+            os.system('g++ -I ./include/ -std=c++11 -O3 ./modules/'+modulename+'.cpp -o ./modules/'+modulename+'.out')
+            
+        command     = out_filename +' '+ filepath
+        
+        for i in range(3,argsize):
+            command = command + ' ' + sys.argv[i]
+        
+        os.system(command)
+        
+
+"""else:
 
     filepath   = sys.argv[1]
     modulename = sys.argv[2]
@@ -37,4 +56,5 @@ else:
         for i in range(3,argsize):
             command = command + ' ' + sys.argv[i]
         
-        os.system(command)
+        os.system(command)"""
+        

@@ -2,9 +2,9 @@
 
 namespace post_p{
 
-postprocessing::postprocessing(char *user_folder)
+postprocessing::postprocessing(char *config_filename)
 {
-    parsed_folder_ = (char*)malloc(strlen("./parsed_file/")+strlen(user_folder)+strlen("/")+1);
+    /*parsed_folder_ = (char*)malloc(strlen("./parsed_file/")+strlen(user_folder)+strlen("/")+1);
     strcpy(parsed_folder_,"./parsed_file/");
     strcat(parsed_folder_,user_folder);
     strcat(parsed_folder_,"/");
@@ -17,14 +17,19 @@ postprocessing::postprocessing(char *user_folder)
     folder_name_ = (char*)malloc(strlen(parent_folder)+strlen(user_folder)+strlen("/")+1);
     strcpy(folder_name_,parent_folder);
     strcat(folder_name_,user_folder);
-    strcat(folder_name_,"/");
+    strcat(folder_name_,"/");*/
+
+    read_params_parser(config_filename);
+    memory_allocation_function();
+    read_config_parser(config_filename);
+    name_postp_dir(config_filename);
+
 
 }
 
 
 postprocessing::~postprocessing()
 {
-        free(parsed_folder_);
         free(folder_name_);
 
         free(lo_hi_);
