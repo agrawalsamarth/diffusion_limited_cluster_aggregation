@@ -1,0 +1,10 @@
+lattice=1
+D=2
+N=1024
+N_s=1024
+x0_periodic=1
+x1_periodic=1
+x0_L=128
+x1_L=128
+alpha=-0.5
+seedMass=1e12
