@@ -41,9 +41,11 @@ class dlca_lattice_3d
         baseMass_[0] = 1.;
         baseMass_[1] = seed_mass;
 
-        agg_threshold = (baseMass_[0] + baseMass_[1] - 1e-8);
+        agg_threshold = (baseMass_[0] + baseMass_[1] - 1e-4);
 
         initArrays();
+
+        reset_check_status();
 
         for (int i = 0; i < N; i++){
             checkForAggregations(i);
@@ -73,6 +75,8 @@ class dlca_lattice_3d
     void save_config();
     void get_max_att();
     void check_params();
+    void read_config_parser(char *config_filename);
+    void force_moves(char *move_file);
 
 
     int
@@ -154,8 +158,6 @@ class dlca_lattice_3d
             pos(0,axis)    = location[axis];
         }
 
-        //std::cout<<"x = "<<x_<<"\t y = "<<y_<<"\t z = "<<z_<<std::endl;
-
         grid.occupied(location) = 0;
 
         for (int i = 1; i < N; i++){
@@ -163,10 +165,6 @@ class dlca_lattice_3d
             flag = 0;
 
             while (flag == 0){
-
-                /*x_ = (int)(L * dis(generator));
-                y_ = (int)(L * dis(generator));
-                z_ = (int)(L * dis(generator));*/
 
                 for (int axis = 0; axis < D; axis++)
                     location[axis] = (int)(L[axis] * dis(generator)); 
@@ -207,15 +205,6 @@ class dlca_lattice_3d
         reset_check_status();
 
     }
-
-    /*void
-    printPositions()
-    {
-
-        for (int i = 0; i < N; i++)
-            std::cout<<pos(i,0)<<"\t"<<pos(i,1)<<"\t"<<pos(i,2)<<"\t"<<seed_[i]<<std::endl;
-
-    }*/
 
     void
     calculatePropensity()
@@ -399,8 +388,10 @@ class dlca_lattice_3d
 
                         mass_sum = mass_[clusterIndex_1]+mass_[clusterIndex_2];
 
-                        if (mass_sum > agg_threshold)
+                        if (mass_sum > agg_threshold){
+                            //std::cout<<"index1="<<index_1<<"\t index2="<<index_2<<std::endl;
                             bindAggregates(index_1, index_2);
+                        }
 
 
                     }
@@ -415,6 +406,9 @@ class dlca_lattice_3d
         for (int axis = 0; axis < D; axis++){
             for (int dir = 0; dir < 2; dir++){
 
+                for (int axis = 0; axis < D; axis++)
+                    location[axis] = pos(index_1,axis);
+
                 for (int axis_2 = 0; axis_2 < D; axis_2++)
                     nb_location[axis_2] = location[axis_2];
 
@@ -423,7 +417,7 @@ class dlca_lattice_3d
 
                 index_2        = grid.occupied(nb_location);
                 
-                if ((index_2 != N) && (check_status[index_2] == 0)){
+                if ((index_2 != N) && (check_status[index_2] == false)){
                     checkForAggregations(index_2);
                 }
                 
@@ -548,4 +542,5 @@ private:
 
 #include "read_params.cpp"
 #include "save_config.cpp"
+#include "force_moves.cpp"
 #endif

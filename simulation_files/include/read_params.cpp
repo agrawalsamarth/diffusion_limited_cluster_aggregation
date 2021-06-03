@@ -25,6 +25,10 @@ void dlca_lattice_3d::read_params_parser(char *params_name)
 
         results = split_string_by_delimiter(str, '=');
 
+        if (results[0] == "headers"){
+            headers = stoi(results[1]);
+        }
+
         if (results[0] == "N"){
             N       = stoi(results[1]);
             N_flag = true;
@@ -178,4 +182,98 @@ void dlca_lattice_3d::check_params()
         N = (int)(phi*L_total);
     }
     
+}
+
+void dlca_lattice_3d::read_config_parser(char *config_filename)
+{
+    for (int i = 0; i < N; i++){
+        
+        for (int axis = 0; axis < D; axis++)
+            location[axis] = pos(i,axis);
+
+        grid.occupied(location) = N;
+
+    }
+        
+    std::ifstream parser(config_filename, std::ifstream::in);
+    int count = 0;
+
+    std::string str;
+    std::vector<std::string> results;
+
+    std::vector<std::string> xi_names;
+    std::string assigned_name    = "seed";
+
+    std::vector<int> xi_idx(D);
+    int assigned_idx;
+
+
+    for (int axis = 0; axis < D; axis++)
+        xi_names.push_back("x"+std::to_string(axis));
+
+    getline(parser,str);
+
+    results = split_string_by_delimiter(str, ',');
+
+    for (int i = 0; i < results.size(); i++){
+
+        if (results[i] == assigned_name)
+            assigned_idx = i;
+
+        for (int axis = 0; axis < D; axis++){
+            if (results[i] == xi_names[axis])
+                xi_idx[axis] = i;
+        }
+
+    }
+
+
+    count=0;
+
+    while (getline(parser, str)){
+
+        results = split_string_by_delimiter(str, ',');
+
+        /*for (int i = 0; i < results.size(); i++)
+            std::cout<<results[i]<<"\t";
+
+        std::cout<<"\n";*/
+
+        seed_[count]  = stoi(results[assigned_idx]);
+        
+        for (int axis = 0; axis < D; axis++)
+            pos(count,axis) = stoi(results[xi_idx[axis]]);
+
+        count++;
+
+    }
+
+    parser.close();
+
+    int L_total = 1;
+
+    for (int axis = 0; axis < D; axis++)
+        L_total *= L[axis];
+
+    for (int i = 0; i < N; i++){
+
+        for (int axis = 0; axis < D; axis++)
+            location[axis] = pos(i,axis);
+
+        grid.occupied(location) = i;
+
+    }
+
+    for (int i = 0; i < N; i++)
+        origSeedStatus_[i] = seed_[i];
+
+    for (int i = 0; i < N; i++)
+        mass_[i] = baseMass_[seed_[i]];
+
+    for (int i = 0; i < N; i++){
+        checkForAggregations(i);
+    }
+
+    reset_check_status();
+
 }
