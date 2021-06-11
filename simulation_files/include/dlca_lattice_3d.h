@@ -41,7 +41,7 @@ class dlca_lattice_3d
         baseMass_[0] = 1.;
         baseMass_[1] = seed_mass;
 
-        agg_threshold = (baseMass_[0] + baseMass_[1] - 1e-4);
+        agg_threshold = (baseMass_[0] + baseMass_[1] - 0.1);
 
         initArrays();
 
@@ -72,6 +72,7 @@ class dlca_lattice_3d
 
     std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
     void read_params_parser(char *config_filename);
+    void save_config(char *filename);
     void save_config();
     void get_max_att();
     void check_params();
@@ -437,7 +438,7 @@ class dlca_lattice_3d
         while ((totalWalkers_ != 0) || (totalClusters_ != 1)) {
             moveCluster();
             iters++;
-            std::cout<<"clusters = "<<totalClusters_<<"\t walkers = "<<totalWalkers_<<std::endl;
+            //std::cout<<"clusters = "<<totalClusters_<<"\t walkers = "<<totalWalkers_<<std::endl;
         }
 
     }

@@ -25,10 +25,6 @@ void dlca_lattice_3d::read_params_parser(char *params_name)
 
         results = split_string_by_delimiter(str, '=');
 
-        if (results[0] == "headers"){
-            headers = stoi(results[1]);
-        }
-
         if (results[0] == "N"){
             N       = stoi(results[1]);
             N_flag = true;

@@ -12,6 +12,11 @@ int main(int argc, char *argv[])
     double q_min = atof(argv[2]);
     double q_max = atof(argv[3]);
     double num_q = atoi(argv[4]);
-    test.dump_scattering_function(q_min, q_max, num_q);
+    
+    if (argc < 6)
+        test.dump_scattering_function(q_min, q_max, num_q);
+    else
+        test.dump_scattering_function(q_min, q_max, num_q, argv[5]);
+        
     return 0;
 }

@@ -15,7 +15,10 @@ int main(int argc, char *argv[])
     else {
         
         if (test.totalClusters() == 1){
-            test.dump_rog();
+            if (argc < 3)
+                test.dump_rog();
+            else
+                test.dump_rog(argv[2]);
         }
 
         else {

@@ -4,15 +4,15 @@ namespace post_p{
 
 void postprocessing::dump_rog()
 {
-        
-    create_results_dir();
+    printf("Radius_of_Gyration\n%lf\n", calc_rog());
+}
+
+void postprocessing::dump_rog(char *filename)
+{
     FILE *f;
-    char filename[] = "radius_of_gyration.csv";  
-    create_filepath(folder_name_, filename);
-    f= fopen(filepath_,"w");
+    f= fopen(filename,"w");
     fprintf(f, "Radius_of_Gyration\n%lf\n", calc_rog());
     fclose(f);
-
 }
 
 double postprocessing::calc_rog()

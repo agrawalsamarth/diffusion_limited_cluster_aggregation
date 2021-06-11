@@ -7,6 +7,11 @@ int main(int argc, char *argv[])
 
     dlca_lattice_3d test(argv[1]);
     test.runSimulation();
-    test.save_config();
+
+    if (argc == 3)
+        test.save_config(argv[2]);
+    else
+        test.save_config();
+        
     return 0;
 }

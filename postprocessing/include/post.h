@@ -78,8 +78,10 @@ class postprocessing
     void dump_rij_file();
     void calc_rij();
     void dump_rij_hist_file(double bin_size);
+    void dump_rij_hist_file(double bin_size, char *filename);
     void calc_rij_hist(double bin_size);
     void dump_unfolded_file();
+    void dump_unfolded_file(char *filename);
     void init_unfolding();
     void unfold(const int prev, const int next);
     void dump_delta_coords();
@@ -90,13 +92,17 @@ class postprocessing
     void dump_unfolded_hist_file(double bin_size);
     void calc_unfolded_hist(double bin_size);
     void dump_scattering_function(double q_min, double q_max, int num_q);
+    void dump_scattering_function(double q_min, double q_max, int num_q, char *filename);
     void calc_scattering_function(double q_min, double q_max, int num_q);
     void save_config();
     void save_unfolded_config();
+    void save_unfolded_config(char *filename);
     void get_headers();
     bool check_percolation();
     void dump_percolation_file();
+    void dump_percolation_file(char *filename);
     void dump_rog();
+    void dump_rog(char *filename);
     double calc_rog();
 
     private:

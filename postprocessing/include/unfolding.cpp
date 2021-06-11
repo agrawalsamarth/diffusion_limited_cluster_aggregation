@@ -11,12 +11,10 @@ void postprocessing::dump_unfolded_file()
         percolation_test = check_percolation();
 
         if (percolation_test){
-            create_results_dir();
             dump_percolation_file();
         }
 
         else {
-            create_results_dir();
             save_unfolded_config();
         }
     }
@@ -29,8 +27,38 @@ void postprocessing::dump_unfolded_file()
             }
         }
 
-        create_results_dir();
         save_unfolded_config();
+
+
+    }
+
+}
+
+void postprocessing::dump_unfolded_file(char *filename)
+{
+    bool percolation_test;
+
+    if (max_attachments_ > 0){
+        percolation_test = check_percolation();
+
+        if (percolation_test){
+            dump_percolation_file(filename);
+        }
+
+        else {
+            save_unfolded_config(filename);
+        }
+    }
+
+    else{
+
+        for (int i = 0; i < numParticles(); i++){
+            for (int axis = 0; axis < dim(); axis++){
+                unfolded_coords(i,axis) = pos(i,axis);
+            }
+        }
+
+        save_unfolded_config(filename);
 
 
     }

@@ -18,16 +18,12 @@ bool postprocessing::check_percolation()
 
 }
 
-void postprocessing::dump_percolation_file()
+void postprocessing::dump_percolation_file(char *filename)
 {
 
     FILE *f;
 
-    char filename[500];
-
-    strcpy(filename, "percolation_data.csv");
-    create_filepath(folder_name_, filename);
-    f= fopen(filepath_,"w");
+    f=fopen(filename, "w");
 
     fprintf(f,"cluster_number,");
 
@@ -50,7 +46,31 @@ void postprocessing::dump_percolation_file()
     }
 
     fclose(f);
-    free(filepath_);
+
+}
+
+void postprocessing::dump_percolation_file()
+{
+
+    printf("cluster_number,");
+
+    for (int axis = 0; axis < dim(); axis++){
+        if (axis == (dim() -1))
+            printf("percolation_x%d\n",axis);
+        else
+            printf("percolation_x%d,",axis);
+    }
+
+    for (int i = 0; i < totalClusters_; i++){
+        printf("%d,",i);
+        for (int axis = 0; axis < dim(); axis++){
+            if (axis == (dim() -1))
+                printf("%d\n",cluster_percolation(i,axis));
+            else
+                printf("%d,",cluster_percolation(i,axis));
+        }
+
+    }
 
 
 }

@@ -23,13 +23,22 @@ void postprocessing::dump_rij_file()
 void postprocessing::dump_rij_hist_file(double bin_size)
 {
     calc_rij_hist(bin_size);
-    create_results_dir();
+
+    printf("r,F(r)\n");
+
+    for (int i = 0; i < r_ij_hist_bins_; i++){
+        printf("%lf,%lf\n", (1.*i*bin_size + 0.5 * bin_size), r_ij_hist_[i]/(1. * N_pairs_));
+    }
+
+    free(r_ij_hist_);
+}
+
+void postprocessing::dump_rij_hist_file(double bin_size, char *filename)
+{
+    calc_rij_hist(bin_size);
 
     FILE *f;
-    char filename[] = "cumulative_pair_correlation_hist.csv";  
-    create_filepath(folder_name_, filename);
-    f= fopen(filepath_,"w");
-
+    f= fopen(filename,"w");
     fprintf(f, "r,F(r)\n");
 
     for (int i = 0; i < r_ij_hist_bins_; i++){
@@ -38,8 +47,6 @@ void postprocessing::dump_rij_hist_file(double bin_size)
 
     fclose(f);
     free(r_ij_hist_);
-    free(filepath_);
-
 }
 
 void postprocessing::calc_rij()

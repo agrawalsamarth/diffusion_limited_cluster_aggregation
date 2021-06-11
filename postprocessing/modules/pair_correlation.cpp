@@ -10,6 +10,11 @@ int main(int argc, char *argv[])
     }
 
     double bin_size = atof(argv[2]);
-    test.dump_rij_hist_file(bin_size);
+
+    if (argc < 4)
+        test.dump_rij_hist_file(bin_size);
+    else
+        test.dump_rij_hist_file(bin_size, argv[3]);
+    
     return 0;
 }
