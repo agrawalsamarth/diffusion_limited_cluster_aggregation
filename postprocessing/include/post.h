@@ -168,24 +168,4 @@ class postprocessing
 
 }
 
-#include "init.cpp"
-#include "getVals.cpp"
-//#include "read_params.cpp"
-//#include "read_config.cpp"
-#include "periodic_image.cpp"
-#include "save_config.cpp"
-#include "unfolding.cpp"
-#include "get_headers.cpp"
-#include "percolation.cpp"
-#include "create_results_dir.cpp"
-#include "create_dir.cpp"
-#include "create_filepath.cpp"
-#include "memory_allocation_function.cpp"
-#include "calc_rij.cpp"
-#include "calc_scattering.cpp"
-#include "rog.cpp"
-#include "string_split.cpp"
-#include "name_postp_dir.cpp"
-#include "read_params_parser.cpp"
-#include "read_config_parser.cpp"
 #endif

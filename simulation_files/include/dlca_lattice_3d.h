@@ -541,7 +541,4 @@ private:
 
 };
 
-#include "read_params.cpp"
-#include "save_config.cpp"
-#include "force_moves.cpp"
 #endif
