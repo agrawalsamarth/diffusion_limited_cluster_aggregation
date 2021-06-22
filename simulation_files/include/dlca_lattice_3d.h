@@ -66,7 +66,6 @@ class dlca_lattice_3d
         free(cumPropensity_);
         free(attachments_);
         free(attachmentCounts_);
-        free(r_ij_);
 
     }
 
@@ -537,7 +536,12 @@ private:
     bool   rng_seed_flag  = false;
     bool   D_flag         = false;
     bool   seed_pct_flag  = false;
-    bool   L_flag         = false;
+    bool   *L_flag;
+    bool   L_flag_and;
+    bool   L_flag_or;
+    bool   *periodic_flag;
+    bool   periodic_flag_and;
+
 
 };
 

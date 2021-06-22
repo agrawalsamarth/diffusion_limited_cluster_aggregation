@@ -14,7 +14,7 @@ void postprocessing::dump_scattering_function(double q_min, double q_max, int nu
     fprintf(f, "q,S(q)\n");
 
     for (int i = 0; i < num_q; i++)
-        fprintf(f, "%lf,%lf\n", exp((1.*i*dq)+log(q_min)), sq_[i]);
+        fprintf(f, "%lf,%lf\n", exp((1.*i*dq)+log(q_min)), 2. * sq_[i]);
 
     fclose(f);
     free(sq_);
@@ -30,7 +30,7 @@ void postprocessing::dump_scattering_function(double q_min, double q_max, int nu
     printf("q,S(q)\n");
 
     for (int i = 0; i < num_q; i++)
-        printf("%lf,%lf\n", exp((1.*i*dq)+log(q_min)), sq_[i]);
+        printf("%lf,%lf\n", exp((1.*i*dq)+log(q_min)), 2. * sq_[i]);
 
     free(sq_);
 

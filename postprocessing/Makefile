@@ -14,23 +14,19 @@ all: unfold radius_of_gyration sq_vs_q pair_correlation
 
 unfold: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o unfold.o target/unfold.cpp
-	$(CXX) $(LDFLAGS) -o $@ $^ unfold.o
-	mv unfold ./bin/
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ unfold.o
 
 radius_of_gyration: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o radius_of_gyration.o target/radius_of_gyration.cpp
-	$(CXX) $(LDFLAGS) -o $@ $^ radius_of_gyration.o
-	mv radius_of_gyration ./bin/
+	$(CXX) $(LDFLAGS)  -o $(BIN_DIR)/$@ $^ radius_of_gyration.o
 
 sq_vs_q: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o sq_vs_q.o target/sq_vs_q.cpp
-	$(CXX) $(LDFLAGS) -o $@ $^ sq_vs_q.o
-	mv sq_vs_q ./bin/
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ sq_vs_q.o
 
 pair_correlation: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o pair_correlation.o target/pair_correlation.cpp
-	$(CXX) $(LDFLAGS) -o $@ $^ pair_correlation.o
-	mv pair_correlation ./bin/
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ pair_correlation.o
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) -c -o $@ $<
@@ -43,4 +39,5 @@ $(OBJ_DIR):
 
 clean:
 	rm *.o
-	rm ./bin/*
+	rm -rf $(BIN_DIR)
+	rm -rf $(OBJ_DIR)

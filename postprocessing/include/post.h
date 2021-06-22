@@ -26,7 +26,6 @@ class postprocessing
     std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
     void read_params_parser(char *config_filename);
     void read_config_parser(char *config_filename);
-    void name_postp_dir(char *config_filename);
 
     int dim() const;
     int numParticles() const;
@@ -71,12 +70,10 @@ class postprocessing
     double get_periodic_image(double x, const int axis);
 
     void print_positions();
-    void create_results_dir();
-    void create_dir(char *folder);
-    void create_filepath(char *folder, char *filename);
-
-    void dump_rij_file();
+    
     void calc_rij();
+    void dump_rij_file();
+    void dump_rij_file(char *filename);
     void dump_rij_hist_file(double bin_size);
     void dump_rij_hist_file(double bin_size, char *filename);
     void calc_rij_hist(double bin_size);

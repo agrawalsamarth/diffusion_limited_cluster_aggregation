@@ -4,11 +4,19 @@ namespace post_p{
 
 void postprocessing::dump_rij_file()
 {
+    calc_rij();    
+    printf("r_ij\n");
+
+    for (int i = 0; i < N_pairs_; i++)
+        printf("%lf\n", r_ij_[i]);
+    
+}
+
+void postprocessing::dump_rij_file(char *filename)
+{
     calc_rij();
     FILE *f;
-    char filename[] = "r_ij.csv";  
-    create_filepath(folder_name_, filename);
-    f= fopen(filepath_,"w");
+    f= fopen(filename,"w");
     
     fprintf(f, "r_ij\n");
 
@@ -17,7 +25,6 @@ void postprocessing::dump_rij_file()
     
     fclose(f);
 
-    
 }
 
 void postprocessing::dump_rij_hist_file(double bin_size)
@@ -140,6 +147,7 @@ void postprocessing::calc_rij_hist(double bin_size)
         r_ij_hist_[i] = 0.;
 
     int bin;
+    r_max=r_max+(0.5*bin_size);
 
     for (int i = 0; i < N_pairs_; i++){
 

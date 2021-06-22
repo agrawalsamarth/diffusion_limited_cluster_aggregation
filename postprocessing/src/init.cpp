@@ -4,33 +4,14 @@ namespace post_p{
 
 postprocessing::postprocessing(char *config_filename)
 {
-    /*parsed_folder_ = (char*)malloc(strlen("./parsed_file/")+strlen(user_folder)+strlen("/")+1);
-    strcpy(parsed_folder_,"./parsed_file/");
-    strcat(parsed_folder_,user_folder);
-    strcat(parsed_folder_,"/");
-
-    read_params();
-    memory_allocation_function();
-    read_config();
-
-    char parent_folder[] = "./postprocessing_results/";
-    folder_name_ = (char*)malloc(strlen(parent_folder)+strlen(user_folder)+strlen("/")+1);
-    strcpy(folder_name_,parent_folder);
-    strcat(folder_name_,user_folder);
-    strcat(folder_name_,"/");*/
-
     read_params_parser(config_filename);
     memory_allocation_function();
     read_config_parser(config_filename);
-    name_postp_dir(config_filename);
-
-
 }
 
 
 postprocessing::~postprocessing()
 {
-        free(folder_name_);
 
         free(lo_hi_);
         free(L_);
@@ -43,15 +24,13 @@ postprocessing::~postprocessing()
         if (max_attachments_ > 0)
             free(attachment_);
         free(diameter_);
-
         free(posDiff_);
 
+        free(r_ij_);
         free(is_placed_);
         free(unfolded_coords_);
         free(unfolded_num_attachments_);
         free(cluster_percolation_);
-
-        free(r_ij_);
 
 }
 

@@ -16,6 +16,13 @@ void dlca_lattice_3d::read_params_parser(char *params_name)
 {
 
     std::ifstream parser(params_name, std::ifstream::in);
+
+    if (parser.fail()){
+        std::cout<<"either file does not exist or does not have permissions"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+
     int count = 0;
 
     std::string str;
@@ -48,6 +55,12 @@ void dlca_lattice_3d::read_params_parser(char *params_name)
         if (results[0] == "lattice"){
             lattice      = stoi(results[1]);
             lattice_flag = true;
+
+            if (lattice == 0){
+                std::cout<<"off-lattice not allowed"<<std::endl;
+                exit(EXIT_FAILURE);
+            }
+
         }
 
         if (results[0] == "phi"){
@@ -80,11 +93,22 @@ void dlca_lattice_3d::read_params_parser(char *params_name)
 
     L                = (int*)malloc(sizeof(int) * D);
     periodic         = (int*)malloc(sizeof(int) * D);
+    L_flag           = (bool*)malloc(sizeof(bool) * D);
+    periodic_flag    = (bool*)malloc(sizeof(bool) * D);
 
     for (int axis = 0; axis < D; axis++){
         periodic_names.push_back("x"+std::to_string(axis)+"_periodic");
         L_names.push_back("x"+std::to_string(axis)+"_L");
     }
+
+    for (int axis = 0; axis < D; axis++){
+        L_flag[axis] = false;
+        periodic_flag[axis] = false;
+    }
+
+    L_flag_and = true;
+    L_flag_or  = false;
+    periodic_flag_and = true;
 
     parser.open(params_name, std::ifstream::in);
     count = 0;
@@ -95,15 +119,19 @@ void dlca_lattice_3d::read_params_parser(char *params_name)
 
         for (int axis = 0; axis < D; axis++){
 
-            if (results[0] == periodic_names[axis])
+            if (results[0] == periodic_names[axis]){
                 periodic[axis] = stoi(results[1]);
+                periodic_flag[axis] = true;
+            }
 
         }
 
         for (int axis = 0; axis < D; axis++){
 
-            if (results[0] == L_names[axis])
+            if (results[0] == L_names[axis]){
                 L[axis] = stoi(results[1]);
+                L_flag[axis] = true;
+            }
 
         }
     }
@@ -118,10 +146,49 @@ void dlca_lattice_3d::check_params()
     double temp;
     int    L_total = 1;
 
-    L_flag = true;
+    for (int axis = 0; axis < D; axis++){
+        L_flag_and = (L_flag_and && L_flag[axis]);
+        L_flag_or  = (L_flag_or  || L_flag[axis]);
 
-    for (int axis = 0; axis < D; axis++)
-        L_total *= L[axis];
+        periodic_flag_and = (periodic_flag_and && periodic_flag[axis]);
+    }
+
+    if (periodic_flag_and == false){
+        std::cout<<"please provide periodicity in each direction"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if ((N_flag) && (N_s_flag)){
+
+        if (N_s > N){
+            std::cout<<"number of seeds is greater than number of particles"<<std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+    }
+
+    if (phi_flag){
+
+        if (phi > 1){
+            std::cout<<"phi should be <= 1"<<std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+    }
+
+    if (seed_pct_flag){
+
+        if (seed_pct > 100){
+            std::cout<<"seed_pct should be <= 100"<<std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+    }
+
+    if (L_flag_and != L_flag_or){
+        std::cout<<"length in one direction is missing"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     if((N_s_flag == false) && (seed_pct_flag == false)){
         std::cout<<"please provide N_s or seed_pct"<<std::endl;
@@ -133,12 +200,12 @@ void dlca_lattice_3d::check_params()
         exit(EXIT_FAILURE);
     }
 
-    if((phi_flag == false) && (L_flag == false)){
+    if((phi_flag == false) && (L_flag_and == false)){
         std::cout<<"please provide L or phi"<<std::endl;
         exit(EXIT_FAILURE);
     }
 
-    if((L_flag == false) && (N_flag == false)){
+    if((L_flag_and == false) && (N_flag == false)){
         std::cout<<"please provide L or N"<<std::endl;
         exit(EXIT_FAILURE);
     }
@@ -152,9 +219,14 @@ void dlca_lattice_3d::check_params()
             exit(EXIT_FAILURE);
         }
 
-    } 
+    }
 
-    if ((N_flag) && (phi_flag) && (L_flag))
+    if (L_flag_and){
+        for (int axis = 0; axis < D; axis++)
+            L_total *= L[axis];
+    }
+
+    if ((N_flag) && (phi_flag) && (L_flag_and))
     {
 
         temp = (1.*N)/(1.*L_total);
@@ -176,6 +248,19 @@ void dlca_lattice_3d::check_params()
 
     if (N_s_flag == false){
         N_s = (int)((N*seed_pct)/100);
+    }
+
+    if (L_flag_and == false){
+
+        for (int axis = 0; axis < D; axis++)
+            L[axis] = (int)(pow((1.*N)/(1.*phi), 1./(1.*D)));
+        
+
+        for (int axis = 0; axis < D; axis++)
+            L_total *= L[axis];
+
+        phi = (1.*N)/(1*L_total);
+
     }
     
 }

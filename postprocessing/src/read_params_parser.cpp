@@ -9,6 +9,11 @@ void postprocessing::read_params_parser(char *config_filename)
     std::ifstream parser(config_filename, std::ifstream::in);
     int count = 0;
 
+    if (parser.fail()){
+        std::cout<<"either file does not exist or doesn't have permission"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     std::string str;
     std::vector<std::string> results;
 

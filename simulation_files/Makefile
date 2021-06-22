@@ -9,18 +9,17 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
+TARGET_DIR = ./target
 
 all: simulation validation
 
 simulation: $(OBJ_FILES) | $(BIN_DIR)
-	$(CXX) $(CPPFLAGS) -c -o simulation.o target/simulation.cpp
-	$(CXX) $(LDFLAGS) -o $@ $^ simulation.o
-	mv simulation ./bin/
+	$(CXX) $(CPPFLAGS) -c -o simulation.o $(TARGET_DIR)/simulation.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ simulation.o
 
 validation: $(OBJ_FILES) | $(BIN_DIR)
-	$(CXX) $(CPPFLAGS) -c -o validation.o target/validation.cpp
-	$(CXX) $(LDFLAGS) -o $@ $^ validation.o
-	mv validation ./bin/
+	$(CXX) $(CPPFLAGS) -c -o validation.o $(TARGET_DIR)/validation.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ validation.o
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) -c -o $@ $<
@@ -33,4 +32,5 @@ $(OBJ_DIR):
 
 clean:
 	rm *.o
-	rm ./bin/*
+	rm -rf $(BIN_DIR)
+	rm -rf $(OBJ_DIR)
