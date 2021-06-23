@@ -79,27 +79,26 @@ class postprocessing
     void calc_rij_hist(double bin_size);
     void dump_unfolded_file();
     void dump_unfolded_file(char *filename);
+    void dump_density_correlation();
+    void dump_density_correlation(char *filename);
+    void dump_percolation_file();
+    void dump_percolation_file(char *filename);
+    void dump_rog();
+    void dump_rog(char *filename);
     void init_unfolding();
     void unfold(const int prev, const int next);
-    void dump_delta_coords();
-    void dump_delta_coords_hist();
-    void calc_delta_coords();
-    void calc_delta_coords_hist();
     void calc_unfolded_rij();
     void dump_unfolded_hist_file(double bin_size);
     void calc_unfolded_hist(double bin_size);
     void dump_scattering_function(double q_min, double q_max, int num_q);
     void dump_scattering_function(double q_min, double q_max, int num_q, char *filename);
     void calc_scattering_function(double q_min, double q_max, int num_q);
+    void calc_density_correlation();
     void save_config();
     void save_unfolded_config();
     void save_unfolded_config(char *filename);
     void get_headers();
     bool check_percolation();
-    void dump_percolation_file();
-    void dump_percolation_file(char *filename);
-    void dump_rog();
-    void dump_rog(char *filename);
     double calc_rog();
 
     private:
@@ -121,6 +120,7 @@ class postprocessing
     double *diameter_;
     int    *periodic_;
     double *posDiff_;
+    int    *posDiff_int_;
     double *pos_;
     int    *num_attachments_;
     int    *attachment_;
@@ -128,6 +128,7 @@ class postprocessing
     int    *current_seed_;
     double *r_ij_;
     double *r_ij_hist_;
+    int    *rho_hist_;
     bool   *is_placed_;
     double *unfolded_coords_;
     int     temp_next;
@@ -144,9 +145,6 @@ class postprocessing
     int     totalClusters_;
     int     N_pairs_;
     int     r_ij_hist_bins_;
-
-    char   *folder_name_;
-    char   *filepath_;
     
     bool    lattice_flag_ = false;
     bool    N_flag_ = false;
