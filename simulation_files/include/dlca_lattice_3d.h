@@ -73,6 +73,8 @@ class dlca_lattice_3d
     void read_params_parser(char *config_filename);
     void save_config(char *filename);
     void save_config();
+    void dump_xyz_file();
+    void dump_xyz_file(const char *filename);
     void get_max_att();
     void check_params();
     void read_config_parser(char *config_filename);
@@ -133,6 +135,14 @@ class dlca_lattice_3d
     int
     getPeriodicImage(int x, int axis)
     {return (x + periodic[axis] * (L[axis]*(x==-1) - L[axis]*(x==L[axis]))); }
+
+    int
+    totalWalkers()
+    {return totalWalkers_;}
+
+    int
+    totalClusters()
+    {return totalClusters_;}
 
     void
     initArrays()

@@ -79,8 +79,8 @@ class postprocessing
     void calc_rij_hist(double bin_size);
     void dump_unfolded_file();
     void dump_unfolded_file(char *filename);
-    void dump_density_correlation();
-    void dump_density_correlation(char *filename);
+    void dump_density_correlation(double bin_size);
+    void dump_density_correlation(double bin_size, char *filename);
     void dump_percolation_file();
     void dump_percolation_file(char *filename);
     void dump_rog();
@@ -93,7 +93,7 @@ class postprocessing
     void dump_scattering_function(double q_min, double q_max, int num_q);
     void dump_scattering_function(double q_min, double q_max, int num_q, char *filename);
     void calc_scattering_function(double q_min, double q_max, int num_q);
-    void calc_density_correlation();
+    void calc_density_correlation(double bin_size);
     void save_config();
     void save_unfolded_config();
     void save_unfolded_config(char *filename);

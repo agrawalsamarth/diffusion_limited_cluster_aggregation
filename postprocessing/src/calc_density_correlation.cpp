@@ -2,7 +2,7 @@
 
 namespace post_p{
 
-void postprocessing::dump_density_correlation(){
+void postprocessing::dump_density_correlation(double bin_size){
 
     double r_max=0.;
 
@@ -21,18 +21,25 @@ void postprocessing::dump_density_correlation(){
     for (int i = 0; i < bins; i++)
         rho_hist_[i] = 0;
 
-    calc_density_correlation();
+    calc_density_correlation(bin_size);
+
+    double prefactor;
+
+    //prefactor = tgamma(0.5 * dim())/(2. * numParticles() * pow(M_PI, 0.5*dim()));
+    prefactor = 1./(2. * M_PI * numParticles());
 
     printf("r,rho(r)\n");
 
-    for (int i = 0; i < bins; i++)
-        printf("%d,%lf\n", i, rho_hist_[i]/(2. * numParticles()));
+    for (int i = i; i < bins; i++){
+        //printf("%d,%lf\n", i, (prefactor * rho_hist_[i])/(1. * pow(1.*i, 1.*(dim()-1))));
+        printf("%d,%lf\n", i, (prefactor * rho_hist_[i])/(1. * i));
+    }
 
     free(rho_hist_);
 
 }
 
-void postprocessing::dump_density_correlation(char *filename){
+void postprocessing::dump_density_correlation(double bin_size, char *filename){
 
     double r_max=0.;
 
@@ -51,7 +58,7 @@ void postprocessing::dump_density_correlation(char *filename){
     for (int i = 0; i < bins; i++)
         rho_hist_[i] = 0;
 
-    calc_density_correlation();
+    calc_density_correlation(bin_size);
 
     FILE *f;
 
@@ -68,7 +75,7 @@ void postprocessing::dump_density_correlation(char *filename){
 
 }
 
-void postprocessing::calc_density_correlation(){
+/*void postprocessing::calc_density_correlation(){
 
     bool xor_flag;
     double offset=1e-10;
@@ -93,7 +100,7 @@ void postprocessing::calc_density_correlation(){
                     if (posDiff_int_[axis] != 0)
                         rho_hist_[posDiff_int_[axis]] += 1;
 
-                    /*if (counter < 10){
+                    if (counter < 10){
 
                         if (axis == (dim()-1))
                             std::cout<<posDiff_int_[axis]<<std::endl;
@@ -101,7 +108,7 @@ void postprocessing::calc_density_correlation(){
                         else
                             std::cout<<posDiff_int_[axis]<<"\t";
 
-                    }*/
+                    }
 
                 }
 
@@ -111,6 +118,37 @@ void postprocessing::calc_density_correlation(){
 
 
         }
+    }
+
+
+}*/
+
+void postprocessing::calc_density_correlation(double bin_size){
+
+    double half_bin_size;
+    int r_int;
+    double offset;
+
+    for (int i = 0; i < N_pairs_; i++){
+
+        r_int = (int)(r_ij_[i]);
+
+        half_bin_size = 0.5 * bin_size * r_int;
+
+        if (fabs(r_ij_[i] - (1. * r_int)) < half_bin_size){
+            //std::cout<<"rij = "<<r_ij_[i]<<"\t r_int = "<<r_int<<"\t"<<rho_hist_[r_int]<<std::endl;
+            rho_hist_[r_int] += 1;
+        }
+
+        r_int += 1;
+
+        half_bin_size = 0.5 * bin_size * r_int;
+
+        if (fabs(r_ij_[i] - (1. * r_int)) < half_bin_size){
+            //std::cout<<"rij = "<<r_ij_[i]<<"\t r_int = "<<r_int<<"\t"<<rho_hist_[r_int]<<std::endl;
+            rho_hist_[r_int] += 1;
+        }
+
     }
 
 

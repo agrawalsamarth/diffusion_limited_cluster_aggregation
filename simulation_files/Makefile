@@ -11,7 +11,7 @@ BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 TARGET_DIR = ./target
 
-all: simulation validation
+all: simulation validation create_movie_files
 
 simulation: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o simulation.o $(TARGET_DIR)/simulation.cpp
@@ -20,6 +20,10 @@ simulation: $(OBJ_FILES) | $(BIN_DIR)
 validation: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o validation.o $(TARGET_DIR)/validation.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ validation.o
+
+create_movie_files: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o create_movie_files.o $(TARGET_DIR)/create_movie_files.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ create_movie_files.o
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) -c -o $@ $<
