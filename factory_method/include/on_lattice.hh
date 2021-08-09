@@ -9,7 +9,7 @@ class on_lattice: public simulation_box{
 
     public:
 
-        on_lattice(const int dim, int *box_lengths);
+        on_lattice(const int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc);
 
         int get_refill(int x, int axis);
 

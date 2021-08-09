@@ -8,7 +8,7 @@
 
 namespace simulation{
 
-//template <typename type>
+
 class simulation_box{
 
     public:
@@ -29,9 +29,9 @@ class simulation_box{
         virtual void remove_particle_from_cell(const int id, int *pos) {};
         virtual int  get_particle_id(int *pos) {};
 
-        virtual void add_particle_to_cell(const int id, double *pos) {};
+        /*virtual void add_particle_to_cell(const int id, double *pos) {};
         virtual void remove_particle_from_cell(const int id, double *pos) {};
-        virtual int  get_particle_id(double *pos) {};
+        virtual int  get_particle_id(double *pos) {};*/
 
         
 

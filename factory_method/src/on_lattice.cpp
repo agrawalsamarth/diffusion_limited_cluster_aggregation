@@ -2,7 +2,7 @@
 
 namespace simulation{
 
-on_lattice::on_lattice(const int dim, int *box_lengths){
+on_lattice::on_lattice(const int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc){
 
     D = dim;
     L = (int*)malloc(sizeof(int) * D);
@@ -31,10 +31,13 @@ on_lattice::on_lattice(const int dim, int *box_lengths){
     for (int i = 0; i < L_total; i++)
         grid[i] = -1;
 
+    for (int axis = 0; axis < D; axis++)
+        box_bc.push_back(system_bc[axis]);
+
  
 }
 
-void on_lattice::set_L(const int L_val, const int axis){
+/*void on_lattice::set_L(const int L_val, const int axis){
     L[axis] = L_val;
 }
 
@@ -42,7 +45,7 @@ int on_lattice::get_L(const int axis){
 
     return L[axis];    
 
-}
+}*/
 
 int on_lattice::get_refill(int x, int axis){
 
@@ -50,11 +53,11 @@ int on_lattice::get_refill(int x, int axis){
 
 }
 
-void on_lattice::add_bc(boundary_conditions *bc){
+/*void on_lattice::add_bc(boundary_conditions *bc){
 
     box_bc.push_back(bc);
 
-}
+}*/
 
 void on_lattice::add_particle_to_cell(const int id, int *pos){
 
