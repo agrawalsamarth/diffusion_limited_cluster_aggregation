@@ -3,8 +3,9 @@
 namespace simulation{
 
 template<typename type>
-particle<type>::particle(const int dim, simulation_box *system_box){
+particle<type>::particle(const int particle_id, const int dim, simulation_box *system_box){
     
+    id  = particle_id;
     D   = dim;
     box = system_box;
 
@@ -13,18 +14,16 @@ particle<type>::particle(const int dim, simulation_box *system_box){
     for (int axis = 0; axis < D; axis++)
         pos_[axis] = 0;
 
-    //for (int axis = 0; axis < D; axis++)
-        //std::cout<<"L="<<box->get_L(axis)<<std::endl;
 
 }
 
 template<typename type>
 void particle<type>::set_mass(const double constituent_mass)
-{ mass_ = constituent_mass;}
+{ mass = constituent_mass;}
 
 template<typename type>
 double particle<type>::get_mass()
-{ return mass_;}
+{ return mass;}
 
 template<typename type>
 type particle<type>::pos(const int axis) const
@@ -52,6 +51,21 @@ template<typename type>
 void particle<type>::remove_constituent_from_cell()
 { box->remove_particle_from_cell(id, pos_); }
 
+template<typename type>
+void particle<type>::set_aggregate_id(const int cluster_id)
+{ aggregate_id = cluster_id;}
+
+template<typename type>
+int particle<type>::get_id()
+{ return id;}
+
+template<typename type>
+int particle<type>::get_aggregate_id()
+{ return aggregate_id;}
+
+template<typename type>
+std::vector<int> particle<type>::get_neighbour_list()
+{ return box->get_neighbour_list(pos_);}
 
 template class particle<int>;
 template class particle<double>;

@@ -1,14 +1,13 @@
 //#include <particle.hh>
 //#include <cluster.hh>
 
-#include <particle.hh>
-#include <cluster.hh>
+#include <normal_bind.hh>
 
 using namespace simulation;
 
-int main()
+int main(int argc, char *argv[])
 {
-    const int D = 2;
+    /*const int D = 2;
 
     boundary_conditions *bc_test_1 = new periodic_bc;
     boundary_conditions *bc_test_2 = new periodic_bc;
@@ -75,12 +74,27 @@ int main()
 
         std::cout<<"\n";
 
-    }
+    }*/
 
     //delete first;
     //delete second;
     //delete test;
 
+    dlma_system test(argv[1]);
+    std::cout<<"initial map"<<std::endl;
+    test.print_id_map();
+
+    constituent<int> *p1 = test.get_constituent(0);
+    constituent<int> *p2 = test.get_constituent(1);
+
+    normal_bind bind_test(&test);
+
+    bind_test.bind_aggregates(p1, p2);
+
+    std::cout<<"updated map"<<std::endl;
+    test.print_id_map();
+
+    
     return 0;
 
 }

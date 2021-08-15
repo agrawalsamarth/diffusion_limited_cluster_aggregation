@@ -2,20 +2,22 @@
 #include "cluster.hh"
 #include "periodic_bc.hh"
 #include "on_lattice.hh"
+#include <string.h>
 
 #ifndef SYSTEM_FACTORY_H
 #define SYSTEM_FACTORY_H
 
 namespace simulation{
 
+//template<typename type>
 class system_factory{
 
     public:
 
-        constituent*         create_constituent(int lattice, int dim, std::string name_type, simulation_box *box);
-        simulation_box*      create_simulation_box(int lattice, int dim, int *box_lengths, vector<boundary_conditions*> system_bc);
+        constituent<int>*         create_constituent(int constituent_id, int lattice, int dim, std::string name_type, simulation_box *box);
+        simulation_box*            create_simulation_box(int lattice, int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc);
         //simulation_box*      create_simulation_box(int lattice, int dim, double *box_lengths);
-        boundary_conditions* create_boundary_conditions(std::string name_type);
+        boundary_conditions*       create_boundary_conditions(std::string name_type);
 
 
 };

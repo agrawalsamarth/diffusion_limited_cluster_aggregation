@@ -1,11 +1,17 @@
 #include "system_factory.hh"
+#include <cstring>
+#include <sstream>
+#include <fstream>
+#include <cmath>
+#include <random>
+#include <map>
 
 #ifndef DLMA_SYSTEM_H
 #define DLMA_SYSTEM_H
 
 namespace simulation{
 
-template <typename type>
+//template <typename type>
 class dlma_system{
 
     public:
@@ -20,17 +26,39 @@ class dlma_system{
         void check_aggregation();
         void move_constituent(const int i);
         void calculate_propensity();
-        void iteration_step();
-        void run_system();
+        //void iteration_step();
+        //void run_system();
+
+        void add_aggregate(constituent<int> *new_aggregate);
+        void remove_aggregate(const int id);
+
+        void build_id_map();
+
+        int get_latest_cluster_id();
+        int get_id_map(constituent<int> *c_1);
+
+        int get_lattice();
+        int get_dim();
+
+        simulation_box* get_box();
+
+        constituent<int>* get_constituent(const int i);
+        void print_id_map();
+
         
 
     private:
 
+        std::mt19937 generator;
+        std::uniform_real_distribution<double> dis;
+
         system_factory factory;
         simulation_box *box;
 
-        vector<constituent<type>*> all_particles;
-        vector<constituent<type>*> aggregates;
+        std::vector<constituent<int>*> all_particles;
+        std::vector<constituent<int>*> aggregates;
+
+        std::map<int, int> id_map;
 
         double  *propensity;
         double  *cum_propensity;
@@ -54,8 +82,13 @@ class dlma_system{
         int    rng_seed = 0;
         bool   rng_seed_flag = false;
         int    *L;
+        bool   *L_flag;
+        bool    L_flag_and;
+        bool    L_flag_or;
         int    *periodic;
-        bool   *bc_flag;
+        bool   *periodic_flag;
+        bool    periodic_flag_and;
+        int     latest_cluster_id=0;
 
 };
 

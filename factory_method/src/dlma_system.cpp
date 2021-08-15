@@ -21,6 +21,9 @@ dlma_system::dlma_system(char *params_name)
     check_params();
     initialize_system();
 
+    generator.seed(rng_seed);
+    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
+
 }
 
 void dlma_system::read_params_parser(char *params_name)
@@ -137,7 +140,7 @@ void dlma_system::read_params_parser(char *params_name)
         for (int axis = 0; axis < D; axis++){
 
             if (results[0] == bc_names[axis]){
-                system_bc[axis] = factory.create_boundary_condition(bc_names[axis]);
+                system_bc[axis] = factory.create_boundary_conditions(bc_names[axis]);
                 periodic_flag[axis] = true;
             }
 
@@ -166,6 +169,23 @@ void dlma_system::read_params_parser(char *params_name)
         std::cout<<"please provide boundary conditions in each direction"<<std::endl;
         exit(EXIT_FAILURE);
     }
+
+    int    L_total = 1;
+
+    if (L_flag_and == false){
+
+        for (int axis = 0; axis < D; axis++)
+            L[axis] = (int)(pow((1.*N)/(1.*phi), 1./(1.*D)));
+        
+
+        for (int axis = 0; axis < D; axis++)
+            L_total *= L[axis];
+
+        phi = (1.*N)/(1*L_total);
+
+    }
+
+    box = factory.create_simulation_box(lattice, D, L, system_bc);
 
 }
 
@@ -265,30 +285,180 @@ void dlma_system::check_params()
     if (N_s_flag == false){
         N_s = (int)((N*seed_pct)/100);
     }
-
-    if (L_flag_and == false){
-
-        for (int axis = 0; axis < D; axis++)
-            L[axis] = (int)(pow((1.*N)/(1.*phi), 1./(1.*D)));
-        
-
-        for (int axis = 0; axis < D; axis++)
-            L_total *= L[axis];
-
-        phi = (1.*N)/(1*L_total);
-
-    }
     
+}
+
+void dlma_system::calculate_propensity()
+{
+
+    int agg_size = aggregates.size();
+
+    propensity     = (double*)malloc(sizeof(double) * agg_size);
+    cum_propensity = (double*)malloc(sizeof(double) * agg_size);
+
+    for (int i = 0; i < agg_size; i++){
+        propensity[i]     = 0.;
+        cum_propensity[i] = 0.;
+    }
+
+    for (int i = 0; i < agg_size; i++){
+        propensity[i] = std::pow(aggregates[i]->get_mass(), alpha);
+    }
+
+
+
+
 }
 
 void dlma_system::initialize_system()
 {
 
-    box = factory.create_simulation_box(lattice, D, L);
+    bool is_placed;
+    constituent<int> *temp;
 
-    std::cout<<"done"<<std::endl;
+    std::string name_type = "particle";
+
+    int temp_pos[D];
+
+    for (int i = 0; i < N; i++){
+
+        temp = factory.create_constituent(i, lattice, D, name_type, box);
+
+        is_placed = false;
+
+        if (i < N_s)
+            temp->set_mass(seed_mass);
+
+        else
+            temp->set_mass(1.);
+
+        while (is_placed == false){
+
+            for (int axis = 0; axis < D; axis++)
+                temp_pos[axis] = (int)(dis(generator) * L[axis]);
+
+            if (box->get_particle_id(temp_pos) == -1){
+
+                for (int axis = 0; axis < D; axis++)
+                    temp->pos(axis) = temp_pos[axis];
+
+                temp->add_constituent_to_cell();
+                all_particles.push_back(temp);
+                is_placed = true;
+            }
+
+        }
+
+    }
+
+    name_type = "cluster";
+
+    for (int i = 0; i < N; i++){
+
+        temp = factory.create_constituent(get_latest_cluster_id(), lattice, D, name_type, box);
+        temp->add_constituent(all_particles[i]);
+        temp->calculate_aggregate_mass();
+
+        aggregates.push_back(temp);
+
+    }
+
+    build_id_map();
+    
+
+    /*for (int axis = 0; axis < D; axis++)
+        std::cout<<L[axis]<<std::endl;
+
+    std::cout<<"\n\n\n";
+
+    int temp_id;
+
+    for (int i = 0; i < L[0]; i++){
+        for (int j = 0; j < L[1]; j++){
+
+            temp_pos[0] = i;
+            temp_pos[1] = j;
+
+            temp_id = box->get_particle_id(temp_pos);
+
+            std::cout<<temp_id<<"\t";
+
+        }
+        std::cout<<"\n"<<std::endl;
+    }*/
+
+    
 
 }
+
+void dlma_system::add_aggregate(constituent<int> *new_aggregate){
+    aggregates.push_back(new_aggregate);
+}
+
+void dlma_system::remove_aggregate(const int id){
+
+    for (int i = 0; i < aggregates.size(); i++){
+
+        if (aggregates[i]->get_id() == id)
+            aggregates.erase(aggregates.begin()+i);
+
+    }
+
+}
+
+void dlma_system::build_id_map()
+{
+
+    for (int i = 0; i < N; i++)
+        id_map[all_particles[i]->get_id()] = all_particles[i]->get_aggregate_id();
+
+}
+
+
+int dlma_system::get_latest_cluster_id(){
+
+    return latest_cluster_id++;
+
+}
+        
+int dlma_system::get_id_map(constituent<int> *c_1){
+
+    int id = c_1->get_aggregate_id();
+
+    return id_map[id];
+
+}
+
+int dlma_system::get_lattice()
+{ return lattice; }
+
+int dlma_system::get_dim()
+{ return D; }
+
+simulation_box* dlma_system::get_box()
+{ return box; }
+
+constituent<int>* dlma_system::get_constituent(const int i){
+    return aggregates[i];
+}
+
+void dlma_system::print_id_map(){
+
+    for (const auto& x : id_map) {
+            std::cout << x.first << ": " << x.second << "\n";
+    }
+
+    for (int i = 0; i < aggregates.size(); i++){
+
+        std::cout<<aggregates[i]->get_id()<<"\t"<<aggregates[i]->get_size()<<std::endl;
+
+
+    }
+
+
+
+}
+
 
 
 }

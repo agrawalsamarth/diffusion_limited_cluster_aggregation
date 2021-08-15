@@ -2,19 +2,19 @@
 
 namespace simulation{
 
-constituent* system_factory::create_constituent(std::string name_type, int lattice, int dim, simulation_box *box){
+constituent<int>* system_factory::create_constituent(int constituent_id, int lattice, int dim, std::string name_type, simulation_box *box){
 
-    if ((lattice == 1) && (strcmp(name_type,"particle")==0))
-        return new particle<int>(dim, box);
+    if ((lattice == 1) && (strcmp(name_type.c_str(),"particle")==0))
+        return new particle<int>(constituent_id, dim, box);
 
-    else if ((lattice == 0) && (strcmp(name_type,"particle")==0))
-        return new particle<double>(dim, box);
+    //else if ((lattice == 0) && (strcmp(name_type,"particle")==0))
+        //return new particle<double>(dim, box);
 
-    else if ((lattice == 1) && (strcmp(name_type,"cluster")==0))
-        return new cluster<int>;
+    else if ((lattice == 1) && (strcmp(name_type.c_str(),"cluster")==0))
+        return new cluster<int>(constituent_id, dim, box);
 
-    else if ((lattice == 0) && (strcmp(name_type,"cluster")==0))
-        return new cluster<double>;
+    //else if ((lattice == 0) && (strcmp(name_type,"cluster")==0))
+        //return new cluster<double>;
 
     else{
         std::cout<<"unknown constituent"<<std::endl;
@@ -22,7 +22,7 @@ constituent* system_factory::create_constituent(std::string name_type, int latti
     }
 }
 
-simulation_box* system_factory::create_simulation_box(int lattice, int dim, int *box_lengths, vector<boundary_conditions*> system_bc){
+simulation_box* system_factory::create_simulation_box(int lattice, int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc){
 
     if (lattice == 1){
         return new on_lattice(dim, box_lengths, system_bc);
@@ -51,7 +51,7 @@ simulation_box* system_factory::create_simulation_box(int lattice, int dim, int 
 
 boundary_conditions* system_factory::create_boundary_conditions(std::string name_type){
 
-    if (strcmp(name_type, "periodic"))
+    if (strcmp(name_type.c_str(), "periodic"))
         return new periodic_bc;
     else{
         std::cout<<"unknown boundary condition"<<std::endl;

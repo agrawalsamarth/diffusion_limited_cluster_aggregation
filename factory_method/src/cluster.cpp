@@ -3,8 +3,17 @@
 namespace simulation{
 
 template <typename type>
+cluster<type>::cluster(const int cluster_id, const int dim, simulation_box *system_box)
+{
+    id  = cluster_id;
+    D   = dim;
+    box = system_box;
+}
+
+template <typename type>
 void cluster<type>::add_constituent(constituent<type> *single_element){
     elements.push_back(single_element);
+    single_element->set_aggregate_id(id);
 }
 
 template <typename type>
@@ -41,6 +50,42 @@ void cluster<type>::remove_constituent_from_cell()
         elements[i]->remove_constituent_from_cell(); 
     
 }
+
+template<typename type>
+void cluster<type>::calculate_aggregate_mass()
+{
+
+    mass = 0.;
+
+    for (int i = 0; i < elements.size(); i++)
+        mass += elements[i]->get_mass();
+
+
+}
+
+template<typename type>
+int cluster<type>::get_id()
+{ return id;}
+
+template<typename type>
+int cluster<type>::get_aggregate_id()
+{ return aggregate_id;}
+
+template<typename type>
+double cluster<type>::get_mass()
+{return mass;}
+
+template<typename type>
+int cluster<type>::get_size()
+{return elements.size();}
+
+template<typename type>
+constituent<type>* cluster<type>::get_element(const int i)
+{ return elements[i];}
+
+template<typename type>
+std::vector<int> cluster<type>::get_neighbour_list(const int i)
+{ return elements[i]->get_neighbour_list();}
 
 
 template class cluster<int>;

@@ -10,7 +10,7 @@ class particle: public constituent<type>{
 
     public:
 
-        particle(const int dim, simulation_box *system_box);
+        particle(const int particle_id, const int dim, simulation_box *system_box);
 
         void   move(type *delta_x);
         double get_mass();
@@ -21,12 +21,19 @@ class particle: public constituent<type>{
 
         void add_constituent_to_cell();
         void remove_constituent_from_cell();
+
+        void set_aggregate_id(const int id);
+        
+        int get_id();
+        int get_aggregate_id();
+        std::vector<int> get_neighbour_list();
         
     private:
 
         int             D;
         int             id;
-        double          mass_;
+        int             aggregate_id;
+        double          mass;
         simulation_box *box;
         type           *pos_;
         

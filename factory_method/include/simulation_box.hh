@@ -29,9 +29,11 @@ class simulation_box{
         virtual void remove_particle_from_cell(const int id, int *pos) {};
         virtual int  get_particle_id(int *pos) {};
 
-        /*virtual void add_particle_to_cell(const int id, double *pos) {};
+        virtual void add_particle_to_cell(const int id, double *pos) {};
         virtual void remove_particle_from_cell(const int id, double *pos) {};
-        virtual int  get_particle_id(double *pos) {};*/
+        virtual int  get_particle_id(double *pos) {};
+
+        std::vector<int> get_neighbour_list(int *ref_pos);
 
         
 
