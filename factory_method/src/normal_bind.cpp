@@ -8,7 +8,7 @@ normal_bind::normal_bind(dlma_system *system_ptr){
 
 }
 
-void normal_bind::bind_aggregates(constituent<int> *c_1, constituent<int> *c_2){
+constituent<int>* normal_bind::bind_aggregates(constituent<int> *c_1, constituent<int> *c_2){
 
     //std::cout<<"1"<<std::endl;
 
@@ -25,11 +25,14 @@ void normal_bind::bind_aggregates(constituent<int> *c_1, constituent<int> *c_2){
         temp->add_constituent(c_2->get_element(i));
     }
 
+    temp->calculate_aggregate_mass();
+
     sys_state->remove_aggregate(c_1->get_id());
     sys_state->remove_aggregate(c_2->get_id());
     sys_state->add_aggregate(temp);
-
     sys_state->build_id_map();
+
+    return temp;
 
 }
 

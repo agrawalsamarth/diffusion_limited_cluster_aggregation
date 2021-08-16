@@ -10,7 +10,7 @@ class normal_bind{
     public:
 
         normal_bind(dlma_system *system_ptr);
-        void bind_aggregates(constituent<int> *c_1, constituent<int> *c_2);
+        constituent<int>* bind_aggregates(constituent<int> *c_1, constituent<int> *c_2);
 
     private:
 

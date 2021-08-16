@@ -84,8 +84,12 @@ constituent<type>* cluster<type>::get_element(const int i)
 { return elements[i];}
 
 template<typename type>
+int cluster<type>::get_element_aggregate_id(const int element_id)
+{ return elements[element_id]->get_aggregate_id();}
+
+template<typename type>
 std::vector<int> cluster<type>::get_neighbour_list(const int i)
-{ return elements[i]->get_neighbour_list();}
+{  return elements[i]->get_neighbour_list();}
 
 
 template class cluster<int>;

@@ -65,7 +65,7 @@ int particle<type>::get_aggregate_id()
 
 template<typename type>
 std::vector<int> particle<type>::get_neighbour_list()
-{ return box->get_neighbour_list(pos_);}
+{   return box->get_neighbour_list(pos_);}
 
 template class particle<int>;
 template class particle<double>;

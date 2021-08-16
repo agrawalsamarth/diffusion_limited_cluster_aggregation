@@ -9,13 +9,19 @@ class check_aggregation{
 
     public:
 
+        check_aggregation(dlma_system *system_state, normal_bind *bind_system);
         void check_for_aggregation(constituent<int> *c_1);
 
     private:
 
         dlma_system *sys_state;
-        normal_bind bind_sys;
+        normal_bind *bind_sys;
         std::vector<int> neighbours;
+        constituent<int>* temp;
+
+        int neighbour_id;
+        int neighbour_cluster_id;
+        int cluster_id;
 
 
 

@@ -305,9 +305,6 @@ void dlma_system::calculate_propensity()
         propensity[i] = std::pow(aggregates[i]->get_mass(), alpha);
     }
 
-
-
-
 }
 
 void dlma_system::initialize_system()
@@ -365,30 +362,6 @@ void dlma_system::initialize_system()
 
     build_id_map();
     
-
-    /*for (int axis = 0; axis < D; axis++)
-        std::cout<<L[axis]<<std::endl;
-
-    std::cout<<"\n\n\n";
-
-    int temp_id;
-
-    for (int i = 0; i < L[0]; i++){
-        for (int j = 0; j < L[1]; j++){
-
-            temp_pos[0] = i;
-            temp_pos[1] = j;
-
-            temp_id = box->get_particle_id(temp_pos);
-
-            std::cout<<temp_id<<"\t";
-
-        }
-        std::cout<<"\n"<<std::endl;
-    }*/
-
-    
-
 }
 
 void dlma_system::add_aggregate(constituent<int> *new_aggregate){
@@ -403,6 +376,19 @@ void dlma_system::remove_aggregate(const int id){
             aggregates.erase(aggregates.begin()+i);
 
     }
+
+}
+
+constituent<int>* dlma_system::get_aggregate(const int id)
+{
+
+    for (int i = 0; i < aggregates.size(); i++){
+
+        if (aggregates[i]->get_id() == id)
+            return aggregates[i];
+
+    }
+
 
 }
 
@@ -421,11 +407,11 @@ int dlma_system::get_latest_cluster_id(){
 
 }
         
-int dlma_system::get_id_map(constituent<int> *c_1){
+int dlma_system::get_id_map(int c_id){
 
-    int id = c_1->get_aggregate_id();
+    //int id = c_1->get_aggregate_id();
 
-    return id_map[id];
+    return id_map[c_id];
 
 }
 
@@ -448,14 +434,65 @@ void dlma_system::print_id_map(){
             std::cout << x.first << ": " << x.second << "\n";
     }
 
-    for (int i = 0; i < aggregates.size(); i++){
+}
 
-        std::cout<<aggregates[i]->get_id()<<"\t"<<aggregates[i]->get_size()<<std::endl;
+bool dlma_system::check_viability(constituent<int> *c_1, int *dis)
+{
+    
+    int temp_pos[D];
+    int cluster_id = c_1->get_id();
+    int neighbour_cluster_id;
 
+    std::vector<int> neighbours;
+
+    is_viable = true;
+
+    for (int i = 0; c_1->get_size(); i++){
+
+        for (int axis = 0; axis < D; axis++)
+            temp_pos[axis] = box->get_refill(c_1->element_pos(i,axis)+dis[axis], axis);
+
+
+        neighbours = box->get_neighbour_list(temp_pos);
+
+        for (int j = 0; j < neighbours.size(); j++){
+
+            if (neighbours[j] != -1){
+
+                neighbour_cluster_id = get_id_map(neighbours[j]);
+
+                if (neighbour_cluster_id != cluster_id)
+                    is_viable = false;
+
+            }
+
+        }
 
     }
 
+    return is_viable;
 
+
+}
+
+void dlma_system::print_grid()
+{
+    int temp_pos[D];
+    int temp_id;
+
+    for (int i = 0; i < L[0]; i++){
+        for (int j = 0; j < L[1]; j++){
+
+            temp_pos[0] = i;
+            temp_pos[1] = j;
+
+            temp_id = box->get_particle_id(temp_pos);
+
+            std::cout<<temp_id<<"\t";
+
+        }
+        std::cout<<"\n"<<std::endl;
+    }
 
 }
 

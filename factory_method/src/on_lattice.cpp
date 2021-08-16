@@ -116,6 +116,8 @@ std::vector<int> on_lattice::get_neighbour_list(int *pos){
         }
     }
 
+    return neighbours;
+
 }
 
 

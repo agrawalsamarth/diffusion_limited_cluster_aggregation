@@ -30,13 +30,12 @@ class particle: public constituent<type>{
         
     private:
 
-        int             D;
-        int             id;
-        int             aggregate_id;
-        double          mass;
-        simulation_box *box;
-        type           *pos_;
-        
+        int              D;
+        int              id;
+        int              aggregate_id;
+        double           mass;
+        simulation_box   *box;
+        type             *pos_;        
 
 
 };

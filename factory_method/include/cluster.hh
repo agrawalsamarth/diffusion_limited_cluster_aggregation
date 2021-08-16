@@ -34,6 +34,8 @@ class cluster: public constituent<type>{
         constituent<type>* get_element(const int i);
         std::vector<int> get_neighbour_list(const int i);
 
+        int get_element_aggregate_id(const int element_id);
+
 
     private:
 

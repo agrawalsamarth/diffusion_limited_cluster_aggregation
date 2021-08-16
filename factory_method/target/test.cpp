@@ -1,7 +1,7 @@
 //#include <particle.hh>
 //#include <cluster.hh>
 
-#include <normal_bind.hh>
+#include <check_aggregation.hh>
 
 using namespace simulation;
 
@@ -81,15 +81,17 @@ int main(int argc, char *argv[])
     //delete test;
 
     dlma_system test(argv[1]);
-    std::cout<<"initial map"<<std::endl;
-    test.print_id_map();
-
-    constituent<int> *p1 = test.get_constituent(0);
-    constituent<int> *p2 = test.get_constituent(1);
-
     normal_bind bind_test(&test);
 
-    bind_test.bind_aggregates(p1, p2);
+    std::cout<<"initial map"<<std::endl;
+    //test.print_id_map();
+    test.print_grid();
+
+    constituent<int> *p1 = test.get_constituent(0);
+
+    check_aggregation agg_test(&test, &bind_test);
+    agg_test.check_for_aggregation(p1);
+
 
     std::cout<<"updated map"<<std::endl;
     test.print_id_map();

@@ -31,11 +31,12 @@ class dlma_system{
 
         void add_aggregate(constituent<int> *new_aggregate);
         void remove_aggregate(const int id);
+        constituent<int>* get_aggregate(const int id);
 
         void build_id_map();
 
         int get_latest_cluster_id();
-        int get_id_map(constituent<int> *c_1);
+        int get_id_map(int c_id);
 
         int get_lattice();
         int get_dim();
@@ -44,6 +45,9 @@ class dlma_system{
 
         constituent<int>* get_constituent(const int i);
         void print_id_map();
+        void print_grid();
+        bool check_viability(constituent<int> *c_1, int *dis);
+        void move_aggregate(const int i);
 
         
 
@@ -89,6 +93,8 @@ class dlma_system{
         bool   *periodic_flag;
         bool    periodic_flag_and;
         int     latest_cluster_id=0;
+
+        bool    is_viable;
 
 };
 
