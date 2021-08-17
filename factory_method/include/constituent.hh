@@ -18,8 +18,7 @@ class constituent{
         virtual void  move(type *delta_x) {};
         virtual type  pos(const int axis) const {};
         virtual type& pos(const int axis) {};
-        virtual type  element_pos(const int i, const int axis) const {};
-        virtual type& element_pos(const int i, const int axis) {};
+        //virtual type  element_pos(const int i, const int axis) const {};
 
         virtual void add_constituent(constituent *single_element) {};
 

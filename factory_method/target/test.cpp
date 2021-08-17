@@ -2,6 +2,7 @@
 //#include <cluster.hh>
 
 #include <check_aggregation.hh>
+#include <brownian_movement.hh>
 
 using namespace simulation;
 
@@ -82,19 +83,35 @@ int main(int argc, char *argv[])
 
     dlma_system test(argv[1]);
     normal_bind bind_test(&test);
+    check_aggregation agg_test(&test, &bind_test);
+    brownian_movement bm_test(2, 1729);
 
-    std::cout<<"initial map"<<std::endl;
-    //test.print_id_map();
+
+    //std::cout<<"initial map"<<std::endl;
+    test.print_id_map();
     test.print_grid();
 
-    constituent<int> *p1 = test.get_constituent(0);
+    int temp;
+    constituent<int> *temp_c;
 
-    check_aggregation agg_test(&test, &bind_test);
-    agg_test.check_for_aggregation(p1);
+    bool test_bool;
+
+    while (test.total_aggregates() != 1){
+
+        std::cout<<"aggs = "<<test.total_aggregates()<<std::endl;
+
+        temp   = (int)(bm_test.get_rand() * test.total_aggregates());
+        temp_c = test.get_constituent(temp); 
+        test.move_aggregate(temp, bm_test.delta_x());
+        agg_test.check_for_aggregation(temp_c);
+
+    }
+
 
 
     std::cout<<"updated map"<<std::endl;
     test.print_id_map();
+    test.print_grid();
 
     
     return 0;

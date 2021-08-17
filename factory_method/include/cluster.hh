@@ -14,8 +14,7 @@ class cluster: public constituent<type>{
 
         void move(type *delta_x);
 
-        type  element_pos(const int i, const int axis) const;
-        type& element_pos(const int i, const int axis);
+        //type  element_pos(const int i, const int axis) const;
 
         void add_constituent(constituent<type> *single_element);
 
@@ -45,6 +44,7 @@ class cluster: public constituent<type>{
         int D;
         simulation_box* box;
         double mass;
+        type temp_pos;
 
 
 };

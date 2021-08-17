@@ -26,9 +26,15 @@ void check_aggregation::check_for_aggregation(constituent<int> *c_1){
             if (neighbour_id != -1){
 
                 neighbour_cluster_id = sys_state->get_id_map(neighbour_id);
+                temp = sys_state->get_aggregate(neighbour_cluster_id);
+
+                if (!temp){
+                    std::cout<<"NULL pointer encountered"<<std::endl;
+                    exit(EXIT_FAILURE);
+                }
+
 
                 if (neighbour_cluster_id != cluster_id){
-                    temp = sys_state->get_aggregate(neighbour_cluster_id);
                     check_for_aggregation(bind_sys->bind_aggregates(c_1, temp));
                     is_checked = true;
                 }

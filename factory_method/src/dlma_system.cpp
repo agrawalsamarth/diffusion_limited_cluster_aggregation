@@ -21,9 +21,6 @@ dlma_system::dlma_system(char *params_name)
     check_params();
     initialize_system();
 
-    generator.seed(rng_seed);
-    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
-
 }
 
 void dlma_system::read_params_parser(char *params_name)
@@ -186,6 +183,9 @@ void dlma_system::read_params_parser(char *params_name)
     }
 
     box = factory.create_simulation_box(lattice, D, L, system_bc);
+
+    generator.seed(rng_seed);
+    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 
 }
 
@@ -389,6 +389,8 @@ constituent<int>* dlma_system::get_aggregate(const int id)
 
     }
 
+    return NULL;
+
 
 }
 
@@ -436,42 +438,42 @@ void dlma_system::print_id_map(){
 
 }
 
-bool dlma_system::check_viability(constituent<int> *c_1, int *dis)
+bool dlma_system::check_viability(constituent<int> *c_1, int *dr)
 {
-    
     int temp_pos[D];
+
+    for (int axis = 0; axis < D; axis++)
+        temp_pos[axis] = 0;
+
     int cluster_id = c_1->get_id();
     int neighbour_cluster_id;
+    int neighbour_id;
 
-    std::vector<int> neighbours;
+    constituent<int> *temp;
+
 
     is_viable = true;
 
-    for (int i = 0; c_1->get_size(); i++){
+    for (int i = 0; i < c_1->get_size(); i++){
 
-        for (int axis = 0; axis < D; axis++)
-            temp_pos[axis] = box->get_refill(c_1->element_pos(i,axis)+dis[axis], axis);
+        temp = c_1->get_element(i);
 
+        for (int axis = 0; axis < D; axis++){
+            temp_pos[axis] = box->get_refill(temp->pos(axis)+dr[axis], axis);
+        }
 
-        neighbours = box->get_neighbour_list(temp_pos);
+        neighbour_id = box->get_particle_id(temp_pos);
 
-        for (int j = 0; j < neighbours.size(); j++){
+        if (neighbour_id != -1){
+            neighbour_cluster_id = get_id_map(neighbour_id);
 
-            if (neighbours[j] != -1){
-
-                neighbour_cluster_id = get_id_map(neighbours[j]);
-
-                if (neighbour_cluster_id != cluster_id)
-                    is_viable = false;
-
-            }
-
+            if (neighbour_cluster_id != cluster_id)
+                is_viable=false;
         }
 
     }
 
     return is_viable;
-
 
 }
 
@@ -493,6 +495,21 @@ void dlma_system::print_grid()
         }
         std::cout<<"\n"<<std::endl;
     }
+
+}
+
+int dlma_system::total_aggregates()
+{ return aggregates.size();}
+
+void dlma_system::move_aggregate(int i, int *dr)
+{
+
+    if (check_viability(aggregates[i], dr)){
+        aggregates[i]->remove_constituent_from_cell();
+        aggregates[i]->move(dr);
+        aggregates[i]->add_constituent_to_cell();
+    }
+
 
 }
 

@@ -1,6 +1,6 @@
 IDIR =./include
 CXX=g++
-CPPFLAGS=-I$(IDIR) -std=c++11 -O3
+CPPFLAGS=-g -I$(IDIR) -std=c++11 -O3
 LDFLAGS=-I$(IDIR) -std=c++11 -O3
 
 SRC_DIR = ./src
@@ -13,11 +13,11 @@ BIN_DIR = ./bin
 all: test
 
 test: $(OBJ_FILES) | $(BIN_DIR)
-	$(CXX) $(CPPFLAGS) -c -o test.o target/test.cpp
-	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ test.o
+	$(CXX)  $(CPPFLAGS) -c -o test.o target/test.cpp
+	$(CXX)  $(LDFLAGS) -o $(BIN_DIR)/$@ $^ test.o
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CPPFLAGS) -c -o $@ $<
+	$(CXX)  $(CPPFLAGS) -c -o $@ $<
 
 $(BIN_DIR):
 	mkdir $(BIN_DIR)

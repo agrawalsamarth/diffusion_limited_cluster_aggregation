@@ -24,7 +24,6 @@ class dlma_system{
         void initialize_system();
 
         void check_aggregation();
-        void move_constituent(const int i);
         void calculate_propensity();
         //void iteration_step();
         //void run_system();
@@ -46,8 +45,10 @@ class dlma_system{
         constituent<int>* get_constituent(const int i);
         void print_id_map();
         void print_grid();
-        bool check_viability(constituent<int> *c_1, int *dis);
-        void move_aggregate(const int i);
+        bool check_viability(constituent<int> *c_1, int *dr);
+        void move_aggregate(const int i, int *dr);
+
+        int total_aggregates();
 
         
 

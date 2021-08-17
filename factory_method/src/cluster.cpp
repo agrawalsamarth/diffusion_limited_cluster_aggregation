@@ -25,13 +25,9 @@ void cluster<type>::move(type *delta_x){
 
 }
 
-template <typename type>
-type cluster<type>::element_pos(const int i, const int axis) const 
-{ return elements[i]->pos(axis);  }
-    
-template <typename type>
-type& cluster<type>::element_pos(const int i, const int axis)
-{ return elements[i]->pos(axis);  }
+/*template <typename type>
+type cluster<type>::element_pos(const int i, const int axis) const
+{ return elements[i]->pos(axis);  }*/
 
 template<typename type>
 void cluster<type>::add_constituent_to_cell()
