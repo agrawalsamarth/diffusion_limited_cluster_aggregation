@@ -12,12 +12,14 @@ check_aggregation::check_aggregation(dlma_system *system_state, normal_bind *bin
 void check_aggregation::check_for_aggregation(constituent<int> *c_1){
 
     bool is_checked = false;
+    int  particle_id;
 
     cluster_id = c_1->get_id();
 
     for (int i = 0; i < c_1->get_size(); i++){
 
-        neighbours = c_1->get_neighbour_list(i);
+        neighbours  = c_1->get_neighbour_list(i);
+        particle_id = c_1->get_element_id(i); 
 
         for (int j = 0; j < neighbours.size(); j++) { 
 
@@ -35,6 +37,7 @@ void check_aggregation::check_for_aggregation(constituent<int> *c_1){
 
 
                 if (neighbour_cluster_id != cluster_id){
+                    sys_state->add_attachment(c_1);
                     check_for_aggregation(bind_sys->bind_aggregates(c_1, temp));
                     is_checked = true;
                 }

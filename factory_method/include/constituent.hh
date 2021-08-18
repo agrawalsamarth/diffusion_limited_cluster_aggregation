@@ -37,6 +37,7 @@ class constituent{
         virtual std::vector<int>   get_neighbour_list() {};
 
         virtual int get_element_aggregate_id(const int element_id) {};
+        virtual int get_element_id(const int i) {};
 
 };
 

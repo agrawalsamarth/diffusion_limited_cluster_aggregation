@@ -87,6 +87,10 @@ template<typename type>
 std::vector<int> cluster<type>::get_neighbour_list(const int i)
 {  return elements[i]->get_neighbour_list();}
 
+template<typename type>
+int cluster<type>::get_element_id(const int i)
+{ return elements[i]->get_id();}
+
 
 template class cluster<int>;
 template class cluster<double>;

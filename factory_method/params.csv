@@ -1,11 +1,11 @@
 lattice=1
 D=2
-N=8
+N=10
 x0_bc=periodic
 x1_bc=periodic
 x2_bc=periodic
-x0_L=6
-x1_L=6
+x0_L=10
+x1_L=10
 alpha=-0.5
 seedMass=1000000000000.0
 N_s=3

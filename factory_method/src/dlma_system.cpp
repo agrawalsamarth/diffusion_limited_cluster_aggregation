@@ -167,7 +167,7 @@ void dlma_system::read_params_parser(char *params_name)
         exit(EXIT_FAILURE);
     }
 
-    int    L_total = 1;
+    int L_total = 1;
 
     if (L_flag_and == false){
 
@@ -186,6 +186,14 @@ void dlma_system::read_params_parser(char *params_name)
 
     generator.seed(rng_seed);
     dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
+
+    /*std::vector<int> temp(1);
+
+    for (int i = 0; i < N; i++){
+        attachments.push_back(temp);
+    }*/
+
+    attachments.resize(N);
 
 }
 
@@ -408,6 +416,10 @@ int dlma_system::get_latest_cluster_id(){
     return latest_cluster_id++;
 
 }
+
+int dlma_system::get_latest_cluster_id_without_increment(){
+    return latest_cluster_id;
+}
         
 int dlma_system::get_id_map(int c_id){
 
@@ -508,6 +520,59 @@ void dlma_system::move_aggregate(int i, int *dr)
         aggregates[i]->remove_constituent_from_cell();
         aggregates[i]->move(dr);
         aggregates[i]->add_constituent_to_cell();
+    }
+
+
+}
+
+void dlma_system::add_attachment(constituent<int> *c_1)
+{
+
+    int particle_id;
+    int neighbour_id;
+
+    std::vector<int> neighbours;
+
+    for (int i = 0; i < c_1->get_size(); i++){
+
+        particle_id = c_1->get_element_id(i);
+        neighbours  = c_1->get_neighbour_list(i);
+
+        for (int j = 0; j < neighbours.size(); j++) {
+
+            neighbour_id = neighbours[j];
+
+            if (neighbour_id != -1){
+
+                if(!(std::find(attachments[particle_id].begin(), attachments[particle_id].end(), neighbour_id) != attachments[particle_id].end())){
+
+                    attachments[particle_id].push_back(neighbour_id);
+                    attachments[neighbour_id].push_back(particle_id);
+
+                } 
+
+
+            }
+
+
+        }
+
+    }
+}
+
+void dlma_system::print_attachments(){
+
+    std::cout<<"attachments size = "<<attachments.size()<<std::endl;
+
+    for (int i = 0; i < N; i++){
+
+        std::cout<<i<<"\t";
+
+        for (int j = 0; j < attachments[i].size(); j++)
+            std::cout<<attachments[i][j]<<"\t";
+
+        std::cout<<"\n";
+
     }
 
 

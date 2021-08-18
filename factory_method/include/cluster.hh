@@ -29,6 +29,7 @@ class cluster: public constituent<type>{
         int   get_id();
         int   get_aggregate_id();
         int   get_size();
+        int   get_element_id(const int i);
 
         constituent<type>* get_element(const int i);
         std::vector<int> get_neighbour_list(const int i);

@@ -94,6 +94,16 @@ int main(int argc, char *argv[])
     int temp;
     constituent<int> *temp_c;
 
+    for (int i = 0; i < test.get_latest_cluster_id_without_increment(); i++){
+
+        temp_c = test.get_aggregate(i);
+
+        if (temp_c){
+            agg_test.check_for_aggregation(temp_c);
+        }
+
+    }
+
     bool test_bool;
 
     while (test.total_aggregates() != 1){
@@ -112,6 +122,8 @@ int main(int argc, char *argv[])
     std::cout<<"updated map"<<std::endl;
     test.print_id_map();
     test.print_grid();
+
+    test.print_attachments();
 
     
     return 0;

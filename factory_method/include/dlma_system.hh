@@ -5,6 +5,7 @@
 #include <cmath>
 #include <random>
 #include <map>
+#include <algorithm>
 
 #ifndef DLMA_SYSTEM_H
 #define DLMA_SYSTEM_H
@@ -35,6 +36,7 @@ class dlma_system{
         void build_id_map();
 
         int get_latest_cluster_id();
+        int get_latest_cluster_id_without_increment();
         int get_id_map(int c_id);
 
         int get_lattice();
@@ -47,6 +49,8 @@ class dlma_system{
         void print_grid();
         bool check_viability(constituent<int> *c_1, int *dr);
         void move_aggregate(const int i, int *dr);
+        void add_attachment(constituent<int> *c_1);
+        void print_attachments();
 
         int total_aggregates();
 
@@ -64,6 +68,7 @@ class dlma_system{
         std::vector<constituent<int>*> aggregates;
 
         std::map<int, int> id_map;
+        std::vector<std::vector<int>> attachments;
 
         double  *propensity;
         double  *cum_propensity;
