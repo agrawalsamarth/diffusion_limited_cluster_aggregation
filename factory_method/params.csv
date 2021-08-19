@@ -9,7 +9,6 @@ N=1024
 N_s=1024
 x0_bc=periodic
 x1_bc=periodic
-x2_bc=periodic
 x0_L=128
 x1_L=128
 alpha=-0.5
