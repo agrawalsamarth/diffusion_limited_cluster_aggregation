@@ -294,6 +294,7 @@ void dlma_system::check_params()
         N_s = (int)((N*seed_pct)/100);
     }
     
+
 }
 
 void dlma_system::calculate_propensity()
@@ -331,11 +332,19 @@ void dlma_system::initialize_system()
 
         is_placed = false;
 
-        if (i < N_s)
-            temp->set_mass(seed_mass);
+        temp->set_diameter(1.);
 
-        else
+        if (i < N_s){
+            temp->set_mass(seed_mass);
+            temp->set_original_seed_status(1);
+            temp->set_current_seed_status(1);
+        }
+
+        else{
             temp->set_mass(1.);
+            temp->set_original_seed_status(0);
+            temp->set_current_seed_status(0);
+        }
 
         while (is_placed == false){
 
@@ -356,6 +365,8 @@ void dlma_system::initialize_system()
 
     }
 
+
+
     name_type = "cluster";
 
     for (int i = 0; i < N; i++){
@@ -363,6 +374,7 @@ void dlma_system::initialize_system()
         temp = factory.create_constituent(get_latest_cluster_id(), lattice, D, name_type, box);
         temp->add_constituent(all_particles[i]);
         temp->calculate_aggregate_mass();
+        //std::cout<<"seed mass = "<<get_seedmass()<<std::endl;
 
         aggregates.push_back(temp);
 
@@ -434,6 +446,20 @@ int dlma_system::get_lattice()
 
 int dlma_system::get_dim()
 { return D; }
+
+int dlma_system::get_max_attachments()
+{
+    int max_atts = 0;
+
+    for (int i = 0; i < N; i++){
+
+        if (attachments[i].size() > max_atts)
+            max_atts = attachments[i].size();
+
+    }
+
+    return max_atts;
+}
 
 simulation_box* dlma_system::get_box()
 { return box; }
@@ -577,6 +603,34 @@ void dlma_system::print_attachments(){
 
 
 }
+
+double dlma_system::get_seedmass()
+{ return seed_mass;}
+
+constituent<int>* dlma_system::get_particle_by_id(const int id)
+{
+
+    for (int i = 0; i < N; i++){
+        if (all_particles[i]->get_id() == id)
+            return all_particles[i];
+    }
+
+    return NULL;
+
+}
+
+int dlma_system::get_N()
+{ return N;}
+
+double dlma_system::get_phi()
+{ return phi; }
+
+double dlma_system::get_alpha()
+{ return alpha; }
+
+std::vector<int> dlma_system::get_attachment_vector(const int i)
+{return attachments[i];}
+
 
 
 

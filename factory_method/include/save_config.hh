@@ -1,0 +1,20 @@
+#include <dlma_system.hh>
+
+#ifndef SAVE_CONFIG_H
+#define SAVE_CONFIG_H
+
+namespace simulation{
+
+class save_config{
+
+    public:
+
+        virtual void save_configuration() {};
+        virtual void save_configuration(char *filename) {};
+
+
+};
+
+}
+
+#endif

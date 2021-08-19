@@ -41,6 +41,11 @@ class dlma_system{
 
         int get_lattice();
         int get_dim();
+        int get_max_attachments();
+        int get_N();
+        double get_phi();
+        double get_alpha();
+        std::vector<int> get_attachment_vector(const int i);
 
         simulation_box* get_box();
 
@@ -53,6 +58,9 @@ class dlma_system{
         void print_attachments();
 
         int total_aggregates();
+        double get_seedmass();
+        constituent<int>* get_particle_by_id(const int id);
+
 
         
 

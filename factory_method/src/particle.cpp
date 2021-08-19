@@ -18,6 +18,10 @@ particle<type>::particle(const int particle_id, const int dim, simulation_box *s
 }
 
 template<typename type>
+particle<type>::~particle()
+{ free(pos_);}
+
+template<typename type>
 void particle<type>::set_mass(const double constituent_mass)
 { mass = constituent_mass;}
 
@@ -66,6 +70,30 @@ int particle<type>::get_aggregate_id()
 template<typename type>
 std::vector<int> particle<type>::get_neighbour_list()
 {   return box->get_neighbour_list(pos_);}
+
+template<typename type>
+void particle<type>::set_diameter(const double dia)
+{ diameter = dia;}
+
+template<typename type>
+double particle<type>::get_diameter()
+{return diameter;}
+
+template<typename type>
+void particle<type>::set_original_seed_status(const int seed)
+{ original_seed_status = seed;}
+
+template<typename type>
+int  particle<type>::get_original_seed_status()
+{ return original_seed_status;}
+
+template<typename type>
+void particle<type>::set_current_seed_status(const int seed)
+{ current_seed_status = seed;}
+
+template<typename type>
+int  particle<type>::get_current_seed_status()
+{ return current_seed_status;}
 
 template class particle<int>;
 template class particle<double>;

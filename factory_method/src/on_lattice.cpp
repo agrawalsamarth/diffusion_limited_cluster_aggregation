@@ -37,30 +37,33 @@ on_lattice::on_lattice(const int dim, int *box_lengths, std::vector<boundary_con
     for (int axis = 0; axis < D; axis++)
         box_bc.push_back(system_bc[axis]);
 
+    periodic = (int*)malloc(sizeof(int) * D);
+
+    for (int axis = 0; axis < D; axis++)
+        periodic[axis] = 1;
+
  
 }
 
-/*void on_lattice::set_L(const int L_val, const int axis){
-    L[axis] = L_val;
+on_lattice::~on_lattice()
+{
+
+    free(temp_pos);
+    free(neighbour_pos);
+    free(L_eff);
+    free(grid);
+
 }
 
-int on_lattice::get_L(const int axis){
 
-    return L[axis];    
-
-}*/
+int on_lattice::get_L(const int axis)
+{ return L[axis]; }
 
 int on_lattice::get_refill(int x, int axis){
 
     return (box_bc[axis]->refill(x, L[axis]));
 
 }
-
-/*void on_lattice::add_bc(boundary_conditions *bc){
-
-    box_bc.push_back(bc);
-
-}*/
 
 void on_lattice::add_particle_to_cell(const int id, int *pos){
 
@@ -119,6 +122,9 @@ std::vector<int> on_lattice::get_neighbour_list(int *pos){
     return neighbours;
 
 }
+
+int on_lattice::get_periodicity(const int axis)
+{return periodic[axis];}
 
 
 }

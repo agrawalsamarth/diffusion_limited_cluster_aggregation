@@ -39,6 +39,15 @@ class constituent{
         virtual int get_element_aggregate_id(const int element_id) {};
         virtual int get_element_id(const int i) {};
 
+        virtual void set_diameter(const double dia) {};
+        virtual double get_diameter() {};
+
+        virtual void set_original_seed_status(const int seed) {};
+        virtual int  get_original_seed_status() {};
+
+        virtual void set_current_seed_status(const int seed) {};
+        virtual int  get_current_seed_status() {};
+
 };
 
 

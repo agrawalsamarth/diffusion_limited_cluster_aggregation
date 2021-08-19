@@ -36,6 +36,8 @@ class cluster: public constituent<type>{
 
         int get_element_aggregate_id(const int element_id);
 
+        void set_current_seed_status(const int seed);
+
 
     private:
 

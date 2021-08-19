@@ -11,6 +11,7 @@ class particle: public constituent<type>{
     public:
 
         particle(const int particle_id, const int dim, simulation_box *system_box);
+        ~particle();
 
         void   move(type *delta_x);
         double get_mass();
@@ -27,6 +28,16 @@ class particle: public constituent<type>{
         int get_id();
         int get_aggregate_id();
         std::vector<int> get_neighbour_list();
+
+        void set_diameter(const double dia);
+        double get_diameter();
+
+        void set_original_seed_status(const int seed);
+        int  get_original_seed_status();
+
+        void set_current_seed_status(const int seed);
+        int  get_current_seed_status();
+
         
     private:
 
@@ -35,7 +46,11 @@ class particle: public constituent<type>{
         int              aggregate_id;
         double           mass;
         simulation_box   *box;
-        type             *pos_;        
+        type             *pos_;      
+
+        double           diameter;
+        int              original_seed_status;
+        int              current_seed_status;  
 
 
 };

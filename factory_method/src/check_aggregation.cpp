@@ -2,11 +2,11 @@
 
 namespace simulation{
 
-check_aggregation::check_aggregation(dlma_system *system_state, normal_bind *bind_system){
+check_aggregation::check_aggregation(dlma_system *system_state, normal_bind *bind_system, aggregation_condition *ref_condition){
 
     sys_state = system_state;
     bind_sys  = bind_system;
-
+    condition = ref_condition;
 }
 
 void check_aggregation::check_for_aggregation(constituent<int> *c_1){
@@ -37,9 +37,15 @@ void check_aggregation::check_for_aggregation(constituent<int> *c_1){
 
 
                 if (neighbour_cluster_id != cluster_id){
-                    sys_state->add_attachment(c_1);
-                    check_for_aggregation(bind_sys->bind_aggregates(c_1, temp));
-                    is_checked = true;
+
+                    particle_1 = sys_state->get_particle_by_id(particle_id);
+                    particle_2 = sys_state->get_particle_by_id(neighbour_id);
+
+                    if (condition->agg_condition(particle_1, particle_2)){
+                        sys_state->add_attachment(c_1);
+                        check_for_aggregation(bind_sys->bind_aggregates(c_1, temp));
+                        is_checked = true;
+                    }
                 }
 
 

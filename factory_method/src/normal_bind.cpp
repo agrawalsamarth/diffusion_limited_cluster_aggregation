@@ -26,6 +26,7 @@ constituent<int>* normal_bind::bind_aggregates(constituent<int> *c_1, constituen
     }
 
     temp->calculate_aggregate_mass();
+    temp->set_current_seed_status(1);
 
     sys_state->remove_aggregate(c_1->get_id());
     sys_state->remove_aggregate(c_2->get_id());

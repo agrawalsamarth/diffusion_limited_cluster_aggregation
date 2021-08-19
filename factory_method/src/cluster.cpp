@@ -91,6 +91,14 @@ template<typename type>
 int cluster<type>::get_element_id(const int i)
 { return elements[i]->get_id();}
 
+template<typename type>
+void cluster<type>::set_current_seed_status(const int seed)
+{
+    for (int i = 0; i < elements.size(); i++)
+        elements[i]->set_current_seed_status(seed);
+
+}
+
 
 template class cluster<int>;
 template class cluster<double>;
