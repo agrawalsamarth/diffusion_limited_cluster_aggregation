@@ -4,16 +4,13 @@
 //off-lattice
 
 
-#include <check_aggregation.hh>
-#include <brownian_movement.hh>
-#include <mass_aggregation_condition.hh>
-#include <dlma_save_config.hh>
+#include <dlma_iterator.hh>
 
 using namespace simulation;
 
 int main(int argc, char *argv[])
 {
-    dlma_system test(argv[1]);
+    /*dlma_system test(argv[1]);
     normal_bind bind_test(&test);
     mass_aggregation_condition condition(&test);
     check_aggregation agg_test(&test, &bind_test, &condition);
@@ -44,7 +41,21 @@ int main(int argc, char *argv[])
 
     }
 
-    save_test.save_configuration(argv[2]);
+    save_test.save_configuration(argv[2]);*/
+
+    if (argc < 2){
+        std::cout<<"please provide params file"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+
+    system_iterator *test = new dlma_iterator(argv[1]);
+    test->run_system();
+
+    if (argc < 3)
+        test->save_config_file();
+    else
+        test->save_config_file(argv[2]);
 
     return 0;
 

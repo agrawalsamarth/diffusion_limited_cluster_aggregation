@@ -10,8 +10,8 @@ class particle_movement{
 
     public:
 
-        int*    delta_x();
-        double  get_rand();
+        virtual int*    delta_x() {};
+        virtual double  get_rand() {};
 
 
 };

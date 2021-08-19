@@ -137,7 +137,7 @@ void dlma_system::read_params_parser(char *params_name)
         for (int axis = 0; axis < D; axis++){
 
             if (results[0] == bc_names[axis]){
-                system_bc[axis] = factory.create_boundary_conditions(bc_names[axis]);
+                system_bc[axis] = factory.create_boundary_conditions(results[1]);
                 periodic_flag[axis] = true;
             }
 
@@ -182,25 +182,8 @@ void dlma_system::read_params_parser(char *params_name)
 
     }
 
-    box = factory.create_simulation_box(lattice, D, L, system_bc);
-
-    generator.seed(rng_seed);
-    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
-
-    /*std::vector<int> temp(1);
-
-    for (int i = 0; i < N; i++){
-        attachments.push_back(temp);
-    }*/
-
-    attachments.resize(N);
-
-}
-
-void dlma_system::check_params()
-{
     double temp;
-    int    L_total = 1;
+    L_total = 1;
 
     if ((N_flag) && (N_s_flag)){
 
@@ -293,8 +276,19 @@ void dlma_system::check_params()
     if (N_s_flag == false){
         N_s = (int)((N*seed_pct)/100);
     }
-    
 
+
+    box = factory.create_simulation_box(lattice, D, L, system_bc);
+
+    generator.seed(rng_seed);
+    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
+    attachments.resize(N);
+
+}
+
+void dlma_system::check_params()
+{
+    return;
 }
 
 void dlma_system::calculate_propensity()

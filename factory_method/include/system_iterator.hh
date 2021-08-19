@@ -1,0 +1,25 @@
+#include "iterator_factory.hh"
+
+#ifndef SYSTEM_IETRATOR_H
+#define SYSTEM_IETRATOR_H
+
+namespace simulation
+{
+
+class system_iterator{
+
+    public:
+
+        virtual void run_system() {};
+        virtual void iteration_step() {};
+        virtual void save_config_file() {};
+        virtual void save_config_file(char *filename) {};
+
+
+};
+
+
+
+}
+
+#endif

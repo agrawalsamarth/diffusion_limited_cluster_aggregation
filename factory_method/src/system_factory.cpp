@@ -51,7 +51,7 @@ simulation_box* system_factory::create_simulation_box(int lattice, int dim, int 
 
 boundary_conditions* system_factory::create_boundary_conditions(std::string name_type){
 
-    if (strcmp(name_type.c_str(), "periodic"))
+    if (strcmp(name_type.c_str(), "periodic") == 0)
         return new periodic_bc;
     else{
         std::cout<<"unknown boundary condition"<<std::endl;

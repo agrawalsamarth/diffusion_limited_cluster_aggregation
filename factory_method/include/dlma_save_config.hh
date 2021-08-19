@@ -12,7 +12,7 @@ class dlma_save_config: public save_config{
     public:
 
         dlma_save_config(dlma_system *ref_sys, simulation_box *ref_box);
-        //void save_configuration();
+        void save_configuration();
         void save_configuration(char *filename);
 
     private:

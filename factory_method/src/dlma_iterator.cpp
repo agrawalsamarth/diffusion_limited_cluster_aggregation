@@ -1,0 +1,164 @@
+#include <dlma_iterator.hh>
+
+namespace simulation{
+
+std::vector<std::string> dlma_iterator::split_string_by_delimiter(const std::string& s, char delimiter)
+{
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream tokenStream(s);
+   while (std::getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
+}
+
+dlma_iterator::dlma_iterator(char *filename)
+{
+    std::ifstream parser(filename, std::ifstream::in);
+
+    if (parser.fail()){
+        std::cout<<"either file does not exist or does not have permissions"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    std::string bind_name;
+    bool bind_flag=false;
+    std::string agg_condition_name;
+    bool agg_condition_flag=false;
+    std::string check_agg_name;
+    bool check_agg_flag=false;
+    std::string movement_name;
+    bool movement_flag=false;
+    std::string save_config_name;
+    bool save_config_flag=false;
+    int  rng_seed;
+    bool rng_seed_flag=false;
+
+    int count = 0;
+
+    std::string str;
+    std::vector<std::string> results;
+
+    while (getline(parser, str)){
+
+        results = split_string_by_delimiter(str, '=');
+
+        if (results[0] == "bind"){
+            bind_name      = results[1];
+            bind_flag      = true;
+        }
+
+        if (results[0] == "aggregation_condition"){
+            agg_condition_name      = results[1];
+            agg_condition_flag      = true;
+        }
+
+        if (results[0] == "aggregation_type"){
+            check_agg_name      = results[1];
+            check_agg_flag      = true;
+        }
+
+
+        if (results[0] == "movement"){
+            movement_name      = results[1];
+            movement_flag      = true;
+        }
+
+        if (results[0] == "system"){
+            save_config_name      = results[1];
+            save_config_flag      = true;
+        }
+
+        if (results[0] == "rng_seed"){
+            rng_seed      = stoi(results[1]);
+            rng_seed++;
+            rng_seed_flag = true;
+        }
+        
+
+    }
+
+    parser.close();
+
+    if (bind_flag == false){
+        std::cout<<"please provide bind"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (agg_condition_flag == false){
+        std::cout<<"please provide aggregation condition"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (check_agg_flag == false){
+        std::cout<<"please provide aggregation type"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (movement_flag == false){
+        std::cout<<"please provide movement"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (save_config_flag == false){
+        std::cout<<"please provide system type"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (rng_seed_flag == false){
+        rng_seed=1;
+    }
+
+    sys_state   = new dlma_system(filename);
+    binding_obj = factory->create_bind_system(bind_name, sys_state);
+    agg_condition = factory->create_aggregation_condition(agg_condition_name, sys_state);
+    aggregation_check_obj = factory->create_check_aggregation(check_agg_name, sys_state, binding_obj, agg_condition);
+    movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed);
+    save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
+
+
+    for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
+
+        temp_c = sys_state->get_aggregate(i);
+
+        if (temp_c){
+            aggregation_check_obj->check_for_aggregation(temp_c);
+        }
+
+    }
+
+
+}
+
+void dlma_iterator::iteration_step()
+{
+
+    temp   = (int)(movement_test->get_rand() * sys_state->total_aggregates());
+    temp_c = sys_state->get_constituent(temp); 
+    sys_state->move_aggregate(temp, movement_test->delta_x());
+    aggregation_check_obj->check_for_aggregation(temp_c);
+
+
+}
+
+void dlma_iterator::run_system()
+{
+    while (sys_state->total_aggregates() != 1)
+        iteration_step();
+}
+
+void dlma_iterator::save_config_file()
+{
+    save_obj->save_configuration();
+}
+
+void dlma_iterator::save_config_file(char *filename)
+{
+    save_obj->save_configuration(filename);
+}
+
+
+
+}
