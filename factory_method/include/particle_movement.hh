@@ -6,11 +6,12 @@
 
 namespace simulation{
 
+template <typename type>
 class particle_movement{
 
     public:
 
-        virtual int*    delta_x() {};
+        virtual type*   delta_x() {};
         virtual double  get_rand() {};
 
 

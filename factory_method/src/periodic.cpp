@@ -2,16 +2,14 @@
 
 namespace simulation{
 
-int periodic_bc::refill(int x, int L){
+template<typename type>
+type periodic_bc<type>::refill(type x, type L){
 
     return (x + L * (x < 0) - L * (x >= L));
 
 }
 
-double periodic_bc::refill(double x, double L){
-
-    return (x + L * (x < 0) - L * (x >= L));
-
-}
+template class periodic_bc<int>;
+template class periodic_bc<double>;
 
 }

@@ -2,7 +2,8 @@
 
 namespace simulation{
 
-on_lattice::on_lattice(const int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc){
+template <typename type>
+on_lattice<type>::on_lattice(const int dim, int *box_lengths, std::vector<boundary_conditions<type>*> system_bc){
 
     D = dim;
     L = (int*)malloc(sizeof(int) * D);
@@ -45,7 +46,8 @@ on_lattice::on_lattice(const int dim, int *box_lengths, std::vector<boundary_con
  
 }
 
-on_lattice::~on_lattice()
+template <typename type>
+on_lattice<type>::~on_lattice()
 {
 
     free(temp_pos);
@@ -55,17 +57,19 @@ on_lattice::~on_lattice()
 
 }
 
-
-int on_lattice::get_L(const int axis)
+template <typename type>
+int on_lattice<type>::get_L(const int axis)
 { return L[axis]; }
 
-int on_lattice::get_refill(int x, int axis){
+template <typename type>
+int on_lattice<type>::get_refill(int x, int axis){
 
     return (box_bc[axis]->refill(x, L[axis]));
 
 }
 
-void on_lattice::add_particle_to_cell(const int id, int *pos){
+template <typename type>
+void on_lattice<type>::add_particle_to_cell(const int id, int *pos){
 
     counter = 0;
 
@@ -76,7 +80,8 @@ void on_lattice::add_particle_to_cell(const int id, int *pos){
 
 }
 
-void on_lattice::remove_particle_from_cell(const int id, int *pos){
+template <typename type>
+void on_lattice<type>::remove_particle_from_cell(const int id, int *pos){
 
     counter = 0;
 
@@ -87,7 +92,8 @@ void on_lattice::remove_particle_from_cell(const int id, int *pos){
 
 }
 
-int on_lattice::get_particle_id(int *pos){
+template <typename type>
+int on_lattice<type>::get_particle_id(int *pos){
 
     counter = 0;
 
@@ -99,7 +105,8 @@ int on_lattice::get_particle_id(int *pos){
 
 }
 
-std::vector<int> on_lattice::get_neighbour_list(int *pos){
+template <typename type>
+std::vector<int> on_lattice<type>::get_neighbour_list(int *pos){
 
     neighbours.clear();
 
@@ -123,8 +130,12 @@ std::vector<int> on_lattice::get_neighbour_list(int *pos){
 
 }
 
-int on_lattice::get_periodicity(const int axis)
+template <typename type>
+int on_lattice<type>::get_periodicity(const int axis)
 {return periodic[axis];}
+
+template class on_lattice<int>;
+template class on_lattice<double>;
 
 
 }

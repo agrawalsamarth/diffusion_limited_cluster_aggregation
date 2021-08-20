@@ -8,33 +8,25 @@
 
 namespace simulation{
 
-
+template<typename type>
 class simulation_box{
 
     public:
 
-        virtual void add_bc(boundary_conditions* bc) {};
-        virtual void set_L(const int L_val, const int axis) {};
-        virtual int  get_L(const int axis) {};
+        virtual void add_bc(boundary_conditions<type> *bc) {};
+        virtual void set_L(const type L_val, const int axis) {};
+        virtual type get_L(const int axis) {};
 
-        virtual int get_refill(int x, int axis) {};
-        virtual int get_refill(int old_pos, int new_pos, int axis) {};
+        virtual type get_refill(int x, int axis) {};
+        virtual type get_refill(int old_pos, int new_pos, int axis) {};
 
-        virtual double get_refill(double x, int axis) {};
-        virtual double get_refill(double old_pos, double new_pos, int axis) {};
+        virtual type periodic_distance(type x, int axis) {};
 
-        virtual double periodic_distance(double x, int axis) {};
+        virtual void add_particle_to_cell(const int id, type *pos) {};
+        virtual void remove_particle_from_cell(const int id, type *pos) {};
+        virtual int  get_particle_id(type *pos) {};
 
-        virtual void add_particle_to_cell(const int id, int *pos) {};
-        virtual void remove_particle_from_cell(const int id, int *pos) {};
-        virtual int  get_particle_id(int *pos) {};
-
-        virtual void add_particle_to_cell(const int id, double *pos) {};
-        virtual void remove_particle_from_cell(const int id, double *pos) {};
-        virtual int  get_particle_id(double *pos) {};
-
-        virtual std::vector<int> get_neighbour_list(int *ref_pos) {};
-        virtual std::vector<int> get_neighbour_list(double *ref_pos) {};
+        virtual std::vector<int> get_neighbour_list(type *ref_pos) {};
 
         virtual int get_periodicity(const int axis) {};
 

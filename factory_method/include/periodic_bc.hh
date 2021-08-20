@@ -5,12 +5,12 @@
 
 namespace simulation{
 
-class periodic_bc: public boundary_conditions{
+template <typename type>
+class periodic_bc: public boundary_conditions<type>{
 
     public:
 
-        int    refill(int x, int L);
-        double refill(double x, double L);
+        type refill(type x, type L);
 
 
 };

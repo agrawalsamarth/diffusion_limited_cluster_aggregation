@@ -2,7 +2,8 @@
 
 namespace simulation{
 
-std::vector<std::string> dlma_system::split_string_by_delimiter(const std::string& s, char delimiter)
+template<typename type>
+std::vector<std::string> dlma_system<type>::split_string_by_delimiter(const std::string& s, char delimiter)
 {
    std::vector<std::string> tokens;
    std::string token;
@@ -14,16 +15,9 @@ std::vector<std::string> dlma_system::split_string_by_delimiter(const std::strin
    return tokens;
 }
 
-dlma_system::dlma_system(char *params_name)
-{
 
-    read_params_parser(params_name);
-    check_params();
-    initialize_system();
-
-}
-
-void dlma_system::read_params_parser(char *params_name)
+template<typename type>
+void dlma_system<type>::read_params_parser(char *params_name)
 {
 
     std::ifstream parser(params_name, std::ifstream::in);
@@ -105,11 +99,11 @@ void dlma_system::read_params_parser(char *params_name)
     std::vector<std::string> bc_names;
     std::vector<std::string> L_names;
 
-    L                = (int*)malloc(sizeof(int) * D);
+    L                = (type*)malloc(sizeof(int) * D);
     L_flag           = (bool*)malloc(sizeof(bool) * D);
     //periodic         = (int*)malloc(sizeof(int) * D);
     
-    std::vector<boundary_conditions*> system_bc(D);
+    std::vector<boundary_conditions<type>*> system_bc(D);
     periodic_flag    = (bool*)malloc(sizeof(bool) * D);
 
 
@@ -167,12 +161,12 @@ void dlma_system::read_params_parser(char *params_name)
         exit(EXIT_FAILURE);
     }
 
-    int L_total = 1;
+    type L_total = 1;
 
     if (L_flag_and == false){
 
         for (int axis = 0; axis < D; axis++)
-            L[axis] = (int)(pow((1.*N)/(1.*phi), 1./(1.*D)));
+            L[axis] = (type)(pow((1.*N)/(1.*phi), 1./(1.*D)));
         
 
         for (int axis = 0; axis < D; axis++)
@@ -286,12 +280,8 @@ void dlma_system::read_params_parser(char *params_name)
 
 }
 
-void dlma_system::check_params()
-{
-    return;
-}
-
-void dlma_system::calculate_propensity()
+template<typename type>
+void dlma_system<type>::calculate_propensity()
 {
 
     int agg_size = aggregates.size();
@@ -310,79 +300,13 @@ void dlma_system::calculate_propensity()
 
 }
 
-void dlma_system::initialize_system()
-{
-
-    bool is_placed;
-    constituent<int> *temp;
-
-    std::string name_type = "particle";
-
-    int temp_pos[D];
-
-    for (int i = 0; i < N; i++){
-
-        temp = factory.create_constituent(i, lattice, D, name_type, box);
-
-        is_placed = false;
-
-        temp->set_diameter(1.);
-
-        if (i < N_s){
-            temp->set_mass(seed_mass);
-            temp->set_original_seed_status(1);
-            temp->set_current_seed_status(1);
-        }
-
-        else{
-            temp->set_mass(1.);
-            temp->set_original_seed_status(0);
-            temp->set_current_seed_status(0);
-        }
-
-        while (is_placed == false){
-
-            for (int axis = 0; axis < D; axis++)
-                temp_pos[axis] = (int)(dis(generator) * L[axis]);
-
-            if (box->get_particle_id(temp_pos) == -1){
-
-                for (int axis = 0; axis < D; axis++)
-                    temp->pos(axis) = temp_pos[axis];
-
-                temp->add_constituent_to_cell();
-                all_particles.push_back(temp);
-                is_placed = true;
-            }
-
-        }
-
-    }
-
-
-
-    name_type = "cluster";
-
-    for (int i = 0; i < N; i++){
-
-        temp = factory.create_constituent(get_latest_cluster_id(), lattice, D, name_type, box);
-        temp->add_constituent(all_particles[i]);
-        temp->calculate_aggregate_mass();
-        //std::cout<<"seed mass = "<<get_seedmass()<<std::endl;
-
-        aggregates.push_back(temp);
-
-    }
-
-    build_id_map();
-    
-}
-
-void dlma_system::add_aggregate(constituent<int> *new_aggregate){
+template<typename type>
+void dlma_system<type>::add_aggregate(constituent<type> *new_aggregate){
     aggregates.push_back(new_aggregate);
 }
 
-void dlma_system::remove_aggregate(const int id){
+template<typename type>
+void dlma_system<type>::remove_aggregate(const int id){
 
     for (int i = 0; i < aggregates.size(); i++){
 
@@ -393,7 +317,8 @@ void dlma_system::remove_aggregate(const int id){
 
 }
 
-constituent<int>* dlma_system::get_aggregate(const int id)
+template<typename type>
+constituent<type>* dlma_system<type>::get_aggregate(const int id)
 {
 
     for (int i = 0; i < aggregates.size(); i++){
@@ -408,7 +333,8 @@ constituent<int>* dlma_system::get_aggregate(const int id)
 
 }
 
-void dlma_system::build_id_map()
+template<typename type>
+void dlma_system<type>::build_id_map()
 {
 
     for (int i = 0; i < N; i++)
@@ -416,32 +342,35 @@ void dlma_system::build_id_map()
 
 }
 
-
-int dlma_system::get_latest_cluster_id(){
+template<typename type>
+int dlma_system<type>::get_latest_cluster_id(){
 
     return latest_cluster_id++;
 
 }
 
-int dlma_system::get_latest_cluster_id_without_increment(){
+template<typename type>
+int dlma_system<type>::get_latest_cluster_id_without_increment(){
     return latest_cluster_id;
 }
-        
-int dlma_system::get_id_map(int c_id){
 
-    //int id = c_1->get_aggregate_id();
+template<typename type>        
+int dlma_system<type>::get_id_map(int c_id){
 
     return id_map[c_id];
 
 }
 
-int dlma_system::get_lattice()
+template<typename type>
+int dlma_system<type>::get_lattice()
 { return lattice; }
 
-int dlma_system::get_dim()
+template<typename type>
+int dlma_system<type>::get_dim()
 { return D; }
 
-int dlma_system::get_max_attachments()
+template<typename type>
+int dlma_system<type>::get_max_attachments()
 {
     int max_atts = 0;
 
@@ -455,14 +384,17 @@ int dlma_system::get_max_attachments()
     return max_atts;
 }
 
-simulation_box* dlma_system::get_box()
+template<typename type>
+simulation_box<type>* dlma_system<type>::get_box()
 { return box; }
 
-constituent<int>* dlma_system::get_constituent(const int i){
+template<typename type>
+constituent<type>* dlma_system<type>::get_constituent(const int i){
     return aggregates[i];
 }
 
-void dlma_system::print_id_map(){
+template<typename type>
+void dlma_system<type>::print_id_map(){
 
     for (const auto& x : id_map) {
             std::cout << x.first << ": " << x.second << "\n";
@@ -470,82 +402,12 @@ void dlma_system::print_id_map(){
 
 }
 
-bool dlma_system::check_viability(constituent<int> *c_1, int *dr)
-{
-    int temp_pos[D];
-
-    for (int axis = 0; axis < D; axis++)
-        temp_pos[axis] = 0;
-
-    int cluster_id = c_1->get_id();
-    int neighbour_cluster_id;
-    int neighbour_id;
-
-    constituent<int> *temp;
-
-
-    is_viable = true;
-
-    for (int i = 0; i < c_1->get_size(); i++){
-
-        temp = c_1->get_element(i);
-
-        for (int axis = 0; axis < D; axis++){
-            temp_pos[axis] = box->get_refill(temp->pos(axis)+dr[axis], axis);
-        }
-
-        neighbour_id = box->get_particle_id(temp_pos);
-
-        if (neighbour_id != -1){
-            neighbour_cluster_id = get_id_map(neighbour_id);
-
-            if (neighbour_cluster_id != cluster_id)
-                is_viable=false;
-        }
-
-    }
-
-    return is_viable;
-
-}
-
-void dlma_system::print_grid()
-{
-    int temp_pos[D];
-    int temp_id;
-
-    for (int i = 0; i < L[0]; i++){
-        for (int j = 0; j < L[1]; j++){
-
-            temp_pos[0] = i;
-            temp_pos[1] = j;
-
-            temp_id = box->get_particle_id(temp_pos);
-
-            std::cout<<temp_id<<"\t";
-
-        }
-        std::cout<<"\n"<<std::endl;
-    }
-
-}
-
-int dlma_system::total_aggregates()
+template<typename type>
+int dlma_system<type>::total_aggregates()
 { return aggregates.size();}
 
-void dlma_system::move_aggregate(int i, int *dr)
-{
-
-    if (check_viability(aggregates[i], dr)){
-        aggregates[i]->remove_constituent_from_cell();
-        aggregates[i]->move(dr);
-        aggregates[i]->add_constituent_to_cell();
-    }
-
-
-}
-
-void dlma_system::add_attachment(constituent<int> *c_1)
+template<typename type>
+void dlma_system<type>::add_attachment(constituent<type> *c_1)
 {
 
     int particle_id;
@@ -580,7 +442,8 @@ void dlma_system::add_attachment(constituent<int> *c_1)
     }
 }
 
-void dlma_system::print_attachments(){
+template<typename type>
+void dlma_system<type>::print_attachments(){
 
     std::cout<<"attachments size = "<<attachments.size()<<std::endl;
 
@@ -598,10 +461,12 @@ void dlma_system::print_attachments(){
 
 }
 
-double dlma_system::get_seedmass()
+template<typename type>
+double dlma_system<type>::get_seedmass()
 { return seed_mass;}
 
-constituent<int>* dlma_system::get_particle_by_id(const int id)
+template<typename type>
+constituent<type>* dlma_system<type>::get_particle_by_id(const int id)
 {
 
     for (int i = 0; i < N; i++){
@@ -613,19 +478,24 @@ constituent<int>* dlma_system::get_particle_by_id(const int id)
 
 }
 
-int dlma_system::get_N()
+template<typename type>
+int dlma_system<type>::get_N()
 { return N;}
 
-double dlma_system::get_phi()
+template<typename type>
+double dlma_system<type>::get_phi()
 { return phi; }
 
-double dlma_system::get_alpha()
+template<typename type>
+double dlma_system<type>::get_alpha()
 { return alpha; }
 
-std::vector<int> dlma_system::get_attachment_vector(const int i)
+template<typename type>
+std::vector<int> dlma_system<type>::get_attachment_vector(const int i)
 {return attachments[i];}
 
-
+template class dlma_system<int>;
+template class dlma_system<double>;
 
 
 }

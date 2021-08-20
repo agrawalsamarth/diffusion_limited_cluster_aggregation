@@ -3,21 +3,25 @@
 #include "mass_aggregation_condition.hh"
 #include "dlma_save_config.hh"
 #include "normal_bind.hh"
+#include "dlma_system_onlattice.hh"
+#include "dlma_system.hh"
 
 #ifndef ITERATOR_FACTORY_H
 #define ITERATOR_FACTORY_H
 
 namespace simulation{
 
+template <typename type>
 class iterator_factory{
 
     public:
 
-        particle_movement* create_movement(std::string name_type, int dim, int rng_seed);
-        aggregation_condition* create_aggregation_condition(std::string name_type, dlma_system *system_state); 
-        check_aggregation* create_check_aggregation(std::string name_type, dlma_system *system_state, normal_bind *bind_system, aggregation_condition *ref_condition);
-        save_config* create_save_config(std::string name_type, dlma_system *ref_sys, simulation_box *ref_box);
-        normal_bind* create_bind_system(std::string name_type, dlma_system *system_ptr);
+        particle_movement<type>* create_movement(std::string name_type, int dim, int rng_seed);
+        aggregation_condition<type>* create_aggregation_condition(std::string name_type, system<type> *system_state); 
+        check_aggregation<type>* create_check_aggregation(std::string name_type, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition);
+        save_config<type>* create_save_config(std::string name_type, system<type> *ref_sys, simulation_box<type> *ref_box);
+        normal_bind<type>* create_bind_system(std::string name_type, system<type> *system_ptr);
+        system<type>* create_new_system(std::string name_type, int lattice, char *filename);
 
 
 

@@ -26,6 +26,6 @@ $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
 clean:
+	rm -rf $(OBJ_DIR)
 	rm *.o
 	rm -rf $(BIN_DIR)
-	rm -rf $(OBJ_DIR)

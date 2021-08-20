@@ -5,17 +5,16 @@
 
 namespace simulation{
 
-class on_lattice: public simulation_box{
+template <typename type>
+class on_lattice: public simulation_box<type>{
 
     public:
 
-        on_lattice(const int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc);
+        on_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc);
         ~on_lattice();
 
-        int get_refill(int x, int axis);
-
-        /*void add_bc(boundary_conditions* bc);*/
-        int  get_L(const int axis);
+        type  get_refill(int x, int axis);
+        type  get_L(const int axis);
 
         void add_particle_to_cell(const int id, int *pos);
         void remove_particle_from_cell(const int id, int *pos);
@@ -27,7 +26,7 @@ class on_lattice: public simulation_box{
         
     private:
 
-        std::vector<boundary_conditions*> box_bc;
+        std::vector<boundary_conditions<type>*> box_bc;
         int *L;
         int *L_eff;
         int *grid;

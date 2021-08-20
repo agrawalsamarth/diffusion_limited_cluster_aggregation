@@ -2,22 +2,22 @@
 
 namespace simulation{
 
-
-particle_movement* iterator_factory::create_movement(std::string name_type, int dim, int rng_seed)
+template <typename type>
+particle_movement<type>* iterator_factory<type>::create_movement(std::string name_type, int dim, int rng_seed)
 {
     if (strcmp(name_type.c_str(), "brownian")==0)
-        return new brownian_movement(dim, rng_seed);
+        return new brownian_movement<type>(dim, rng_seed);
     else{
         std::cout<<"unknown movement type"<<std::endl;
         exit(EXIT_FAILURE);
     }
 }
 
-
-aggregation_condition* iterator_factory::create_aggregation_condition(std::string name_type, dlma_system *system_state)
+template <typename type>
+aggregation_condition<type>* iterator_factory<type>::create_aggregation_condition(std::string name_type, system<type> *system_state)
 {
     if (strcmp(name_type.c_str(), "mass")==0)
-        return new mass_aggregation_condition(system_state);
+        return new mass_aggregation_condition<type>(system_state);
     else{
         std::cout<<"unknown aggregate condition"<<std::endl;
         exit(EXIT_FAILURE);
@@ -25,12 +25,12 @@ aggregation_condition* iterator_factory::create_aggregation_condition(std::strin
     
 }
 
-
-check_aggregation* iterator_factory::create_check_aggregation(std::string name_type, dlma_system *system_state, normal_bind *bind_system, aggregation_condition *ref_condition)
+template <typename type>
+check_aggregation<type>* iterator_factory<type>::create_check_aggregation(std::string name_type, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition)
 {
 
     if (strcmp(name_type.c_str(), "normal")==0)
-        return new check_aggregation(system_state, bind_system, ref_condition);
+        return new check_aggregation<type>(system_state, bind_system, ref_condition);
     else{
         std::cout<<"unknown aggregation type"<<std::endl;
         exit(EXIT_FAILURE);
@@ -38,11 +38,12 @@ check_aggregation* iterator_factory::create_check_aggregation(std::string name_t
 
 }
 
-save_config* iterator_factory::create_save_config(std::string name_type, dlma_system *ref_sys, simulation_box *ref_box)
+template <typename type>
+save_config<type>* iterator_factory<type>::create_save_config(std::string name_type, system<type> *ref_sys, simulation_box<type> *ref_box)
 {
 
     if (strcmp(name_type.c_str(), "dlma")==0)
-        return new dlma_save_config(ref_sys, ref_box);
+        return new dlma_save_config<type>(ref_sys, ref_box);
     else{
         std::cout<<"unknown system type"<<std::endl;
         exit(EXIT_FAILURE);
@@ -51,12 +52,12 @@ save_config* iterator_factory::create_save_config(std::string name_type, dlma_sy
 
 }
 
-
-normal_bind* iterator_factory::create_bind_system(std::string name_type, dlma_system *system_ptr)
+template <typename type>
+normal_bind<type>* iterator_factory<type>::create_bind_system(std::string name_type, system<type> *system_ptr)
 {
 
     if (strcmp(name_type.c_str(), "normal")==0)
-        return new normal_bind(system_ptr);
+        return new normal_bind<type>(system_ptr);
     else{
         std::cout<<"unknown bind type"<<std::endl;
         exit(EXIT_FAILURE);
@@ -66,8 +67,17 @@ normal_bind* iterator_factory::create_bind_system(std::string name_type, dlma_sy
 
 }
 
+template <typename type>
+system<type>* iterator_factory<type>::create_new_system(std::string name_type, int lattice, char *filename)
+{
+    if ((strcmp(name_type.c_str(), "dlma")==0) && (lattice == 1))
+        return new dlma_system_onlattice<type>(filename);
+    else
+        std::cout<<"unknown system type"<<std::endl;        
 
+}
 
-
+template class iterator_factory<int>;
+template class iterator_factory<double>;
 
 }

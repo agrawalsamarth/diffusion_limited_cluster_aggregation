@@ -5,16 +5,13 @@
 
 namespace simulation{
 
+template <typename type>
 class boundary_conditions{
 
     public:
 
-        virtual int refill(int x, int L) {};
-        virtual int refill(int old_pos, int new_pos, int L) {};
-
-        virtual double refill(double x, double L) {};
-        virtual double refill(double old_pos, double new_pos, double L) {};
-
+        virtual type refill(type x, type L) {};
+        virtual type refill(type old_pos, type new_pos, type L) {};
 };
 
 }

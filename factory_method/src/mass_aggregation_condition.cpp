@@ -2,17 +2,20 @@
 
 namespace simulation{
 
-mass_aggregation_condition::mass_aggregation_condition(dlma_system *ref_sys)
+template<typename type>
+mass_aggregation_condition<type>::mass_aggregation_condition(system<type> *ref_sys)
 {
 
     sys_state = ref_sys;
 
 }
 
-void mass_aggregation_condition::show_out()
+template<typename type>
+void mass_aggregation_condition<type>::show_out()
 { std::cout<<"object"<<std::endl;}
 
-bool mass_aggregation_condition::agg_condition(constituent<int> *c_1, constituent<int> *c_2)
+template<typename type>
+bool mass_aggregation_condition<type>::agg_condition(constituent<type> *c_1, constituent<type> *c_2)
 {
 
     id_1 = c_1->get_id();
@@ -34,7 +37,8 @@ bool mass_aggregation_condition::agg_condition(constituent<int> *c_1, constituen
 
 }
 
-
+template class mass_aggregation_condition<int>;
+template class mass_aggregation_condition<double>;
 
 
 }

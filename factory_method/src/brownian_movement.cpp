@@ -2,8 +2,8 @@
 
 namespace simulation{
 
-
-brownian_movement::brownian_movement(int dim, int rng_seed){
+template <typename type>
+brownian_movement<type>::brownian_movement(int dim, int rng_seed){
 
     D  = dim;
     dr = (int*)malloc(sizeof(int) * D);
@@ -16,7 +16,8 @@ brownian_movement::brownian_movement(int dim, int rng_seed){
     dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 }
 
-int* brownian_movement::delta_x()
+template <typename type>
+type* brownian_movement<type>::delta_x()
 {
 
     temp      = dis(generator);
@@ -32,7 +33,8 @@ int* brownian_movement::delta_x()
 
 }
 
-double brownian_movement::get_rand()
+template <typename type>
+double brownian_movement<type>::get_rand()
 { return dis(generator); }
 
 

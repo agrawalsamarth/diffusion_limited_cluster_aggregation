@@ -6,27 +6,28 @@
 
 namespace simulation{
 
+template <typename type>
 class check_aggregation{
 
     public:
 
-        check_aggregation(dlma_system *system_state, normal_bind *bind_system, aggregation_condition *ref_condition);
-        void check_for_aggregation(constituent<int> *c_1);
+        check_aggregation(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition);
+        void check_for_aggregation(constituent<type> *c_1);
 
     private:
 
-        dlma_system *sys_state;
-        normal_bind *bind_sys;
-        aggregation_condition *condition;
+        system<type> *sys_state;
+        normal_bind<type> *bind_sys;
+        aggregation_condition<type> *condition;
         std::vector<int> neighbours;
-        constituent<int>* temp;
+        constituent<type>* temp;
 
         int neighbour_id;
         int neighbour_cluster_id;
         int cluster_id;
 
-        constituent<int>* particle_1;
-        constituent<int>* particle_2;
+        constituent<type>* particle_1;
+        constituent<type>* particle_2;
 
 
 

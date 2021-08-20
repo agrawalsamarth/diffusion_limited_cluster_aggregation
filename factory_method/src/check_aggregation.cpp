@@ -2,14 +2,16 @@
 
 namespace simulation{
 
-check_aggregation::check_aggregation(dlma_system *system_state, normal_bind *bind_system, aggregation_condition *ref_condition){
+template<typename type>
+check_aggregation<type>::check_aggregation(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition){
 
     sys_state = system_state;
     bind_sys  = bind_system;
     condition = ref_condition;
 }
 
-void check_aggregation::check_for_aggregation(constituent<int> *c_1){
+template <typename type>
+void check_aggregation<type>::check_for_aggregation(constituent<type> *c_1){
 
     bool is_checked = false;
     int  particle_id;
@@ -65,5 +67,7 @@ void check_aggregation::check_for_aggregation(constituent<int> *c_1){
 
 } 
 
+template class check_aggregation<int>;
+template class check_aggregation<double>;
 
 }

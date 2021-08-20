@@ -10,7 +10,7 @@ class cluster: public constituent<type>{
 
     public:
 
-        cluster(const int cluster_id, const int dim, simulation_box *system_box);
+        cluster(const int cluster_id, const int dim, simulation_box<type> *system_box);
 
         void move(type *delta_x);
 
@@ -45,7 +45,7 @@ class cluster: public constituent<type>{
         int id;
         int aggregate_id;
         int D;
-        simulation_box* box;
+        simulation_box<type>* box;
         double mass;
         type temp_pos;
 

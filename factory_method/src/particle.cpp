@@ -3,7 +3,7 @@
 namespace simulation{
 
 template<typename type>
-particle<type>::particle(const int particle_id, const int dim, simulation_box *system_box){
+particle<type>::particle(const int particle_id, const int dim, simulation_box<type> *system_box){
     
     id  = particle_id;
     D   = dim;

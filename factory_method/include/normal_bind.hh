@@ -1,21 +1,23 @@
 #include <dlma_system.hh>
+#include <dlma_system_onlattice.hh>
 
 #ifndef NORMAL_BIND_H
 #define NORMAL_BIND_H
 
 namespace simulation{
 
+template<typename type>
 class normal_bind{
 
     public:
 
-        normal_bind(dlma_system *system_ptr);
-        constituent<int>* bind_aggregates(constituent<int> *c_1, constituent<int> *c_2);
+        normal_bind(system<type> *system_ptr);
+        constituent<type>* bind_aggregates(constituent<type> *c_1, constituent<type> *c_2);
 
     private:
 
-        system_factory factory;
-        dlma_system *sys_state;
+        system_factory<type> factory;
+        system<type>        *sys_state;
 
 };
 

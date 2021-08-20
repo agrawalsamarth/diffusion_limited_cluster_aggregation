@@ -2,18 +2,20 @@
 
 namespace simulation{
 
-normal_bind::normal_bind(dlma_system *system_ptr){
+template<typename type>
+normal_bind<type>::normal_bind(system<type> *system_ptr){
 
     sys_state = system_ptr;
 
 }
 
-constituent<int>* normal_bind::bind_aggregates(constituent<int> *c_1, constituent<int> *c_2){
+template<typename type>
+constituent<type>* normal_bind<type>::bind_aggregates(constituent<type> *c_1, constituent<type> *c_2){
 
     //std::cout<<"1"<<std::endl;
 
     std::string name_type = "cluster";
-    constituent<int> *temp;
+    constituent<type> *temp;
 
     temp = factory.create_constituent(sys_state->get_latest_cluster_id(), sys_state->get_lattice(), sys_state->get_dim(), name_type, sys_state->get_box());
 
@@ -37,5 +39,7 @@ constituent<int>* normal_bind::bind_aggregates(constituent<int> *c_1, constituen
 
 }
 
+template class normal_bind<int>;
+template class normal_bind<double>;
 
 }

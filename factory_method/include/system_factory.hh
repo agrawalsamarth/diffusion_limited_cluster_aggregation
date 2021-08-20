@@ -9,15 +9,14 @@
 
 namespace simulation{
 
-//template<typename type>
+template<typename type>
 class system_factory{
 
     public:
 
-        constituent<int>*         create_constituent(int constituent_id, int lattice, int dim, std::string name_type, simulation_box *box);
-        simulation_box*            create_simulation_box(int lattice, int dim, int *box_lengths, std::vector<boundary_conditions*> system_bc);
-        //simulation_box*      create_simulation_box(int lattice, int dim, double *box_lengths);
-        boundary_conditions*       create_boundary_conditions(std::string name_type);
+        constituent<type>*               create_constituent(int constituent_id, int lattice, int dim, std::string name_type, simulation_box<type> *box);
+        simulation_box<type>*            create_simulation_box(int lattice, int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc);
+        boundary_conditions<type>*       create_boundary_conditions(std::string name_type);
 
 
 };

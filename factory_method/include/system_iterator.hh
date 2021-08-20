@@ -6,6 +6,7 @@
 namespace simulation
 {
 
+template <typename type>
 class system_iterator{
 
     public:

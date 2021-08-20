@@ -3,7 +3,7 @@
 namespace simulation{
 
 template <typename type>
-cluster<type>::cluster(const int cluster_id, const int dim, simulation_box *system_box)
+cluster<type>::cluster(const int cluster_id, const int dim, simulation_box<type> *system_box)
 {
     id  = cluster_id;
     D   = dim;

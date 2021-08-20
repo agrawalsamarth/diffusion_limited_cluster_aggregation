@@ -5,12 +5,13 @@
 
 namespace simulation{
 
+template <typename type>
 class aggregation_condition{
 
     public:
 
         virtual void show_out() {};
-        virtual bool agg_condition(constituent<int> *c_1, constituent<int> *c_2) {};
+        virtual bool agg_condition(constituent<type> *c_1, constituent<type> *c_2) {};
 
 
 };

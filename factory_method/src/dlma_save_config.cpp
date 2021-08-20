@@ -2,13 +2,15 @@
 
 namespace simulation{
 
-dlma_save_config::dlma_save_config(dlma_system *ref_sys, simulation_box *ref_box)
+template <typename type>
+dlma_save_config<type>::dlma_save_config(system<type> *ref_sys, simulation_box<type> *ref_box)
 {
     sys_state = ref_sys;
     box       = ref_box;
 }
 
-void dlma_save_config::save_configuration(char *filename)
+template <typename type>
+void dlma_save_config<type>::save_configuration(char *filename)
 {
     FILE *f;
     f= fopen(filename,"w");
@@ -21,7 +23,7 @@ void dlma_save_config::save_configuration(char *filename)
     double phi   = sys_state->get_phi();
     double alpha = sys_state->get_alpha();
 
-    constituent<int> *temp;
+    constituent<type> *temp;
     std::vector<int>  attachments;
 
     int headers = 10+(3*D);
@@ -129,7 +131,8 @@ void dlma_save_config::save_configuration(char *filename)
 
 }
 
-void dlma_save_config::save_configuration()
+template <typename type>
+void dlma_save_config<type>::save_configuration()
 {
     int num_atts;
     int max_attachments = sys_state->get_max_attachments();
@@ -140,7 +143,7 @@ void dlma_save_config::save_configuration()
     double phi   = sys_state->get_phi();
     double alpha = sys_state->get_alpha();
 
-    constituent<int> *temp;
+    constituent<type> *temp;
     std::vector<int>  attachments;
 
     int headers = 10+(3*D);
@@ -247,6 +250,8 @@ void dlma_save_config::save_configuration()
 
 }
 
+template class dlma_save_config<int>;
+template class dlma_save_config<double>;
 
 
 }

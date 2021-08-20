@@ -5,20 +5,20 @@
 
 namespace simulation{
 
-
-class dlma_save_config: public save_config{
+template<typename type>
+class dlma_save_config: public save_config<type>{
 
 
     public:
 
-        dlma_save_config(dlma_system *ref_sys, simulation_box *ref_box);
+        dlma_save_config(system<type> *ref_sys, simulation_box<type> *ref_box);
         void save_configuration();
         void save_configuration(char *filename);
 
     private:
 
-        dlma_system    *sys_state;
-        simulation_box *box;
+        system<type>         *sys_state;
+        simulation_box<type> *box;
 
 };
 

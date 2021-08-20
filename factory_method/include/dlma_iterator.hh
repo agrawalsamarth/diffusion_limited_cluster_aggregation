@@ -5,7 +5,8 @@
 
 namespace simulation{
 
-class dlma_iterator: public system_iterator{
+template <typename type>
+class dlma_iterator: public system_iterator<type>{
 
     public:
 
@@ -20,18 +21,18 @@ class dlma_iterator: public system_iterator{
 
         std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
 
-        dlma_system *sys_state;
-        normal_bind *binding_obj;
-        aggregation_condition *agg_condition;
-        check_aggregation *aggregation_check_obj;
-        particle_movement *movement_test;
-        save_config *save_obj;
+        system<type> *sys_state;
+        normal_bind<type> *binding_obj;
+        aggregation_condition<type> *agg_condition;
+        check_aggregation<type> *aggregation_check_obj;
+        particle_movement<type> *movement_test;
+        save_config<type> *save_obj;
 
-        iterator_factory *factory;
+        iterator_factory<type> *factory;
 
 
         int temp;
-        constituent<int> *temp_c;
+        constituent<type> *temp_c;
 
 };
 

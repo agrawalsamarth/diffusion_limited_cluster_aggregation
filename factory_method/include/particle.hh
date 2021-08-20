@@ -10,7 +10,7 @@ class particle: public constituent<type>{
 
     public:
 
-        particle(const int particle_id, const int dim, simulation_box *system_box);
+        particle(const int particle_id, const int dim, simulation_box<type> *system_box);
         ~particle();
 
         void   move(type *delta_x);
@@ -41,16 +41,16 @@ class particle: public constituent<type>{
         
     private:
 
-        int              D;
-        int              id;
-        int              aggregate_id;
-        double           mass;
-        simulation_box   *box;
-        type             *pos_;      
+        int                     D;
+        int                     id;
+        int                     aggregate_id;
+        double                  mass;
+        simulation_box<type>   *box;
+        type                   *pos_;      
 
-        double           diameter;
-        int              original_seed_status;
-        int              current_seed_status;  
+        double                  diameter;
+        int                     original_seed_status;
+        int                     current_seed_status;  
 
 
 };

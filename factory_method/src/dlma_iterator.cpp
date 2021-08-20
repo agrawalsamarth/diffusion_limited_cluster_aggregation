@@ -2,7 +2,8 @@
 
 namespace simulation{
 
-std::vector<std::string> dlma_iterator::split_string_by_delimiter(const std::string& s, char delimiter)
+template <typename type>
+std::vector<std::string> dlma_iterator<type>::split_string_by_delimiter(const std::string& s, char delimiter)
 {
    std::vector<std::string> tokens;
    std::string token;
@@ -14,7 +15,8 @@ std::vector<std::string> dlma_iterator::split_string_by_delimiter(const std::str
    return tokens;
 }
 
-dlma_iterator::dlma_iterator(char *filename)
+template <typename type>
+dlma_iterator<type>::dlma_iterator(char *filename)
 {
     std::ifstream parser(filename, std::ifstream::in);
 
@@ -35,6 +37,8 @@ dlma_iterator::dlma_iterator(char *filename)
     bool save_config_flag=false;
     int  rng_seed;
     bool rng_seed_flag=false;
+    int  lattice;
+    bool lattice_flag=false;
 
     int count = 0;
 
@@ -76,6 +80,12 @@ dlma_iterator::dlma_iterator(char *filename)
             rng_seed++;
             rng_seed_flag = true;
         }
+
+        if (results[0] == "lattice"){
+            lattice      = stoi(results[1]);
+            lattice_flag = true;
+        }
+
         
 
     }
@@ -111,7 +121,12 @@ dlma_iterator::dlma_iterator(char *filename)
         rng_seed=1;
     }
 
-    sys_state   = new dlma_system(filename);
+    if (lattice_flag == false){
+        std::cout<<"please provide lattice type"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    sys_state   = factory->create_new_system(save_config_name, lattice, filename);
     binding_obj = factory->create_bind_system(bind_name, sys_state);
     agg_condition = factory->create_aggregation_condition(agg_condition_name, sys_state);
     aggregation_check_obj = factory->create_check_aggregation(check_agg_name, sys_state, binding_obj, agg_condition);
@@ -132,7 +147,8 @@ dlma_iterator::dlma_iterator(char *filename)
 
 }
 
-void dlma_iterator::iteration_step()
+template <typename type>
+void dlma_iterator<type>::iteration_step()
 {
 
     temp   = (int)(movement_test->get_rand() * sys_state->total_aggregates());
@@ -143,22 +159,26 @@ void dlma_iterator::iteration_step()
 
 }
 
-void dlma_iterator::run_system()
+template <typename type>
+void dlma_iterator<type>::run_system()
 {
     while (sys_state->total_aggregates() != 1)
         iteration_step();
 }
 
-void dlma_iterator::save_config_file()
+template <typename type>
+void dlma_iterator<type>::save_config_file()
 {
     save_obj->save_configuration();
 }
 
-void dlma_iterator::save_config_file(char *filename)
+template <typename type>
+void dlma_iterator<type>::save_config_file(char *filename)
 {
     save_obj->save_configuration(filename);
 }
 
-
+template class dlma_iterator<int>;
+template class dlma_iterator<double>;
 
 }
