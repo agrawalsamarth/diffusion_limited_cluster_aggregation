@@ -13,12 +13,12 @@ class on_lattice: public simulation_box<type>{
         on_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc);
         ~on_lattice();
 
-        type  get_refill(int x, int axis);
+        type  get_refill(type x, int axis);
         type  get_L(const int axis);
 
         void add_particle_to_cell(const int id, int *pos);
         void remove_particle_from_cell(const int id, int *pos);
-        int  get_particle_id(int *pos);
+        int  get_particle_id(type *pos);
 
         std::vector<int> get_neighbour_list(int *pos);
 
@@ -27,14 +27,14 @@ class on_lattice: public simulation_box<type>{
     private:
 
         std::vector<boundary_conditions<type>*> box_bc;
-        int *L;
+        type *L;
         int *L_eff;
         int *grid;
         int  counter;
         int  D;
         std::vector<int> neighbours;
-        int *temp_pos;
-        int *neighbour_pos;
+        type *temp_pos;
+        type *neighbour_pos;
         int *periodic;
 
 

@@ -3,13 +3,13 @@
 namespace simulation{
 
 template <typename type>
-on_lattice<type>::on_lattice(const int dim, int *box_lengths, std::vector<boundary_conditions<type>*> system_bc){
+on_lattice<type>::on_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc){
 
     D = dim;
-    L = (int*)malloc(sizeof(int) * D);
+    L = (type*)malloc(sizeof(int) * D);
 
-    temp_pos      = (int*)malloc(sizeof(int) * D);
-    neighbour_pos = (int*)malloc(sizeof(int) * D);
+    temp_pos      = (type*)malloc(sizeof(type) * D);
+    neighbour_pos = (type*)malloc(sizeof(type) * D);
 
     for (int axis = 0; axis < D; axis++)
         L[axis] = box_lengths[axis];
@@ -58,11 +58,11 @@ on_lattice<type>::~on_lattice()
 }
 
 template <typename type>
-int on_lattice<type>::get_L(const int axis)
+type on_lattice<type>::get_L(const int axis)
 { return L[axis]; }
 
 template <typename type>
-int on_lattice<type>::get_refill(int x, int axis){
+type on_lattice<type>::get_refill(type x, int axis){
 
     return (box_bc[axis]->refill(x, L[axis]));
 
@@ -93,7 +93,7 @@ void on_lattice<type>::remove_particle_from_cell(const int id, int *pos){
 }
 
 template <typename type>
-int on_lattice<type>::get_particle_id(int *pos){
+int on_lattice<type>::get_particle_id(type *pos){
 
     counter = 0;
 

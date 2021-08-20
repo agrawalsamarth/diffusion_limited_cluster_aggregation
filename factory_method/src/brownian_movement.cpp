@@ -6,7 +6,7 @@ template <typename type>
 brownian_movement<type>::brownian_movement(int dim, int rng_seed){
 
     D  = dim;
-    dr = (int*)malloc(sizeof(int) * D);
+    dr = (type*)malloc(sizeof(type) * D);
 
     for (int axis = 0; axis < D; axis++)
         dr[axis] = 0;
@@ -37,5 +37,7 @@ template <typename type>
 double brownian_movement<type>::get_rand()
 { return dis(generator); }
 
+template class brownian_movement<int>;
+template class brownian_movement<double>;
 
 }
