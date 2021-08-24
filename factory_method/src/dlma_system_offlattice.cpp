@@ -88,7 +88,7 @@ void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
     this->aggregates[i]->move(dr);
     this->aggregates[i]->add_constituent_to_cell();
 
-    fix_overlap(i, dr);
+    //fix_overlap(i, dr);
 
 }
 
@@ -124,18 +124,36 @@ void dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
                 particle_1 = this->get_particle_by_id(particle_id);
                 particle_2 = this->get_particle_by_id(neighbour_id);
 
+                if (!particle_1){
+                    std::cout<<"particle 1 is null"<<std::endl;
+                }
+
+                if (!particle_2){
+                    std::cout<<"particle 2 is null"<<std::endl;
+                }
+
                 distance  = this->get_interparticle_distance(particle_1, particle_2);
                 distance  = 0.5 * (particle_1->get_diameter() + particle_2->get_diameter()) - distance;
 
-                if (distance > max_overlap)
-                    max_overlap = distance; 
+                std::cout<<"distance = "<<distance<<std::endl;
+
+                if (distance > max_overlap){
+                    max_overlap = distance;
+                    //std::cout<<"max_overlap = "<<max_overlap<<"\t id1 = "<<particle_id<<"\t id2 = "<<neighbour_id<<"\t distance = "<<distance<<std::endl;
+
+                    //for (int axis = 0; axis < this->D; axis++)
+                        //std::cout<<"axis = "<<axis<<"\t"<<particle_1->pos(axis)<<"\t"<<particle_2->pos(axis)<<std::endl;
+
+
+
+                }
 
             }
         }
 
     }
 
-    std::cout<<"max_overlap="<<max_overlap<<std::endl;
+    //std::cout<<"max_overlap="<<max_overlap<<std::endl;
 
     if (max_overlap > 1e-8){
 
@@ -146,6 +164,13 @@ void dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     }
 
+}
+
+template<typename type>
+void dlma_system_offlattice<type>::add_attachment(const int i, const int j)
+{
+    this->attachments[i].push_back(j);
+    this->attachments[j].push_back(i);
 }
 
 template class dlma_system_offlattice<int>;

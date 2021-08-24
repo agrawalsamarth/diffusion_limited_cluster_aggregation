@@ -133,7 +133,6 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed, lattice);
     save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
 
-
     for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
 
         temp_c = sys_state->get_aggregate(i);
@@ -163,6 +162,7 @@ template <typename type>
 void dlma_iterator<type>::run_system()
 {
     while (sys_state->total_aggregates() != 1){
+        //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
         iteration_step();
     }
 }

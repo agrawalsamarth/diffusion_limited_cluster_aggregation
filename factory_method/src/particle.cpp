@@ -43,7 +43,6 @@ void particle<type>::move(type *delta_x)
 
     for (int axis = 0; axis < D; axis++)
         pos_[axis] = box->get_refill(pos_[axis]+delta_x[axis], axis);
-        //pos_[axis] = pos_[axis]+delta_x[axis];
 
 }
 
@@ -94,6 +93,18 @@ void particle<type>::set_current_seed_status(const int seed)
 template<typename type>
 int  particle<type>::get_current_seed_status()
 { return current_seed_status;}
+
+template<typename type>
+void particle<type>::print_neighbours()
+{
+
+    neighbours = box->get_neighbour_list(pos_);
+
+    for (int i = 0; i < neighbours.size(); i++)
+        std::cout<<neighbours[i]<<"\t";
+
+
+}
 
 template class particle<int>;
 template class particle<double>;

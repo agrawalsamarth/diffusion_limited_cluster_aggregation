@@ -40,25 +40,12 @@ void check_aggregation_offlattice<type>::check_for_aggregation(constituent<type>
                 particle_1 = sys_state->get_particle_by_id(particle_id);
                 particle_2 = sys_state->get_particle_by_id(neighbour_id);
 
-                /*if (!particle_1){
-                    std::cout<<"particle 1 is NULL"<<std::endl;
-                }
-
-                if (!particle_2){
-                    
-                    for (int k = 0; k < neighbours.size(); k++)
-                        std::cout<<"k="<<neighbours[k]<<std::endl;
-
-
-                    std::cout<<"particle 2 is NULL"<<std::endl;
-                }*/
-
                 distance = sys_state->get_interparticle_distance(particle_1, particle_2);
 
                 if (distance <= (0.5 * (particle_1->get_diameter()+particle_2->get_diameter())))
                 {
                     if (condition->agg_condition(particle_1, particle_2)){
-                        sys_state->add_attachment(c_1);
+                        sys_state->add_attachment(particle_id, neighbour_id);
                         check_for_aggregation(bind_sys->bind_aggregates(c_1, temp));
                         is_checked = true;
                     }

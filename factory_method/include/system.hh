@@ -49,6 +49,7 @@ class system{
         virtual bool check_viability(constituent<type> *c_1, type *dr) {};
         virtual void move_aggregate(const int i, type *dr) {};
         virtual void add_attachment(constituent<type> *c_1) {};
+        virtual void add_attachment(const int i, const int j) {};
         virtual void print_attachments() {};
 
         virtual int total_aggregates() {};

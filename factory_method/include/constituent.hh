@@ -47,6 +47,8 @@ class constituent{
         virtual void set_current_seed_status(const int seed) {};
         virtual int  get_current_seed_status() {};
 
+        virtual void print_neighbours() {};
+
 };
 
 

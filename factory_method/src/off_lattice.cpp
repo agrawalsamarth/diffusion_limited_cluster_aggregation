@@ -55,7 +55,6 @@ off_lattice<type>::off_lattice(const int dim, type *box_lengths, std::vector<bou
 
     for (int axis = 0; axis < D; axis++)
         periodic[axis] = 1;
-
  
 }
 
@@ -69,13 +68,11 @@ off_lattice<type>::~off_lattice()
 
 template <typename type>
 type off_lattice<type>::get_L(const int axis)
-{ return L[axis]; }
+{  return L[axis]; }
 
 template <typename type>
 type off_lattice<type>::get_refill(type x, int axis){
-
     return (box_bc[axis]->refill(x, L[axis]));
-
 }
 
 template <typename type>

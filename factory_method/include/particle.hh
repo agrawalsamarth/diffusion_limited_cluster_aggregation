@@ -38,6 +38,8 @@ class particle: public constituent<type>{
         void set_current_seed_status(const int seed);
         int  get_current_seed_status();
 
+        void print_neighbours();
+
         
     private:
 
@@ -47,7 +49,7 @@ class particle: public constituent<type>{
         double                  mass;
         simulation_box<type>   *box;
         type                   *pos_;      
-
+        std::vector<int>        neighbours;
         double                  diameter;
         int                     original_seed_status;
         int                     current_seed_status;  
