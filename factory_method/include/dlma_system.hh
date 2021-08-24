@@ -47,6 +47,7 @@ class dlma_system: public system<type>{
         virtual int total_aggregates();
         virtual double get_seedmass();
         virtual constituent<type>* get_particle_by_id(const int id);
+        virtual type get_interparticle_distance(constituent<type> *p_1, constituent<type> *p_2);
 
 
         
@@ -87,6 +88,7 @@ class dlma_system: public system<type>{
         int    rng_seed = 0;
         bool   rng_seed_flag = false;
         type   *L;
+        type   *halfL;
         bool   *L_flag;
         bool    L_flag_and;
         bool    L_flag_or;
@@ -96,6 +98,8 @@ class dlma_system: public system<type>{
         int     latest_cluster_id=0;
 
         bool    is_viable;
+        type    temp_r;
+        type    r2;
 
 };
 

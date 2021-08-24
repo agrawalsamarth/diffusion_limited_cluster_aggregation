@@ -24,6 +24,10 @@ simulation_box<type>* system_factory<type>::create_simulation_box(int lattice, i
         return new on_lattice<type>(dim, box_lengths, system_bc);
     }
 
+    else if (lattice == 0){
+        return new off_lattice<type>(dim, box_lengths, system_bc);
+    }
+
     else{
         std::cout<<"unknown simulation box"<<std::endl;
         exit(EXIT_FAILURE);

@@ -28,7 +28,8 @@ class simulation_box{
 
         virtual std::vector<int> get_neighbour_list(type *ref_pos) {};
 
-        virtual int get_periodicity(const int axis) {};
+        virtual int  get_periodicity(const int axis) {};
+        virtual type get_periodic_distance(type x, type y, int axis) {};
 
         
 

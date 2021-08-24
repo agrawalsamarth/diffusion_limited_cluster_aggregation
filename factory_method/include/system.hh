@@ -54,6 +54,8 @@ class system{
         virtual int total_aggregates() {};
         virtual double get_seedmass() {};
         virtual constituent<type>* get_particle_by_id(const int id) {};
+
+        virtual type get_interparticle_distance(constituent<type> *p_1, constituent<type> *p_2) {};
 };
 
 

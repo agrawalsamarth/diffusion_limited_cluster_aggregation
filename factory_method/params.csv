@@ -1,12 +1,12 @@
 system=dlma
-lattice=1
+lattice=0
 aggregation_type=normal
 aggregation_condition=mass
 bind=normal
 movement=brownian
 D=2
 N=1024
-N_s=1
+N_s=1024
 x0_bc=periodic
 x1_bc=periodic
 x0_L=128

@@ -99,7 +99,7 @@ void dlma_system<type>::read_params_parser(char *params_name)
     std::vector<std::string> bc_names;
     std::vector<std::string> L_names;
 
-    L                = (type*)malloc(sizeof(int) * D);
+    L                = (type*)malloc(sizeof(type) * D);
     L_flag           = (bool*)malloc(sizeof(bool) * D);
     //periodic         = (int*)malloc(sizeof(int) * D);
     
@@ -140,12 +140,13 @@ void dlma_system<type>::read_params_parser(char *params_name)
         for (int axis = 0; axis < D; axis++){
 
             if (results[0] == L_names[axis]){
-                L[axis] = stoi(results[1]);
+                L[axis] = (type)(stod(results[1]));
                 L_flag[axis] = true;
             }
 
         }
     }
+
 
     parser.close();
 
@@ -277,6 +278,11 @@ void dlma_system<type>::read_params_parser(char *params_name)
     generator.seed(rng_seed);
     dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
     attachments.resize(N);
+
+    halfL = (type*)malloc(sizeof(type) * D);
+
+    for (int axis = 0; axis < D; axis++)
+        halfL[axis] = 0.5 * L[axis];    
 
 }
 
@@ -493,6 +499,22 @@ double dlma_system<type>::get_alpha()
 template<typename type>
 std::vector<int> dlma_system<type>::get_attachment_vector(const int i)
 {return attachments[i];}
+
+template<typename type>
+type dlma_system<type>::get_interparticle_distance(constituent<type> *p_1, constituent<type> *p_2)
+{
+    r2 = 0;
+
+    for (int axis = 0; axis < D; axis++){
+        temp_r = box->get_periodic_distance(p_1->pos(axis), p_2->pos(axis), axis);
+        r2    += (temp_r * temp_r);
+    }
+
+    r2 = sqrt(r2);
+
+    return r2;
+
+}
 
 template class dlma_system<int>;
 template class dlma_system<double>;

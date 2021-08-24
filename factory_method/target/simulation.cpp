@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     }
 
 
-    system_iterator<int> *test = new dlma_iterator<int>(argv[1]);
+    system_iterator<double> *test = new dlma_iterator<double>(argv[1]);
     test->run_system();
 
     if (argc < 3)

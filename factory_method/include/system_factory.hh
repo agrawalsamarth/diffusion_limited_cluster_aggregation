@@ -2,6 +2,7 @@
 #include "cluster.hh"
 #include "periodic_bc.hh"
 #include "on_lattice.hh"
+#include "off_lattice.hh"
 #include <string.h>
 
 #ifndef SYSTEM_FACTORY_H

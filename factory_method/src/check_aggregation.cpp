@@ -1,9 +1,9 @@
-#include <check_aggregation.hh>
+#include <check_aggregation_onlattice.hh>
 
 namespace simulation{
 
 template<typename type>
-check_aggregation<type>::check_aggregation(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition){
+check_aggregation_onlattice<type>::check_aggregation_onlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition){
 
     sys_state = system_state;
     bind_sys  = bind_system;
@@ -11,7 +11,7 @@ check_aggregation<type>::check_aggregation(system<type> *system_state, normal_bi
 }
 
 template <typename type>
-void check_aggregation<type>::check_for_aggregation(constituent<type> *c_1){
+void check_aggregation_onlattice<type>::check_for_aggregation(constituent<type> *c_1){
 
     bool is_checked = false;
     int  particle_id;
@@ -67,7 +67,7 @@ void check_aggregation<type>::check_for_aggregation(constituent<type> *c_1){
 
 } 
 
-template class check_aggregation<int>;
-template class check_aggregation<double>;
+template class check_aggregation_onlattice<int>;
+template class check_aggregation_onlattice<double>;
 
 }

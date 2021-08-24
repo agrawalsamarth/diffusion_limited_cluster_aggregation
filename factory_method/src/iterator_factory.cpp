@@ -3,10 +3,12 @@
 namespace simulation{
 
 template <typename type>
-particle_movement<type>* iterator_factory<type>::create_movement(std::string name_type, int dim, int rng_seed)
+particle_movement<type>* iterator_factory<type>::create_movement(std::string name_type, int dim, int rng_seed, int lattice)
 {
-    if (strcmp(name_type.c_str(), "brownian")==0)
+    if ((strcmp(name_type.c_str(), "brownian")==0) && (lattice == 1))
         return new brownian_movement<type>(dim, rng_seed);
+    else if ((strcmp(name_type.c_str(), "brownian")==0) && (lattice == 0))
+        return new brownian_movement_offlattice<type>(dim, rng_seed);
     else{
         std::cout<<"unknown movement type"<<std::endl;
         exit(EXIT_FAILURE);
@@ -26,11 +28,13 @@ aggregation_condition<type>* iterator_factory<type>::create_aggregation_conditio
 }
 
 template <typename type>
-check_aggregation<type>* iterator_factory<type>::create_check_aggregation(std::string name_type, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition)
+check_aggregation<type>* iterator_factory<type>::create_check_aggregation(std::string name_type, int lattice, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition)
 {
 
-    if (strcmp(name_type.c_str(), "normal")==0)
-        return new check_aggregation<type>(system_state, bind_system, ref_condition);
+    if ((strcmp(name_type.c_str(), "normal")==0) && (lattice == 1))
+        return new check_aggregation_onlattice<type>(system_state, bind_system, ref_condition);
+    else if ((strcmp(name_type.c_str(), "normal")==0) && (lattice == 0))
+        return new check_aggregation_offlattice<type>(system_state, bind_system, ref_condition);
     else{
         std::cout<<"unknown aggregation type"<<std::endl;
         exit(EXIT_FAILURE);
@@ -72,8 +76,12 @@ system<type>* iterator_factory<type>::create_new_system(std::string name_type, i
 {
     if ((strcmp(name_type.c_str(), "dlma")==0) && (lattice == 1))
         return new dlma_system_onlattice<type>(filename);
-    else
-        std::cout<<"unknown system type"<<std::endl;        
+    else if ((strcmp(name_type.c_str(), "dlma")==0) && (lattice == 0))
+        return new dlma_system_offlattice<type>(filename);
+    else{
+        std::cout<<"unknown system type"<<std::endl;
+        exit(EXIT_FAILURE);
+    }        
 
 }
 

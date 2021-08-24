@@ -129,8 +129,8 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     sys_state   = factory->create_new_system(save_config_name, lattice, filename);
     binding_obj = factory->create_bind_system(bind_name, sys_state);
     agg_condition = factory->create_aggregation_condition(agg_condition_name, sys_state);
-    aggregation_check_obj = factory->create_check_aggregation(check_agg_name, sys_state, binding_obj, agg_condition);
-    movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed);
+    aggregation_check_obj = factory->create_check_aggregation(check_agg_name, lattice, sys_state, binding_obj, agg_condition);
+    movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed, lattice);
     save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
 
 
@@ -162,8 +162,9 @@ void dlma_iterator<type>::iteration_step()
 template <typename type>
 void dlma_iterator<type>::run_system()
 {
-    while (sys_state->total_aggregates() != 1)
+    while (sys_state->total_aggregates() != 1){
         iteration_step();
+    }
 }
 
 template <typename type>

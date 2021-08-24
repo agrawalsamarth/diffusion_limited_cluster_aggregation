@@ -1,5 +1,6 @@
 #include <dlma_system.hh>
 #include <dlma_system_onlattice.hh>
+#include <dlma_system_offlattice.hh>
 
 #ifndef NORMAL_BIND_H
 #define NORMAL_BIND_H

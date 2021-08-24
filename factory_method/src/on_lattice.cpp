@@ -69,7 +69,7 @@ type on_lattice<type>::get_refill(type x, int axis){
 }
 
 template <typename type>
-void on_lattice<type>::add_particle_to_cell(const int id, int *pos){
+void on_lattice<type>::add_particle_to_cell(const int id, type *pos){
 
     counter = 0;
 
@@ -81,7 +81,7 @@ void on_lattice<type>::add_particle_to_cell(const int id, int *pos){
 }
 
 template <typename type>
-void on_lattice<type>::remove_particle_from_cell(const int id, int *pos){
+void on_lattice<type>::remove_particle_from_cell(const int id, type *pos){
 
     counter = 0;
 
@@ -106,7 +106,7 @@ int on_lattice<type>::get_particle_id(type *pos){
 }
 
 template <typename type>
-std::vector<int> on_lattice<type>::get_neighbour_list(int *pos){
+std::vector<int> on_lattice<type>::get_neighbour_list(type *pos){
 
     neighbours.clear();
 
