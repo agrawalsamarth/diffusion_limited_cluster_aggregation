@@ -34,6 +34,7 @@ constituent<type>* normal_bind<type>::bind_aggregates(constituent<type> *c_1, co
     sys_state->remove_aggregate(c_2->get_id());
     sys_state->add_aggregate(temp);
     sys_state->build_id_map();
+    sys_state->calculate_propensity();
 
     return temp;
 

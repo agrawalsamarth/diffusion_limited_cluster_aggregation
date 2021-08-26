@@ -17,9 +17,11 @@ class dlma_system_offlattice: public dlma_system<type>{
     
     private:
 
-        void fix_overlap(const int i, type *dr);
-        constituent<type> *temp;
-        std::vector<int> neighbours;
+        type fix_overlap(const int i, type *dr);
+        constituent<type> *image;
+        std::vector<int>   actual_list;
+        std::vector<int>   image_list;
+        std::vector<int>   neighbours;
         int iters = 0;
 
 };

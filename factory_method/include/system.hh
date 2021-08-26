@@ -57,6 +57,7 @@ class system{
         virtual constituent<type>* get_particle_by_id(const int id) {};
 
         virtual type get_interparticle_distance(constituent<type> *p_1, constituent<type> *p_2) {};
+        virtual int choose_aggregate() {};
 };
 
 

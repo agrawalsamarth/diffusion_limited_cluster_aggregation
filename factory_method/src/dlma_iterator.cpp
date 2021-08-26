@@ -150,7 +150,7 @@ template <typename type>
 void dlma_iterator<type>::iteration_step()
 {
 
-    temp   = (int)(movement_test->get_rand() * sys_state->total_aggregates());
+    temp   = sys_state->choose_aggregate();
     temp_c = sys_state->get_constituent(temp); 
     sys_state->move_aggregate(temp, movement_test->delta_x());
     aggregation_check_obj->check_for_aggregation(temp_c);

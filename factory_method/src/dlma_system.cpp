@@ -289,19 +289,28 @@ void dlma_system<type>::read_params_parser(char *params_name)
 template<typename type>
 void dlma_system<type>::calculate_propensity()
 {
+    double temp_propensity;
 
-    int agg_size = aggregates.size();
+    propensity.clear();
+    total_propensity = 0.;
 
-    propensity     = (double*)malloc(sizeof(double) * agg_size);
-    cum_propensity = (double*)malloc(sizeof(double) * agg_size);
-
-    for (int i = 0; i < agg_size; i++){
-        propensity[i]     = 0.;
-        cum_propensity[i] = 0.;
+    for (int i = 0; i < aggregates.size(); i++){
+        temp_propensity   = std::pow(aggregates[i]->get_mass(), (-1. * alpha));
+        total_propensity += temp_propensity;
+        propensity.push_back(total_propensity);
     }
 
-    for (int i = 0; i < agg_size; i++){
-        propensity[i] = std::pow(aggregates[i]->get_mass(), alpha);
+}
+
+template<typename type>
+int dlma_system<type>::choose_aggregate()
+{
+    double temp = 0.;
+    temp = dis(generator) * total_propensity;
+
+    for (int i = 0; i < aggregates.size(); i++){
+        if (temp < propensity[i])
+            return i;
     }
 
 }

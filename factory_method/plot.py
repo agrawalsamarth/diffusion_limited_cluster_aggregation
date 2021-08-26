@@ -25,4 +25,4 @@ for i in range(N):
     
     df.loc[i, 'r_att'] = np.sqrt(rx**2 + ry**2)
     
-plt.scatter(df['x0'], df['x1'])
+plt.scatter(df['x0'], df['x1'],s=1)

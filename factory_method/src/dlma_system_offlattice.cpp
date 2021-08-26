@@ -77,172 +77,120 @@ void dlma_system_offlattice<type>::initialize_system()
     }
 
     this->build_id_map();
+
+    name_type = "particle";
+    image = this->factory.create_constituent(this->N, this->lattice, this->D, name_type, this->box);
+
+    this->calculate_propensity();
     
 }
 
 template <typename type>
 void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
 {
-    //iters++;
+
+    type scale = fix_overlap(i, dr);
+
+    for (int axis = 0; axis < this->D; axis++)
+        dr[axis] = scale * dr[axis];
 
     this->aggregates[i]->remove_constituent_from_cell();
     this->aggregates[i]->move(dr);
     this->aggregates[i]->add_constituent_to_cell();
 
-    fix_overlap(i, dr);
-    //iters=0;
 
 }
 
 template<typename type>
-void dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
+type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 {
 
     constituent<type> *c_1 = this->aggregates[i];
-    constituent<type> *particle_1;
-    constituent<type> *particle_2;
+    constituent<type> *ref_particle;
+    constituent<type> *nb_particle;
+    //constituent<type> *image;
     type distance;
-    type max_overlap = -1.;
+    type fraction = 1.;
 
     int particle_id;
     int cluster_id = c_1->get_id();
     int neighbour_id;
     int neighbour_cluster_id;
 
-    int p_id;
-    int n_id;
-
-    type dot_product;
-    type scale;
-
-    type sum = 0;
-    type dot = 0;
-    type tolerance = (-1. * 1e-4);
     type diff[this->D];
-    type temp_dr[this->D];
+    type beta;
+    type q;
+    type dia_distance;
+    type diff_2;
+    type alpha;
 
-    while (max_overlap < tolerance){
+    for (int i = 0; i < c_1->get_size(); i++){
 
-        max_overlap = 0.;
+        ref_particle = c_1->get_element(i);
 
-        for (int i = 0; i < c_1->get_size(); i++){
+        for (int axis = 0; axis < this->D; axis++)
+            image->pos(axis) = ref_particle->pos(axis);
 
-            neighbours  = c_1->get_neighbour_list(i);
-            particle_id = c_1->get_element_id(i); 
+        image->move(dr);
 
-            for (int j = 0; j < neighbours.size(); j++) { 
+        actual_list = ref_particle->get_neighbour_list();
+        image_list  = image->get_neighbour_list();
+        
+        neighbours.clear();
+        neighbours.reserve(actual_list.size() + image_list.size());
+        neighbours.insert( neighbours.end(), actual_list.begin(), actual_list.end() );
+        neighbours.insert( neighbours.end(), image_list.begin(), image_list.end() );
+           
+        for (int j = 0; j < neighbours.size(); j++) { 
 
-                neighbour_id = neighbours[j];
-                neighbour_cluster_id = this->get_id_map(neighbour_id);
+            neighbour_id = neighbours[j];
+            neighbour_cluster_id = this->get_id_map(neighbour_id);
 
-                if (neighbour_cluster_id != cluster_id){
+            if (neighbour_cluster_id != cluster_id){
 
-                    particle_1 = this->get_particle_by_id(particle_id);
-                    particle_2 = this->get_particle_by_id(neighbour_id);
+                nb_particle = this->get_particle_by_id(neighbour_id);
 
-                    distance  = this->get_interparticle_distance(particle_1, particle_2);
-                    distance  = distance - 0.5 * (particle_1->get_diameter() + particle_2->get_diameter());
+                for (int axis = 0; axis < this->D; axis++)
+                    diff[axis] = this->box->get_periodic_distance(nb_particle->pos(axis), ref_particle->pos(axis), axis);
 
-                    //std::cout<<"distance = "<<distance<<std::endl;
+                q = 0;
 
-                    if (distance < max_overlap){
-                        max_overlap = distance;
-                        //std::cout<<"max_overlap = "<<max_overlap<<"\t id1 = "<<particle_id<<"\t id2 = "<<neighbour_id<<"\t distance = "<<distance<<std::endl;
+                for (int axis = 0; axis < this->D; axis++)
+                    q += diff[axis] * dr[axis];
 
-                        //for (int axis = 0; axis < this->D; axis++)
-                            //std::cout<<"axis = "<<axis<<"\t"<<particle_1->pos(axis)<<"\t"<<particle_2->pos(axis)<<std::endl;
+                diff_2 = 0;
 
-                        p_id = particle_id;
-                        n_id = neighbour_id;
+                for (int axis = 0; axis < this->D; axis++)
+                    diff_2 += diff[axis] * diff[axis];
+
+                dia_distance = 0.5 * (ref_particle->get_diameter() + nb_particle->get_diameter());
+                dia_distance = dia_distance * dia_distance;
+
+                beta = (q * q) - diff_2 + dia_distance;
+
+                //if (fabs(diff_2 - dia_distance) < 1e-10)
+                    //return 0;
+
+                if (beta >= 0.){
+
+                    alpha = q - sqrt(beta);
+
+                    if (alpha >= 0){
+
+                        if (alpha < fraction)
+                            fraction = alpha;
 
                     }
 
                 }
+
+
             }
-
-        }
-
-        if (max_overlap < tolerance){
-
-            particle_1 = this->get_particle_by_id(p_id);
-            particle_2 = this->get_particle_by_id(n_id);
-
-            if (!particle_1)
-                std::cout<<"particle 1 is NULL"<<std::endl;
-
-            if (!particle_2)
-                std::cout<<"particle 2 is NULL"<<std::endl;
-
-            for (int axis = 0; axis < this->D; axis++){
-                diff[axis] = this->box->get_periodic_distance(particle_1->pos(axis), particle_2->pos(axis), axis);
-                //std::cout<<diff[axis]<<std::endl;
-            }
-
-            sum = 0.;
-
-            for (int axis = 0; axis < this->D; axis++){
-                sum += (diff[axis] * diff[axis]);
-            }
-
-            sum = sqrt(sum);
-
-            for (int axis = 0; axis < this->D; axis++)
-                diff[axis] /= (1. * sum);
-
-            //for (int axis = 0; axis < this->D; axis++)
-                //std::cout<<"normalized diff = "<<diff[axis]<<std::endl;
-
-            /*dot = 0.;
-
-            for (int axis = 0; axis < this->D; axis++)
-                dot += diff[axis] * dr[axis];
-
-            dot = fabs(dot);
-
-            scale = (-1. * max_overlap)/(1. * dot);*/
-
-            for (int axis = 0; axis < this->D; axis++){
-                temp_dr[axis] = max_overlap * diff[axis];
-                //std::cout<<diff[axis]<<std::endl;
-            }
-
-            this->aggregates[i]->remove_constituent_from_cell();
-            this->aggregates[i]->move(temp_dr);
-            this->aggregates[i]->add_constituent_to_cell();        
         }
 
     }
 
-    //std::cout<<"max_overlap="<<max_overlap<<std::endl;
-
-
-    /*if ((iters > 2) && (max_overlap < (-1. * 1e-4))){
-
-        //std::cout<<"max_overlap = "<<max_overlap<<std::endl;
-
-        std::cout<<"particle_id = "<<p_id<<"\t neighbour_id = "<<n_id<<"\t max_overlap = "<<max_overlap<<std::endl;
-
-        for (int i = 0; i < this->D; i++)
-            std::cout<<dr[i]<<"\t";
-
-        std::cout<<"\n";
-
-        //std::cout<<particle_id<<"\t"<<neighbour_id<<std::endl;
-
-        for (int axis = 0; axis < this->D; axis++){
-            dr[axis] = (max_overlap * dr[axis]);
-        }
-
-        for (int i = 0; i < this->D; i++)
-            std::cout<<dr[i]<<"\t";
-
-        std::cout<<"\n";
-
-        exit(EXIT_FAILURE);
-
-    }*/
-
-
+    return fraction;
 
 
 }

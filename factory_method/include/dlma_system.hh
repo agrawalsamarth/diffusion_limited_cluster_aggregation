@@ -49,6 +49,7 @@ class dlma_system: public system<type>{
         virtual double get_seedmass();
         virtual constituent<type>* get_particle_by_id(const int id);
         virtual type get_interparticle_distance(constituent<type> *p_1, constituent<type> *p_2);
+        virtual int choose_aggregate();
 
 
         
@@ -67,8 +68,8 @@ class dlma_system: public system<type>{
         std::map<int, int> id_map;
         std::vector<std::vector<int>> attachments;
 
-        double  *propensity;
-        double  *cum_propensity;
+        std::vector<double> propensity;
+        double total_propensity;
 
         int    N;
         bool   N_flag = false;
