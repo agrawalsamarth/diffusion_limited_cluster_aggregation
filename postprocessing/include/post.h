@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include </home/samarth/codes/voronoi/include/voro++/voro++.hh>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -100,6 +101,8 @@ class postprocessing
     void get_headers();
     bool check_percolation();
     double calc_rog();
+
+    void psd();
 
     private:
 

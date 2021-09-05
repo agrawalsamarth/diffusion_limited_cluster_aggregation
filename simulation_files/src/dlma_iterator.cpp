@@ -162,7 +162,7 @@ template <typename type>
 void dlma_iterator<type>::run_system()
 {
     while (sys_state->total_aggregates() != 1){
-        std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
+        //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
         iteration_step();
     }
 }

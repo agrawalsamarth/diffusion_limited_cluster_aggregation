@@ -7,6 +7,9 @@ dlma_system_offlattice<type>::dlma_system_offlattice(char *params_name)
 {
     this->read_params_parser(params_name);
     initialize_system();
+
+    int N_pair = (this->N * (this->N - 1))/2; 
+    rij = (double*)malloc(sizeof(double)*N_pair);
 }
 
 template <typename type>
@@ -98,6 +101,8 @@ void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
     this->aggregates[i]->move(dr);
     this->aggregates[i]->add_constituent_to_cell();
 
+    //std::cout<<"i="<<this->aggregates[i]->get_id()<<std::endl;
+    //calc_rij();
 
 }
 
@@ -108,7 +113,6 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
     constituent<type> *c_1 = this->aggregates[i];
     constituent<type> *ref_particle;
     constituent<type> *nb_particle;
-    //constituent<type> *image;
     type distance;
     type fraction = 1.;
 
@@ -168,17 +172,20 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
                 beta = (q * q) - diff_2 + dia_distance;
 
-                //if (fabs(diff_2 - dia_distance) < 1e-10)
-                    //return 0;
 
                 if (beta >= 0.){
 
                     alpha = q - sqrt(beta);
 
+                    if (fabs(alpha) < 1e-10){
+                        return 0.;
+                    }
+
                     if (alpha >= 0){
 
-                        if (alpha < fraction)
-                            fraction = alpha;
+                        if (alpha < fraction){
+                            fraction  = alpha;
+                        } 
 
                     }
 
@@ -186,6 +193,7 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
 
             }
+
         }
 
     }
@@ -200,6 +208,34 @@ void dlma_system_offlattice<type>::add_attachment(const int i, const int j)
 {
     this->attachments[i].push_back(j);
     this->attachments[j].push_back(i);
+}
+
+template<typename type>
+void dlma_system_offlattice<type>::calc_rij()
+{
+
+    int count = 0;
+
+    constituent<type> *p_1;
+    constituent<type> *p_2;
+
+    for (int i = 0; i < this->N; i++){
+        p_1 = this->all_particles[i];
+        for (int j = i+1; j < this->N; j++){
+            p_2 = this->all_particles[j];
+            rij[count] = this->get_interparticle_distance(p_1, p_2);
+
+            if (rij[count] < (1.-1e-4)){
+                std::cout<<"particle i = "<<p_1->get_aggregate_id()<<"\t particle j = "<<p_2->get_aggregate_id()<<"\t distance="<<rij[count]<<std::endl;
+                exit(EXIT_FAILURE);
+            }
+
+            count++;
+
+        }
+    }
+
+
 }
 
 template class dlma_system_offlattice<int>;
