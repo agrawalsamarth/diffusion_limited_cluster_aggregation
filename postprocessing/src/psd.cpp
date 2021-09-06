@@ -14,7 +14,6 @@ void postprocessing::psd()
     for (int i = 0; i < numParticles(); i++)
         base_con.put(i, pos(i,0), pos(i,1), pos(i,2));
 
-
     voro::c_loop_all  base_loop(base_con);
     voro::voronoicell cell;
 
@@ -22,10 +21,6 @@ void postprocessing::psd()
     double centre_pos[D_];
     double delta_x[D_];
     double particle_pos[D_];
-
-    double x;
-    double y;
-    double z;
 
     std::vector<double> v;
 
@@ -76,11 +71,11 @@ void postprocessing::psd()
             r = 0;
             
             for (int axis = 0; axis < dim(); axis++){
-                delta_x[axis]  = get_periodic_image(v[3*i+0] - particle_pos[axis], 0);
+                delta_x[axis]  = get_periodic_image(v[3*i+axis]-particle_pos[axis], axis);
                 r             += delta_x[axis] * delta_x[axis];
             }
 
-            r -= radius(id);
+            //r -= radius(id);
 
             if ((ref_r < r) && (r > r_max)){
                 r_max = r;
@@ -141,7 +136,7 @@ void postprocessing::psd()
                     r            += (delta_x[axis] * delta_x[axis]);
                 }
 
-                r -= radius(rid);
+                //r -= radius(rid);
 
                 //std::cout<<"r = "<<r<<"\tr_max = "<<r_max<<"\trid = "<<rid<<std::endl;
                 //std::cout<<"v_x = "<<v_x<<"\tv_y = "<<v_y<<"\tv_z = "<<v_z<<std::endl;
@@ -164,6 +159,7 @@ void postprocessing::psd()
 
     }while(sample_loop.inc());
 
+    std::cout<<"data structure test"<<std::endl;
     std::cout<<"largest radius = "<<sqrt(r_max)<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
 
 
