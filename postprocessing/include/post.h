@@ -52,6 +52,8 @@ class postprocessing
     int& current_seed(const int i);
     double  diameter(const int i) const;
     double& diameter(const int i);
+    double  radius(const int i) const;
+    double& radius(const int i);
     int  unfoldedAttachments(const int i) const;
     int& unfoldedAttachments(const int i);
     int  attachment(const int i, const int j) const;
@@ -121,6 +123,7 @@ class postprocessing
     double *L_;
     double *halfL_;
     double *diameter_;
+    double *radius_;
     int    *periodic_;
     double *posDiff_;
     int    *posDiff_int_;

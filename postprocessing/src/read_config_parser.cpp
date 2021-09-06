@@ -94,6 +94,10 @@ void postprocessing::read_config_parser(char *config_filename)
 
     parser.close();
 
+    for (int i = 0; i < numParticles(); i++){
+        radius(i) = 0.5 * diameter(i);
+    }
+
 }
 
 

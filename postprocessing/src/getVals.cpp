@@ -96,6 +96,13 @@ namespace post_p
   postprocessing::diameter(const int i)
   { return diameter_[i]; }
 
+  double
+  postprocessing::radius(const int i) const
+  { return radius_[i]; }
+  double&
+  postprocessing::radius(const int i)
+  { return radius_[i]; }
+
   int
   postprocessing::unfoldedAttachments(const int i) const
   { return unfolded_num_attachments_[i]; }
