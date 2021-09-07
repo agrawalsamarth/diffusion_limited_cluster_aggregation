@@ -6,7 +6,7 @@ namespace post_p{
 void postprocessing::psd()
 {
 
-    voro::container_poly base_con(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, 2*numParticles());
+    voro::container_poly base_con(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles());
 
     for (int i = 0; i < numParticles(); i++)
         base_con.put(i, pos(i,0), pos(i,1), pos(i,2), radius(i));
@@ -37,30 +37,12 @@ void postprocessing::psd()
         base_loop.pos(particle_pos[0], particle_pos[1], particle_pos[2]);
         id=base_loop.pid();
 
-        /*for (int axis = 0; axis < dim(); axis++)
-                std::cout<<particle_pos[axis]<<"\t";
-
-        std::cout<<"\n";*/
-
         base_con.compute_cell(cell,base_loop);
         cell.vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
 
         for (int i = 0; i < cell.p; i++){
 
             ref_r = 0;
-
-            /*for (int axis = 0; axis < dim(); axis++)
-                std::cout<<v[3*i+axis]<<"\t";
-
-            std::cout<<"\n";
-
-            for (int axis = 0; axis < dim(); axis++)
-                v[3*i+axis] = get_periodic_image(v[3*i+axis], axis);
-
-            for (int axis = 0; axis < dim(); axis++)
-                std::cout<<v[3*i+axis]<<"\t";
-
-            std::cout<<"\n";*/
 
             for (int axis = 0; axis < dim(); axis++)
                 v[3*i+axis] = get_periodic_image(v[3*i+axis], axis);
@@ -95,12 +77,12 @@ void postprocessing::psd()
 
     }while(base_loop.inc());
     
-    voro::container_poly sample_con(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, 2 * numParticles());
+    voro::container_poly *sample_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles()+1);
 
     for (int i = 0; i < numParticles(); i++)
-        sample_con.put(i, pos(i,0), pos(i,1), pos(i,2),radius(i));
+        sample_con->put(i, pos(i,0), pos(i,1), pos(i,2),radius(i));
 
-    sample_con.put(numParticles(), test_pos[0], test_pos[1], test_pos[2], test_radius);
+    sample_con->put(numParticles(), test_pos[0], test_pos[1], test_pos[2], test_radius);
 
     /*for (int i = 0; i < numParticles(); i++)
         sample_con.put(i, pos(i,0), pos(i,1), pos(i,2));
@@ -108,7 +90,7 @@ void postprocessing::psd()
     sample_con.put(numParticles(), test_pos[0], test_pos[1], test_pos[2]);*/
 
 
-    voro::c_loop_all sample_loop(sample_con);
+    voro::c_loop_all *sample_loop = new voro::c_loop_all(*sample_con);
 
 
     double vertex[D_];
@@ -116,15 +98,14 @@ void postprocessing::psd()
 
     int rid;
 
-    if(sample_loop.start()) do  {
-        sample_loop.pos(particle_pos[0], particle_pos[1], particle_pos[2]);
-        id=sample_loop.pid();
-
-        sample_con.compute_cell(cell,sample_loop);
-        cell.vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
+    if(sample_loop->start()) do  {
+        sample_loop->pos(particle_pos[0], particle_pos[1], particle_pos[2]);
+        id=sample_loop->pid();
 
         if (id == numParticles()){
 
+            sample_con->compute_cell(cell,*sample_loop);
+            cell.vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
             //std::cout<<"here"<<std::endl;
 
             for (int i = 0; i < cell.p; i++){
@@ -159,7 +140,7 @@ void postprocessing::psd()
                 //std::cout<<"r = "<<r<<"\tr_max = "<<r_max<<"\trid = "<<rid<<std::endl;
                 //std::cout<<"v_x = "<<v_x<<"\tv_y = "<<v_y<<"\tv_z = "<<v_z<<std::endl;
 
-                if ((r > r_max) && (ref_r < (r+1e-4))){
+                if ((r > r_max) && (ref_r < (r+1e-8))){
 
                     r_max = r;
 
@@ -175,7 +156,10 @@ void postprocessing::psd()
         }
 
 
-    }while(sample_loop.inc());
+    }while(sample_loop->inc());
+
+    delete sample_con;
+    delete sample_loop;
 
     //std::cout<<"radical test"<<std::endl;
     std::cout<<"largest radius = "<<r_max<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
