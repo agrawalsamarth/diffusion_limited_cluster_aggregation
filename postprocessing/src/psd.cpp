@@ -10,6 +10,7 @@ void postprocessing::psd()
     double delta_x[D_];
     double particle_pos[D_];
     std::vector<double> v;
+    std::vector<std::vector<double>> base_vertices(N_);
     int id;
     double r;
     double r_max;
@@ -18,10 +19,13 @@ void postprocessing::psd()
     double max_vertex_length;
     double vertex[D_];
     double rx[D_];
+    int rid;
+    int size;
+    std::vector<double> temp_v;
 
 
     int iters = 0;
-    int max_iters = 1e1;
+    int max_iters = 3;
 
     voro::container_poly *base_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles());
 
@@ -29,14 +33,11 @@ void postprocessing::psd()
         base_con->put(i, pos(i,0), pos(i,1), pos(i,2), radius(i));
 
     voro::c_loop_all    *vertex_loop = new voro::c_loop_all(*base_con);
-    voro::voronoicell   *cell        = new voro::voronoicell;
     voro::c_loop_all    *base_loop   = new voro::c_loop_all(*base_con);
+    voro::voronoicell   *cell        = new voro::voronoicell;
 
     voro::container_poly    *sample_con;
     voro::c_loop_all        *sample_loop;
-
-    //base_con->compute_all_cells();
-
     max_vertex_length = 0.;
 
     if(vertex_loop->start()) do{
@@ -45,15 +46,18 @@ void postprocessing::psd()
         id=vertex_loop->pid();
         cell->vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
 
+        if (cell->p > 0)
+            base_vertices[id] = v;
+
         for (int i = 0; i < cell->p; i++){
 
             for (int axis = 0; axis < dim(); axis++)
-                v[3*i+axis] = get_periodic_image(v[3*i+axis], axis);
+                vertex[axis] = get_periodic_image(v[3*i+axis], axis);
 
             r = 0;
             
             for (int axis = 0; axis < dim(); axis++){
-                delta_x[axis]  = get_periodic_image(v[3*i+axis]-particle_pos[axis], axis);
+                delta_x[axis]  = get_periodic_image(vertex[axis]-particle_pos[axis], axis);
                 r             += delta_x[axis] * delta_x[axis];
             }
 
@@ -70,6 +74,8 @@ void postprocessing::psd()
 
     max_vertex_length += 1e-8;
     bool in_void_space;
+
+    bool test;
 
     while (iters < max_iters){
 
@@ -89,11 +95,12 @@ void postprocessing::psd()
 
         r  = sqrt(r);
 
+        //std::cout<<"r="<<r<<std::endl;
+
         if (r < radius(id))
             in_void_space = false;
         else
             in_void_space = true;
-
 
         if (in_void_space){
 
@@ -103,37 +110,54 @@ void postprocessing::psd()
 
                     base_loop->pos(particle_pos[0], particle_pos[1], particle_pos[2]);
                     id=base_loop->pid();
-                    cell->vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
+                    v.clear();
+                    v = base_vertices[id];
+                    size = v.size()/3;
 
-                    for (int i = 0; i < cell->p; i++){
+                    r = 0;
+                    
+                    for (int axis = 0; axis < dim(); axis++){
+                        delta_x[axis]  = get_periodic_image(test_pos[axis]-particle_pos[axis], axis);
+                        r             += delta_x[axis] * delta_x[axis];
+                    }
 
-                        ref_r = 0;
+                    r  = sqrt(r);
 
-                        for (int axis = 0; axis < dim(); axis++)
-                            v[3*i+axis] = get_periodic_image(v[3*i+axis], axis);
+                    if (r <= max_vertex_length){
 
-                        for (int axis = 0; axis < dim(); axis++){
-                            delta_x[axis] = get_periodic_image(v[3*i+axis]-test_pos[axis], axis);
-                            ref_r        += (delta_x[axis] * delta_x[axis]);
-                        }
-                        
-                        ref_r = sqrt(ref_r);
+                        for (int i = 0; i < size; i++){
 
-                        r = 0;
-                        
-                        for (int axis = 0; axis < dim(); axis++){
-                            delta_x[axis]  = get_periodic_image(v[3*i+axis]-particle_pos[axis], axis);
-                            r             += delta_x[axis] * delta_x[axis];
-                        }
-
-                        r  = sqrt(r);
-                        r -= radius(id);
-
-                        if ((ref_r < r) && (r > r_max)){
-                            r_max = r;
+                            ref_r = 0;
 
                             for (int axis = 0; axis < dim(); axis++)
-                                centre_pos[axis] = v[3*i+axis];
+                                vertex[axis] = get_periodic_image(v[3*i+axis], axis);
+
+                            for (int axis = 0; axis < dim(); axis++){
+                                delta_x[axis] = get_periodic_image(vertex[axis]-test_pos[axis], axis);
+                                ref_r        += (delta_x[axis] * delta_x[axis]);
+                            }
+                            
+                            ref_r = sqrt(ref_r);
+
+                            r = 0;
+                            
+                            for (int axis = 0; axis < dim(); axis++){
+                                delta_x[axis]  = get_periodic_image(vertex[axis]-particle_pos[axis], axis);
+                                r             += delta_x[axis] * delta_x[axis];
+                            }
+
+                            r  = sqrt(r);
+                            r -= radius(id);
+
+                            if ((ref_r < r) && (r > r_max)){
+                                //std::cout<<"r_max old = "<<r_max<<std::endl;
+                                r_max = r;
+                                //std::cout<<"r_max new = "<<r_max<<std::endl;
+
+                                for (int axis = 0; axis < dim(); axis++)
+                                    centre_pos[axis] = vertex[axis];
+
+                            }
 
                         }
 
@@ -150,13 +174,7 @@ void postprocessing::psd()
                 sample_con->put(i, pos(i,0), pos(i,1), pos(i,2),radius(i));
 
             sample_con->put(numParticles(), test_pos[0], test_pos[1], test_pos[2], test_radius);
-
             sample_loop = new voro::c_loop_all(*sample_con);
-            //sample_loop->setup_sphere(test_pos[0], test_pos[1], test_pos[2], 1e-4);
-
-            int rid;
-
-            //int sample_i = 0;
 
             if(sample_loop->start()) do  {
 
@@ -169,7 +187,6 @@ void postprocessing::psd()
 
                     sample_con->compute_cell(*cell,*sample_loop);
                     cell->vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
-                    //std::cout<<"here"<<std::endl;
 
                     for (int i = 0; i < cell->p; i++){
 
