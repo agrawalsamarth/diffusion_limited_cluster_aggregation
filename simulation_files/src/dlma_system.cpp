@@ -166,8 +166,10 @@ void dlma_system<type>::read_params_parser(char *params_name)
 
     if (L_flag_and == false){
 
-        for (int axis = 0; axis < D; axis++)
+        for (int axis = 0; axis < D; axis++){
             L[axis] = (type)(pow((1.*N)/(1.*phi), 1./(1.*D)));
+            //std::cout<<L[axis]<<std::endl;
+        }
         
 
         for (int axis = 0; axis < D; axis++)
