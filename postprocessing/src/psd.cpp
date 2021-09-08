@@ -3,7 +3,7 @@
 namespace post_p{
 
 
-void postprocessing::psd()
+void postprocessing::psd(int total_iters)
 {
     double test_pos[D_];
     double centre_pos[D_];
@@ -21,11 +21,11 @@ void postprocessing::psd()
     double rx[D_];
     int rid;
     int size;
-    std::vector<double> temp_v;
+    
+    radius_dis = (double*)malloc(sizeof(double) * total_iters);
 
-
-    int iters = 0;
-    int max_iters = 3;
+    int iters     = 0;
+    max_psd_iters = total_iters;
 
     voro::container_poly *base_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles());
 
@@ -77,12 +77,12 @@ void postprocessing::psd()
 
     bool test;
 
-    while (iters < max_iters){
+    while (iters < max_psd_iters){
 
         r_max = 0.;
 
         for (int axis = 0; axis < dim(); axis++)
-            test_pos[axis] = 0.;
+            test_pos[axis] = lo_hi(axis,0) + dis(generator) * (lo_hi(axis,1) - lo_hi(axis,0));
 
         base_con->find_voronoi_cell(test_pos[0], test_pos[1], test_pos[2], particle_pos[0], particle_pos[1], particle_pos[2], id);
 
@@ -238,8 +238,11 @@ void postprocessing::psd()
             delete sample_con;
             delete sample_loop;
 
+            radius_dis[iters] = r_max;
             iters++;
-            std::cout<<"iters = "<<iters<<"\tlargest radius = "<<r_max<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
+            //std::cout<<"iters = "<<iters<<"\tlargest radius = "<<r_max<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
+            
+
 
         }
 
@@ -254,7 +257,35 @@ void postprocessing::psd()
 
 }
 
+void postprocessing::save_radius_distribution()
+{
+    
+    printf("max_radius\n");
 
+    for (int i = 0; i < max_psd_iters; i++)
+        printf("%lf\n", radius_dis[i]);
+
+    free(radius_dis);
+
+}
+
+void postprocessing::save_radius_distribution(char *filename)
+{
+    
+    FILE *f;
+
+    f = fopen(filename, "w");
+
+    fprintf(f, "max_radius\n");
+
+    for (int i = 0; i < max_psd_iters; i++)
+        fprintf(f, "%lf\n", radius_dis[i]);
+
+    fclose(f);
+
+    free(radius_dis);
+
+}
 
 
 }

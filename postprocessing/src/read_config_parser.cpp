@@ -98,6 +98,9 @@ void postprocessing::read_config_parser(char *config_filename)
         radius(i) = 0.5 * diameter(i);
     }
 
+    generator.seed(0);
+    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
+
 }
 
 

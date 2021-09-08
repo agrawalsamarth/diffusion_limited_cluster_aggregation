@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <random>
 #include </home/samarth/codes/voronoi/include/voro++/voro++.hh>
 
 #ifndef POSTPROCESSING_H
@@ -104,9 +105,14 @@ class postprocessing
     bool check_percolation();
     double calc_rog();
 
-    void psd();
+    void psd(int total_iters);
+    void save_radius_distribution();
+    void save_radius_distribution(char *filename);
 
     private:
+
+    std::mt19937 generator;
+    std::uniform_real_distribution<double> dis;
 
     int     headers_;
     int     N_;
@@ -164,6 +170,9 @@ class postprocessing
     bool    alpha_flag_ = false;
     bool    phi_flag_   = false;
     bool    columns_flag_ = false;
+
+    double  *radius_dis;
+    int      max_psd_iters;
 
 };
 
