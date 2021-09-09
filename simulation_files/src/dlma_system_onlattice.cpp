@@ -75,6 +75,7 @@ void dlma_system_onlattice<type>::initialize_system()
     }
 
     this->build_id_map();
+    this->calculate_propensity();
     
 }
 

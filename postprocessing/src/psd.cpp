@@ -82,7 +82,7 @@ void postprocessing::psd(int total_iters)
         r_max = 0.;
 
         for (int axis = 0; axis < dim(); axis++)
-            test_pos[axis] = lo_hi(axis,0) + dis(generator) * (lo_hi(axis,1) - lo_hi(axis,0));
+            test_pos[axis] = 0.;//test_pos[axis] = lo_hi(axis,0) + dis(generator) * (lo_hi(axis,1) - lo_hi(axis,0));
 
         base_con->find_voronoi_cell(test_pos[0], test_pos[1], test_pos[2], particle_pos[0], particle_pos[1], particle_pos[2], id);
 
@@ -240,7 +240,7 @@ void postprocessing::psd(int total_iters)
 
             radius_dis[iters] = r_max;
             iters++;
-            //std::cout<<"iters = "<<iters<<"\tlargest radius = "<<r_max<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
+            std::cout<<"iters = "<<iters<<"\tlargest radius = "<<r_max<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
             
 
 

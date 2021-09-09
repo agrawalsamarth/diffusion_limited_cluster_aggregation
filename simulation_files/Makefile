@@ -1,6 +1,6 @@
 IDIR =./include
 CXX=g++
-CPPFLAGS= -I$(IDIR) -std=c++11 -O3
+CPPFLAGS=-g -I$(IDIR) -std=c++11 -O3
 LDFLAGS=-I$(IDIR) -std=c++11 -O3
 
 SRC_DIR = ./src
