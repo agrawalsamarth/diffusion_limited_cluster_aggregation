@@ -172,6 +172,8 @@ class postprocessing
     bool    columns_flag_ = false;
 
     double  *radius_dis;
+    double  *centres;
+    int     *type_dis;
     int      max_psd_iters;
 
 };

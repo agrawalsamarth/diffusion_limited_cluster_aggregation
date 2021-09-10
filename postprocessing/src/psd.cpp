@@ -23,6 +23,9 @@ void postprocessing::psd(int total_iters)
     int size;
     
     radius_dis = (double*)malloc(sizeof(double) * total_iters);
+    centres    = (double*)malloc(sizeof(double) * total_iters * 3);
+    type_dis   = (int*)malloc(sizeof(int) * total_iters);
+
 
     int iters     = 0;
     max_psd_iters = total_iters;
@@ -76,13 +79,21 @@ void postprocessing::psd(int total_iters)
     bool in_void_space;
 
     bool test;
+    bool test_find;
+
+    int find_type = 0;
+
 
     while (iters < max_psd_iters){
 
         r_max = 0.;
+        test_find = true;
 
         for (int axis = 0; axis < dim(); axis++)
-            test_pos[axis] = 0.;//test_pos[axis] = lo_hi(axis,0) + dis(generator) * (lo_hi(axis,1) - lo_hi(axis,0));
+            //test_pos[axis] = 0.;
+            test_pos[axis] = lo_hi(axis,0) + dis(generator) * (lo_hi(axis,1) - lo_hi(axis,0));
+
+        //std::cout<<"test = "<<test_pos[0]<<" "<<test_pos[1]<<" "<<test_pos[2]<<std::endl;
 
         base_con->find_voronoi_cell(test_pos[0], test_pos[1], test_pos[2], particle_pos[0], particle_pos[1], particle_pos[2], id);
 
@@ -149,10 +160,16 @@ void postprocessing::psd(int total_iters)
                             r  = sqrt(r);
                             r -= radius(id);
 
+                            /*if (iters == 1){
+                                std::cout<<"r = "<<r<<"\t ref_r = "<<ref_r<<std::endl;
+                            }*/
+
                             if ((ref_r < r) && (r > r_max)){
                                 //std::cout<<"r_max old = "<<r_max<<std::endl;
                                 r_max = r;
                                 //std::cout<<"r_max new = "<<r_max<<std::endl;
+                                test_find = false;
+                                find_type = 1;
 
                                 for (int axis = 0; axis < dim(); axis++)
                                     centre_pos[axis] = vertex[axis];
@@ -196,7 +213,19 @@ void postprocessing::psd(int total_iters)
                         for (int axis = 0; axis < dim(); axis++)
                             vertex[axis] = get_periodic_image(vertex[axis], axis);
 
-                        base_con->find_voronoi_cell(vertex[0], vertex[1], vertex[2], rx[0], rx[1], rx[2], rid);                
+                        base_con->find_voronoi_cell(vertex[0], vertex[1], vertex[2], rx[0], rx[1], rx[2], rid);
+
+                        for (int axis = 0; axis < dim(); axis++)
+                            rx[axis] = get_periodic_image(rx[axis], axis);
+
+                        ref_r = 0.;
+
+                        for (int axis = 0; axis < dim(); axis++){
+                            delta_x[axis] = get_periodic_image(vertex[axis]-particle_pos[axis], axis);
+                            ref_r        += (delta_x[axis] * delta_x[axis]);
+                        }
+
+                        ref_r = sqrt(ref_r);             
 
                         r = 0;
 
@@ -208,21 +237,15 @@ void postprocessing::psd(int total_iters)
                         r  = sqrt(r);
                         r -= radius(rid);
 
-                        ref_r = 0.;
-
-                        for (int axis = 0; axis < dim(); axis++){
-                            delta_x[axis] = get_periodic_image(vertex[axis]-particle_pos[axis], axis);
-                            ref_r        += (delta_x[axis] * delta_x[axis]);
-                        }
-
-                        ref_r = sqrt(ref_r);
-
                         if ((r > r_max) && (ref_r < (r+1e-8))){
 
                             r_max = r;
 
                             for (int axis = 0; axis < dim(); axis++)
                                 centre_pos[axis] = vertex[axis];
+
+                            test_find = false;
+                            find_type = 2;
                             
                         }
 
@@ -238,11 +261,16 @@ void postprocessing::psd(int total_iters)
             delete sample_con;
             delete sample_loop;
 
-            radius_dis[iters] = r_max;
-            iters++;
-            std::cout<<"iters = "<<iters<<"\tlargest radius = "<<r_max<<"\t with centre = "<<centre_pos[0]<<"\t"<<centre_pos[1]<<"\t"<<centre_pos[2]<<std::endl;
-            
+            if (!test_find){
+                radius_dis[iters] = r_max;
+                type_dis[iters]   = find_type;
 
+                for (int axis = 0; axis < dim(); axis++)
+                    centres[iters*3+axis] = centre_pos[axis];
+
+
+                iters++;
+            }
 
         }
 
@@ -260,12 +288,14 @@ void postprocessing::psd(int total_iters)
 void postprocessing::save_radius_distribution()
 {
     
-    printf("max_radius\n");
+    printf("max_radius,type,cx0,cx1,cx2\n");
 
     for (int i = 0; i < max_psd_iters; i++)
-        printf("%lf\n", radius_dis[i]);
+        printf("%lf,%d,%lf,%lf,%lf\n", radius_dis[i], type_dis[i], centres[i*3], centres[i*3+1], centres[i*3+2]);
 
     free(radius_dis);
+    free(type_dis);
+    free(centres);
 
 }
 
@@ -276,14 +306,16 @@ void postprocessing::save_radius_distribution(char *filename)
 
     f = fopen(filename, "w");
 
-    fprintf(f, "max_radius\n");
+    fprintf(f, "max_radius,type,cx0,cx1,cx2\n");
 
     for (int i = 0; i < max_psd_iters; i++)
-        fprintf(f, "%lf\n", radius_dis[i]);
+        fprintf(f, "%lf,%d,%lf,%lf,%lf\n", radius_dis[i], type_dis[i], centres[i*3], centres[i*3+1], centres[i*3+2]);
 
     fclose(f);
 
     free(radius_dis);
+    free(type_dis);
+    free(centres);
 
 }
 
