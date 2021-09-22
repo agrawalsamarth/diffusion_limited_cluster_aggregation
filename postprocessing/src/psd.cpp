@@ -30,17 +30,23 @@ void postprocessing::psd(int total_iters)
     int iters     = 0;
     max_psd_iters = total_iters;
 
-    voro::container_poly *base_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles());
+    //voro::container_poly *base_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles());
+    voro::container *base_con = new voro::container(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles());
+
+
+    //for (int i = 0; i < numParticles(); i++)
+        //base_con->put(i, pos(i,0), pos(i,1), pos(i,2), radius(i));
 
     for (int i = 0; i < numParticles(); i++)
-        base_con->put(i, pos(i,0), pos(i,1), pos(i,2), radius(i));
+        base_con->put(i, pos(i,0), pos(i,1), pos(i,2));
+
 
     voro::c_loop_all    *vertex_loop = new voro::c_loop_all(*base_con);
     voro::c_loop_all    *base_loop   = new voro::c_loop_all(*base_con);
     voro::voronoicell   *cell        = new voro::voronoicell;
 
-    voro::container_poly    *sample_con;
-    voro::c_loop_all        *sample_loop;
+    //voro::container_poly    *sample_con;
+    //voro::c_loop_all        *sample_loop;
     max_vertex_length = 0.;
 
     if(vertex_loop->start()) do{
@@ -80,6 +86,7 @@ void postprocessing::psd(int total_iters)
 
     bool test;
     bool test_find;
+    bool c_test;
 
     int find_type = 0;
 
@@ -185,24 +192,26 @@ void postprocessing::psd(int total_iters)
 
             }
             
-            sample_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles()+1);
+            /*sample_con = new voro::container_poly(lo_hi(0,0), lo_hi(0,1), lo_hi(1,0), lo_hi(1,1), lo_hi(2,0), lo_hi(2,1), 1, 1, 1, true, true, true, numParticles()+1);
 
             for (int i = 0; i < numParticles(); i++)
                 sample_con->put(i, pos(i,0), pos(i,1), pos(i,2),radius(i));
 
             sample_con->put(numParticles(), test_pos[0], test_pos[1], test_pos[2], test_radius);
-            sample_loop = new voro::c_loop_all(*sample_con);
+            sample_loop = new voro::c_loop_all(*sample_con);*/
 
-            if(sample_loop->start()) do  {
+            //if(sample_loop->start()) do  {
 
                 //std::cout<<"sample i = "<<sample_i++<<std::endl;
 
-                sample_loop->pos(particle_pos[0], particle_pos[1], particle_pos[2]);
-                id=sample_loop->pid();
+                //sample_loop->pos(particle_pos[0], particle_pos[1], particle_pos[2]);
+                //id=sample_loop->pid();
 
-                if (id == numParticles()){
+                //if (id == numParticles()){
+                    
+                    //c_test = base_con->compute_ghost_cell(cell, test_pos[0], test_pos[1], test_pos[2], r);
+                    c_test = base_con->compute_ghost_cell(cell, test_pos[0], test_pos[1], test_pos[2]);
 
-                    sample_con->compute_cell(*cell,*sample_loop);
                     cell->vertices(particle_pos[0], particle_pos[1], particle_pos[2], v);
 
                     for (int i = 0; i < cell->p; i++){
@@ -253,13 +262,13 @@ void postprocessing::psd(int total_iters)
 
                     }
 
-                }
+                //}
 
 
-            }while(sample_loop->inc());
+            //}while(sample_loop->inc());
 
-            delete sample_con;
-            delete sample_loop;
+            //delete sample_con;
+            //delete sample_loop;
 
             if (!test_find){
                 radius_dis[iters] = r_max;

@@ -12,5 +12,5 @@ x2_bc=periodic
 phi=0.01
 alpha=-0.5
 seedMass=1000000000000.0
-N_s=1
+N_s=4096
 rng_seed=0
