@@ -15,6 +15,8 @@ class dlma_iterator: public system_iterator<type>{
         void iteration_step();
         void save_config_file();
         void save_config_file(char *filename);
+        void create_movie_files(char *filename);
+
 
 
     private:

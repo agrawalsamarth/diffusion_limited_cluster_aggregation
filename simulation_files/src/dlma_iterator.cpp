@@ -173,11 +173,62 @@ void dlma_iterator<type>::save_config_file()
     save_obj->save_configuration();
 }
 
+
 template <typename type>
 void dlma_iterator<type>::save_config_file(char *filename)
 {
     save_obj->save_configuration(filename);
 }
+
+template <typename type>
+void dlma_iterator<type>::create_movie_files(char *filename)
+{
+    int itr = 0;
+    char *filename_m;
+    int index;
+    std::string index_s;
+    std::string temp_s;
+    std::string ext = ".csv";
+
+    while (sys_state -> total_aggregates() != 1)
+    {
+        iteration_step();
+
+        if (itr % 100 == 0){
+
+            //std::cout<<"here1"<<std::endl;
+
+            index   = itr/100;
+            index_s = std::to_string(index);
+            filename_m = (char*)malloc(1 + strlen(filename)+ index_s.length() + ext.length());
+            strcpy(filename_m, filename);
+            strcat(filename_m, index_s.c_str());
+            strcat(filename_m, ext.c_str());
+
+            //std::cout<<"here"<<std::endl;
+
+            save_obj->save_configuration(filename_m);
+
+            free(filename_m);
+        }
+
+        itr++;
+    }
+
+    index++;
+    index_s = std::to_string(index);
+    filename_m = (char*)malloc(1 + strlen(filename)+ index_s.length() + ext.length());
+    strcpy(filename_m, filename);
+    strcat(filename_m, index_s.c_str());
+    strcat(filename_m, ext.c_str());
+
+    save_obj->save_configuration(filename_m);
+
+    free(filename_m);
+
+
+}
+
 
 template class dlma_iterator<int>;
 template class dlma_iterator<double>;

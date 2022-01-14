@@ -12,7 +12,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 
-all: unfold radius_of_gyration sq_vs_q pair_correlation
+all: unfold radius_of_gyration sq_vs_q pair_correlation percolation
 #all: psd_test
 
 density_correlation: $(OBJ_FILES) | $(BIN_DIR)
@@ -38,6 +38,11 @@ pair_correlation: $(OBJ_FILES) | $(BIN_DIR)
 psd_test: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o psd_test.o target/psd_test.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ psd_test.o
+
+percolation: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o percolation.o target/percolation.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ percolation.o
+
 
 
 

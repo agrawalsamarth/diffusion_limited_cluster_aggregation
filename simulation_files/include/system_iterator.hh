@@ -15,6 +15,7 @@ class system_iterator{
         virtual void iteration_step() {};
         virtual void save_config_file() {};
         virtual void save_config_file(char *filename) {};
+        virtual void create_movie_files(char *filename) {};
 
 
 };

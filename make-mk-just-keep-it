@@ -1,0 +1,103 @@
+#! /usr/bin/perl
+
+# just keep this file unchanged for mk
+# 6 oct 2021
+
+$code = "dlma/simulation_files/bin/simulation"; 
+$bin  = "dlma/postprocessing/bin"; 
+
+sub USAGE { print<<EOF;
+perl ./make_mk [-compile] -lattice=<0/1> -D=<2/3> -N=<N> -Nseed=<Nseed> -L=<L> -seed=<seed> -periodic -run -config=.. -eval=..
+
+example: 
+perl ./make_mk -compile
+perl ./make_mk -lattice=1 -D=2 -N=100 -Nseed=1 -L=10 -seed=1 -periodic -run
+perl ./make_mk -lattice=1 -D=2 -N=100 -Nseed=1 -phi=0.1 -seed=1 -periodic -run -eval=2
+perl ./make_mk -config=1.csv -eval=2
+perl ./make_mk -lattice=0 -D=2 -N=100 -Nseed=1 -phi=0.1 -seed=1 -periodic -run -eval=1
+EOF
+exit;
+};
+
+sub COMPILE {
+ print `cd dlma/postprocessing; make all`; 
+ print `cd dlma/simulation_files; make all`; 
+};
+
+sub CREATE_PARAM_FILE {
+ open(P,">params.csv"); print P<<EOF;
+system=dlma
+lattice=$lattice
+aggregation_type=normal
+aggregation_condition=mass
+bind=normal
+movement=brownian
+D=$D
+N=$N
+N_s=$Nseed
+EOF
+if ($phi) { print P "phi=$phi\n"; }; 
+print P<<EOF;
+alpha=0.5
+seedMass=1000000000000.0
+rng_seed=9
+EOF
+$sep="_bc="; foreach $d (0 .. $D-1) { print P "x$d$sep$periodic\n"; }; 
+# $sep="_L="; 	     foreach $d (0 .. $D-1) { print P "x$d$sep$L\n"; }; 
+print P<<EOF;
+alpha=-0.5
+seedMass=1000000000000.0
+N_s=$Nseed
+rng_seed=$seed
+EOF
+close(P); print "created params.csv\n";
+};
+
+$periodic=0; $run=0; $eval=0;
+if ($#ARGV eq -1) { USAGE; }; 
+foreach $arg (@ARGV) { ($field,$value)=split(/=/,$arg); 
+ if ($arg eq "-compile") 	{ COMPILE; }; 
+ if ($field eq "-lattice") 	{ $lattice=$value; }; 
+ if ($field eq "-D")  		{ $D=$value; }; 
+ if ($field eq "-N") 		{ $N=$value; }; 
+ if ($field eq "-Nseed") 	{ $Nseed=$value; }; 
+ if ($field eq "-periodic") 	{ $periodic="periodic"; }; 
+ if ($field eq "-L")  		{ $L=$value; $lo=-$L/2; $hi=$L/2; };  
+ if ($field eq "-phi")  	{ $phi=$value; }; 
+ if ($field eq "-seed") 	{ $seed=$value; }; 
+ if ($field eq "-eval")  	{ $eval=$value; }; 
+ if ($field eq "-run") 		{ $run=1; }; 
+ if ($field eq "-config")  	{ $config="$value"; };
+}; 
+
+sub CREATE_XYZ {
+ open(C,"<$config"); while (!eof(C)) { $line=<C>; chomp $line; ($field,$value)=split(/=/,$line); print "field $field value $value\n"; $attachments=0;
+  if ($field eq "D") { $D=$value; }; 
+  if ($field eq "x0_lo") { $lo[0]=$value; }; if ($field eq "x0_hi") { $hi[0]=$value; }; 
+  if ($field eq "x1_lo") { $lo[1]=$value; }; if ($field eq "x1_hi") { $hi[1]=$value; };
+  if ($field eq "x2_lo") { $lo[2]=$value; }; if ($field eq "x2_hi") { $hi[2]=$value; };
+  if ($field eq "N")     { $N=$value; print "N=$N from config\n"; }; 
+  if ($field =~ /^id,/)  { foreach $j (1 .. $N) { $line=<C>; chomp $line; @tmp=split(/,/,$line); foreach $k (1 .. $D) { $x[$j][$k]=$tmp[$k]; }; $attachments+=$tmp[4+$D]; }; };
+ };
+ $attachments/=$N; open(A,">$config-attachments.dat"); print A "$attachments"; close(A); print "created $config-attachments.dat\n";
+ foreach $k (0 .. $D-1) { $box[$k]=$hi[$k]-$lo[$k]; }; 
+ open(C,">$config.xyz"); print C "$D @box\n"; foreach $i (1 .. $N) { foreach $k (1 .. $D) { print C "$x[$i][$k] "; }; print C "\n"; }; close(C);
+ print "created $config.xyz\n";
+ # print "scp $config.xyz mkroeger\@polyphys-s09.ethz.ch:~/Downloads\n";
+};
+
+
+sub GO { print "calling $command\n"; `$command`; my @tmp=split(/ /,$command); print "created ",`ls -1t $tmp[$#tmp]`; }; 
+
+if ($N) { 
+ CREATE_PARAM_FILE; 
+ print `cat params.csv`; 
+}; 
+if (-s "$config") { } else { print "file $config does not yet exist\n"; $config="config.csv"; }; 
+if ($run eq 1) { $command="$code params.csv $config"; GO; }; 
+CREATE_XYZ; 
+
+if ($eval>=1) { $drij = 0.1; 			    	$command = "$bin/pair_correlation $config $drij $config-Fr.dat"; GO; }; 
+if ($eval>=2) { $qmin = 0.1; $qmax = 10; $numq = 20;   	$command = "$bin/sq_vs_q $config $qmin $qmax $numq $config-Sq.dat"; GO; }; 
+if ($eval>=3) { 				    	$command = "$bin/radius_of_gyration $config $config-Rg.dat"; GO; }; 
+if ($eval>=4) { 					$command = "$bin/unfold $config $config-unfolded.dat"; GO; };
