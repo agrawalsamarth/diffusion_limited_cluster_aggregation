@@ -28,13 +28,14 @@ aggregation_condition<type>* iterator_factory<type>::create_aggregation_conditio
 }
 
 template <typename type>
-check_aggregation<type>* iterator_factory<type>::create_check_aggregation(std::string name_type, int lattice, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition)
+check_aggregation<type>* iterator_factory<type>::create_check_aggregation(std::string name_type, int lattice, system<type> *system_state, normal_bind<type> *bind_system,
+ aggregation_condition<type> *ref_condition, double tolerance)
 {
 
     if ((strcmp(name_type.c_str(), "normal")==0) && (lattice == 1))
         return new check_aggregation_onlattice<type>(system_state, bind_system, ref_condition);
     else if ((strcmp(name_type.c_str(), "normal")==0) && (lattice == 0))
-        return new check_aggregation_offlattice<type>(system_state, bind_system, ref_condition);
+        return new check_aggregation_offlattice<type>(system_state, bind_system, ref_condition, tolerance);
     else{
         std::cout<<"unknown aggregation type"<<std::endl;
         exit(EXIT_FAILURE);

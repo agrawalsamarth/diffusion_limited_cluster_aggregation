@@ -21,7 +21,8 @@ class iterator_factory{
 
         particle_movement<type>* create_movement(std::string name_type, int dim, int rng_seed, int lattice);
         aggregation_condition<type>* create_aggregation_condition(std::string name_type, system<type> *system_state); 
-        check_aggregation<type>* create_check_aggregation(std::string name_type, int lattice, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition);
+        check_aggregation<type>* create_check_aggregation(std::string name_type, int lattice, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition
+        , double tolerance);
         save_config<type>* create_save_config(std::string name_type, system<type> *ref_sys, simulation_box<type> *ref_box);
         normal_bind<type>* create_bind_system(std::string name_type, system<type> *system_ptr);
         system<type>* create_new_system(std::string name_type, int lattice, char *filename);

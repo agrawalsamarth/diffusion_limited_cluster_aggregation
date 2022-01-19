@@ -10,15 +10,13 @@ int main(int argc, char *argv[])
     }
 
 
-    system_iterator<int> *test = new dlma_iterator<int>(argv[1]);
-    test->create_movie_files(argv[2]);
-
-    /*test->run_system();
+    system_iterator<double> *test = new dlma_iterator<double>(argv[1]);
+    test->run_system();
 
     if (argc < 3)
         test->save_config_file();
     else
-        test->save_config_file(argv[2]);*/
+        test->save_config_file(argv[2]);
 
     return 0;
 

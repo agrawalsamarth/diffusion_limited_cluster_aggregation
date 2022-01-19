@@ -3,11 +3,12 @@
 namespace simulation{
 
 template<typename type>
-check_aggregation_offlattice<type>::check_aggregation_offlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition){
+check_aggregation_offlattice<type>::check_aggregation_offlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition, double tolerance){
 
-    sys_state = system_state;
-    bind_sys  = bind_system;
-    condition = ref_condition;
+    sys_state     = system_state;
+    bind_sys      = bind_system;
+    condition     = ref_condition;
+    agg_tolerance = tolerance;
 }
 
 template <typename type>
@@ -42,7 +43,7 @@ void check_aggregation_offlattice<type>::check_for_aggregation(constituent<type>
 
                 distance = sys_state->get_interparticle_distance(particle_1, particle_2);
 
-                if (distance <= (0.5 * (particle_1->get_diameter()+particle_2->get_diameter())))
+                if (distance <= ((1.+agg_tolerance) * (0.5 * (particle_1->get_diameter()+particle_2->get_diameter()))))
                 {
                     if (condition->agg_condition(particle_1, particle_2)){
                         sys_state->add_attachment(particle_id, neighbour_id);

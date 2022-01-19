@@ -10,7 +10,7 @@ class check_aggregation_offlattice: public check_aggregation<type>{
 
     public:
 
-        check_aggregation_offlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition);
+        check_aggregation_offlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition, double tolerance);
         void check_for_aggregation(constituent<type> *c_1);
 
     private:
@@ -32,6 +32,8 @@ class check_aggregation_offlattice: public check_aggregation<type>{
 
         type temp_r;
         type r2;
+
+        double agg_tolerance;
 
 
 

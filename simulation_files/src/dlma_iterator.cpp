@@ -39,6 +39,8 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     bool rng_seed_flag=false;
     int  lattice;
     bool lattice_flag=false;
+    double tolerance;
+    bool   tolerance_flag=false;
 
     int count = 0;
 
@@ -86,6 +88,11 @@ dlma_iterator<type>::dlma_iterator(char *filename)
             lattice_flag = true;
         }
 
+        if (results[0] == "agg_dist_tolerance"){
+            tolerance      = stod(results[1]);
+            tolerance_flag = true;
+        }
+
         
 
     }
@@ -126,10 +133,15 @@ dlma_iterator<type>::dlma_iterator(char *filename)
         exit(EXIT_FAILURE);
     }
 
+    if (tolerance_flag == false){
+        std::cout<<"please provide aggregation distance tolerance"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     sys_state   = factory->create_new_system(save_config_name, lattice, filename);
     binding_obj = factory->create_bind_system(bind_name, sys_state);
     agg_condition = factory->create_aggregation_condition(agg_condition_name, sys_state);
-    aggregation_check_obj = factory->create_check_aggregation(check_agg_name, lattice, sys_state, binding_obj, agg_condition);
+    aggregation_check_obj = factory->create_check_aggregation(check_agg_name, lattice, sys_state, binding_obj, agg_condition, tolerance);
     movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed, lattice);
     save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
 
