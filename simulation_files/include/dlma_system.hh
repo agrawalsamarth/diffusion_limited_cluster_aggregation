@@ -51,6 +51,8 @@ class dlma_system: public system<type>{
         virtual type get_interparticle_distance(constituent<type> *p_1, constituent<type> *p_2);
         virtual int choose_aggregate();
 
+        virtual void build_attachment_list() {};
+
 
         
 
@@ -98,6 +100,8 @@ class dlma_system: public system<type>{
         bool   *periodic_flag;
         bool    periodic_flag_and;
         int     latest_cluster_id=0;
+        double  tolerance;
+        bool    tolerance_flag=false;
 
         bool    is_viable;
         type    temp_r;

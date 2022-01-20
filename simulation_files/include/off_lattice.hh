@@ -10,7 +10,7 @@ class off_lattice: public simulation_box<type>{
 
     public:
 
-        off_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc);
+        off_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc, double tolerance);
         ~off_lattice();
 
         type  get_refill(type x, int axis);

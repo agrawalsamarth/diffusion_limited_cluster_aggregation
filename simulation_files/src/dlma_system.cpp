@@ -81,6 +81,10 @@ void dlma_system<type>::read_params_parser(char *params_name)
             rng_seed_flag = true;
         }
 
+        if (results[0] == "agg_dist_tolerance"){
+            tolerance      = stod(results[1]);
+            tolerance_flag = true;
+        }
 
     }
 
@@ -274,8 +278,11 @@ void dlma_system<type>::read_params_parser(char *params_name)
         N_s = (int)((N*seed_pct)/100);
     }
 
+    if (tolerance_flag == false){
+        tolerance = 0.;
+    }
 
-    box = factory.create_simulation_box(lattice, D, L, system_bc);
+    box = factory.create_simulation_box(lattice, D, L, system_bc, tolerance);
 
     generator.seed(rng_seed);
     dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));

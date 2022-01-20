@@ -78,7 +78,7 @@ void dlma_save_config<type>::save_configuration(char *filename)
         fprintf(f, "%d,", i);
 
         for (int axis = 0; axis < D; axis++){
-            if (lattice = 1)
+            if (lattice == 1)
                 fprintf(f, "%lf,", 1. * (temp->pos(axis)) + 0.5);
             else
                 fprintf(f, "%lf,", 1. * (temp->pos(axis)));
@@ -198,7 +198,7 @@ void dlma_save_config<type>::save_configuration()
         printf("%d,", i);
 
         for (int axis = 0; axis < D; axis++){
-            if (lattice = 1)
+            if (lattice == 1)
                 printf("%lf,", 1. * (temp->pos(axis)) + 0.5);
             else
                 printf("%lf,", 1. * (temp->pos(axis)));

@@ -3,7 +3,7 @@
 namespace simulation{
 
 template <typename type>
-off_lattice<type>::off_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc){
+off_lattice<type>::off_lattice(const int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc, double tolerance){
 
     D = dim;
     L = (type*)malloc(sizeof(type) * D);
@@ -18,12 +18,17 @@ off_lattice<type>::off_lattice(const int dim, type *box_lengths, std::vector<bou
         halfL[axis] = 0.5 * L[axis];
     } 
 
+    type delta_x[D];
+
     for (int axis = 0; axis < D; axis++){
-        num_grid[axis] = (int)(L[axis]);
-        nx[axis] = (int)(L[axis]);
+        delta_x[axis] = (1. + tolerance);
+        inv_deltax[axis] = 1./delta_x[axis];
     }
 
-    type delta_x[D];
+    for (int axis = 0; axis < D; axis++){
+        num_grid[axis] = (int)(L[axis] * inv_deltax[axis]);
+        nx[axis] = num_grid[axis];
+    }
 
     for (int axis = 0; axis < D; axis++){
         delta_x[axis]    = L[axis]/(1. * nx[axis]);

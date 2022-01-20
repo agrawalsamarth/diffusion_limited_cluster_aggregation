@@ -134,8 +134,7 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     }
 
     if (tolerance_flag == false){
-        std::cout<<"please provide aggregation distance tolerance"<<std::endl;
-        exit(EXIT_FAILURE);
+        tolerance = 0.;
     }
 
     sys_state   = factory->create_new_system(save_config_name, lattice, filename);
@@ -145,8 +144,9 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed, lattice);
     save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
 
-    for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
-
+    /*for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
+    for (int i = 0; i < 1; i++){
+    
         temp_c = sys_state->get_aggregate(i);
 
         if (temp_c){
@@ -154,6 +154,8 @@ dlma_iterator<type>::dlma_iterator(char *filename)
         }
 
     }
+
+    std::cout<<"total aggregates = "<<sys_state->total_aggregates()<<std::endl;*/
 
 
 }
@@ -177,6 +179,8 @@ void dlma_iterator<type>::run_system()
         //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
         iteration_step();
     }
+    sys_state->build_attachment_list();
+    return;
 }
 
 template <typename type>

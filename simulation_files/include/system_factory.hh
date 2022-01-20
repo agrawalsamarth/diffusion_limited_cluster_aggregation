@@ -16,7 +16,7 @@ class system_factory{
     public:
 
         constituent<type>*               create_constituent(int constituent_id, int lattice, int dim, std::string name_type, simulation_box<type> *box);
-        simulation_box<type>*            create_simulation_box(int lattice, int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc);
+        simulation_box<type>*            create_simulation_box(int lattice, int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc, double tolerance);
         boundary_conditions<type>*       create_boundary_conditions(std::string name_type);
 
 

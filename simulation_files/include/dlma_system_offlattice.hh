@@ -14,6 +14,7 @@ class dlma_system_offlattice: public dlma_system<type>{
         void initialize_system();
         void move_aggregate(int i, type *dr);
         void add_attachment(const int i, const int j);
+        void build_attachment_list();
     
     private:
 

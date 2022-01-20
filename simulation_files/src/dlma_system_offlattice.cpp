@@ -54,7 +54,7 @@ void dlma_system_offlattice<type>::initialize_system()
             
                     distance = this->get_interparticle_distance(temp, this->all_particles[j]);
 
-                    if (distance < (0.5 * (temp->get_diameter() + this->all_particles[j]->get_diameter()))){
+                    if (distance < ((1. + this->tolerance) * 0.5 * (temp->get_diameter() + this->all_particles[j]->get_diameter()))){
                         is_placed = false;
                         break;
                     }
@@ -87,6 +87,69 @@ void dlma_system_offlattice<type>::initialize_system()
     this->calculate_propensity();
     
 }
+
+/*template <typename type>
+void dlma_system_offlattice<type>::initialize_system()
+{
+
+    bool is_placed;
+    constituent<type> *temp;
+
+    std::string name_type = "particle";
+
+    type distance;
+
+    for (int i = 0; i < this->N; i++){
+
+        temp = this->factory.create_constituent(i, this->lattice, this->D, name_type, this->box);
+
+        is_placed = false;
+
+        temp->set_diameter(1.);
+
+        if (i < this->N_s){
+            temp->set_mass(this->seed_mass);
+            temp->set_original_seed_status(1);
+            temp->set_current_seed_status(1);
+        }
+
+        else{
+            temp->set_mass(1.);
+            temp->set_original_seed_status(0);
+            temp->set_current_seed_status(0);
+        }
+
+        //while (is_placed == false){
+
+            for (int axis = 0; axis < this->D; axis++)
+                temp->pos(axis) = 1. * (i+1);
+
+        //}
+
+        temp->add_constituent_to_cell();
+        this->all_particles.push_back(temp);
+
+    }
+
+    name_type = "cluster";
+
+    for (int i = 0; i < this->N; i++){
+
+        temp = this->factory.create_constituent(this->get_latest_cluster_id(), this->lattice, this->D, name_type, this->box);
+        temp->add_constituent(this->all_particles[i]);
+        temp->calculate_aggregate_mass();
+        this->aggregates.push_back(temp);
+
+    }
+
+    this->build_id_map();
+
+    name_type = "particle";
+    image = this->factory.create_constituent(this->N, this->lattice, this->D, name_type, this->box);
+
+    this->calculate_propensity();
+    
+}*/
 
 template <typename type>
 void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
@@ -233,6 +296,56 @@ void dlma_system_offlattice<type>::calc_rij()
             count++;
 
         }
+    }
+
+
+}
+
+template<typename type>
+void dlma_system_offlattice<type>::build_attachment_list()
+{
+
+    constituent<type>* particle_1;
+    constituent<type>* particle_2;
+    double distance;
+
+    std::vector<int> neighbours;
+
+    int particle_id;
+    int neighbour_id;
+
+    for (int i = 0; i < this->N; i++){
+
+        particle_1 = this->get_particle_by_id(i);
+        neighbours = particle_1->get_neighbour_list();
+
+        particle_id = i;
+
+        for (int j = 0; j < neighbours.size(); j++){
+
+            neighbour_id = neighbours[j];
+
+            if (neighbour_id != particle_id){
+
+                particle_2 = this->get_particle_by_id(neighbour_id);
+                distance   = this->get_interparticle_distance(particle_1, particle_2);
+
+                if ((distance-1e-4) < ((1. + this->tolerance) * 0.5 * (particle_1->get_diameter() + particle_2->get_diameter()))){
+
+                    if(!(std::find(this->attachments[particle_id].begin(), this->attachments[particle_id].end(), neighbour_id) != this->attachments[particle_id].end())){
+
+                        this->attachments[particle_id].push_back(neighbour_id);
+                        this->attachments[neighbour_id].push_back(particle_id);
+
+                    } 
+
+                }
+
+            }
+
+
+        }
+
     }
 
 

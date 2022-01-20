@@ -18,14 +18,14 @@ constituent<type>* system_factory<type> ::create_constituent(int constituent_id,
 }
 
 template <typename type>
-simulation_box<type>* system_factory<type>::create_simulation_box(int lattice, int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc){
+simulation_box<type>* system_factory<type>::create_simulation_box(int lattice, int dim, type *box_lengths, std::vector<boundary_conditions<type>*> system_bc, double tolerance){
 
     if (lattice == 1){
         return new on_lattice<type>(dim, box_lengths, system_bc);
     }
 
     else if (lattice == 0){
-        return new off_lattice<type>(dim, box_lengths, system_bc);
+        return new off_lattice<type>(dim, box_lengths, system_bc, tolerance);
     }
 
     else{
