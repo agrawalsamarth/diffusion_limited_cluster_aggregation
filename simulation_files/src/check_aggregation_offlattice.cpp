@@ -43,7 +43,7 @@ void check_aggregation_offlattice<type>::check_for_aggregation(constituent<type>
 
                 distance = sys_state->get_interparticle_distance(particle_1, particle_2);
 
-                if ((distance-1e-8) <= ((1.+agg_tolerance) * (0.5 * (particle_1->get_diameter()+particle_2->get_diameter()))))
+                if ((distance) <= ((1.+agg_tolerance) * (0.5 * (particle_1->get_diameter()+particle_2->get_diameter()))))
                 {
                     if (condition->agg_condition(particle_1, particle_2)){
                         //sys_state->add_attachment(particle_id, neighbour_id);

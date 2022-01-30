@@ -123,6 +123,7 @@ void postprocessing::unfold(const int prev, const int next)
                 posDiff(axis) = unfolded_coords(temp_next, axis) - unfolded_coords(next, axis);
                 if ((posDiff(axis) > halfL(axis)) || (posDiff(axis) < -halfL(axis))){
                     cluster_percolation(totalClusters_,axis) = 1;
+                    load_bearing_paths_[axis]++;
                 }
             }
 

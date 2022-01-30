@@ -87,6 +87,8 @@ class postprocessing
     void dump_density_correlation(double bin_size, char *filename);
     void dump_percolation_file();
     void dump_percolation_file(char *filename);
+    void dump_load_bearing_paths_file(char *filename);
+    void dump_load_bearing_paths_file();
     void dump_rog();
     void dump_rog(char *filename);
     void init_unfolding();
@@ -154,6 +156,7 @@ class postprocessing
     int    *delta_hist_;
     int     max_delta_;
     int    *cluster_percolation_;
+    int    *load_bearing_paths_;
     int     totalClusters_;
     int     N_pairs_;
     int     r_ij_hist_bins_;

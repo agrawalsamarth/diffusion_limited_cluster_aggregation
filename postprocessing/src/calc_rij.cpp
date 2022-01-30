@@ -25,6 +25,7 @@ void postprocessing::dump_rij_file(char *filename)
     
     fclose(f);
 
+
 }
 
 void postprocessing::dump_rij_hist_file(double bin_size)

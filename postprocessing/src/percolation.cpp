@@ -75,5 +75,32 @@ void postprocessing::dump_percolation_file()
 
 }
 
+void postprocessing::dump_load_bearing_paths_file(char *filename)
+{
+
+    FILE *f;
+
+    f=fopen(filename, "w");
+
+    fprintf(f,"axis\n");
+
+    for (int axis = 0; axis < dim(); axis++){
+        fprintf(f, "%d\n", load_bearing_paths_[axis]);
+    }
+
+    fclose(f);
+
+}
+
+void postprocessing::dump_load_bearing_paths_file()
+{
+    printf("axis\n");
+
+    for (int axis = 0; axis < dim(); axis++){
+        printf("%d\n", load_bearing_paths_[axis]);
+    }
+
+}
+
 
 }

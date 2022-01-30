@@ -54,7 +54,7 @@ void dlma_system_offlattice<type>::initialize_system()
             
                     distance = this->get_interparticle_distance(temp, this->all_particles[j]);
 
-                    if (distance < ((1. + this->tolerance) * 0.5 * (temp->get_diameter() + this->all_particles[j]->get_diameter()))){
+                    if (distance < ((1.+this->tolerance) * 0.5 * (temp->get_diameter() + this->all_particles[j]->get_diameter()))){
                         is_placed = false;
                         break;
                     }
@@ -122,7 +122,7 @@ void dlma_system_offlattice<type>::initialize_system()
         //while (is_placed == false){
 
             for (int axis = 0; axis < this->D; axis++)
-                temp->pos(axis) = 1. * (i+1);
+                temp->pos(axis) = 1. * i;
 
         //}
 
@@ -130,6 +130,9 @@ void dlma_system_offlattice<type>::initialize_system()
         this->all_particles.push_back(temp);
 
     }
+
+    temp = this->get_particle_by_id(49);
+    temp->pos(0) = 5.;
 
     name_type = "cluster";
 
@@ -168,6 +171,20 @@ void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
     //calc_rij();
 
 }
+
+/*template <typename type>
+void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
+{
+
+    constituent<type> *temp;
+    temp = this->get_particle_by_id(i);
+
+    temp->pos(0) = i;    
+
+    //std::cout<<"i="<<this->aggregates[i]->get_id()<<std::endl;
+    //calc_rij();
+
+}*/
 
 template<typename type>
 type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
