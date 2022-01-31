@@ -1,4 +1,5 @@
 #include <dlma_iterator.hh>
+#include <split_string.hh>
 
 using namespace simulation;
 
@@ -9,14 +10,59 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    std::ifstream parser(argv[1], std::ifstream::in);
 
-    system_iterator<double> *test = new dlma_iterator<double>(argv[1]);
-    test->run_system();
+    if (parser.fail()){
+        std::cout<<"either file does not exist or does not have permissions"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-    if (argc < 3)
-        test->save_config_file();
-    else
-        test->save_config_file(argv[2]);
+    std::string str;
+    std::vector<std::string> results;
+
+    std::string sys_name;
+    int lattice_val;
+
+    while (getline(parser, str)){
+
+        results = split_string_by_delimiter(str, '=');
+
+        if (results[0] == "system"){
+            sys_name = results[1];
+        }
+
+        if (results[0] == "lattice"){
+            lattice_val = stoi(results[1]);
+        }
+
+    }
+
+    if ((sys_name == "dlma") && (lattice_val == 1)){
+        system_iterator<int> *test = new dlma_iterator<int>(argv[1]);;
+        test->run_system();
+
+        if (argc < 3)
+            test->save_config_file();
+        else
+            test->save_config_file(argv[2]);
+        
+    }
+
+    else if((sys_name == "dlma") && (lattice_val == 0)){
+        system_iterator<double> *test = new dlma_iterator<double>(argv[1]);;
+        test->run_system();
+
+        if (argc < 3)
+            test->save_config_file();
+        else
+            test->save_config_file(argv[2]);
+    }
+
+    else{
+        std::cout<<"please check system and lattice values"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
 
     return 0;
 

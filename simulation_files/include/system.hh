@@ -6,6 +6,7 @@
 #include <random>
 #include <map>
 #include <algorithm>
+#include <split_string.hh>
 
 #ifndef SYSTEM_H
 #define SYSTEM_H
@@ -17,7 +18,7 @@ class system{
 
     public:
 
-        virtual std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter) {};
+        //virtual std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter) {};
         virtual void read_params_parser(char *params_name) {};
         virtual void initialize_system() {};
 

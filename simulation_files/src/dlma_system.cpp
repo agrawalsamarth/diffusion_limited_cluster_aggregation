@@ -2,7 +2,7 @@
 
 namespace simulation{
 
-template<typename type>
+/*template<typename type>
 std::vector<std::string> dlma_system<type>::split_string_by_delimiter(const std::string& s, char delimiter)
 {
    std::vector<std::string> tokens;
@@ -13,7 +13,7 @@ std::vector<std::string> dlma_system<type>::split_string_by_delimiter(const std:
       tokens.push_back(token);
    }
    return tokens;
-}
+}*/
 
 
 template<typename type>
@@ -291,7 +291,7 @@ void dlma_system<type>::read_params_parser(char *params_name)
     halfL = (type*)malloc(sizeof(type) * D);
 
     for (int axis = 0; axis < D; axis++)
-        halfL[axis] = 0.5 * L[axis];    
+        halfL[axis] = 0.5 * L[axis];
 
 }
 

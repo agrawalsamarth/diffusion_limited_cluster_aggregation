@@ -1,5 +1,4 @@
 #include <dlma_system.hh>
-#include <dlma_system_onlattice.hh>
 
 #ifndef SAVE_CONFIG_H
 #define SAVE_CONFIG_H

@@ -10,7 +10,7 @@ class dlma_system: public system<type>{
 
     public:
 
-        virtual std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
+        //virtual std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
         virtual void read_params_parser(char *params_name);
         virtual void initialize_system() {};
 
