@@ -131,6 +131,13 @@ namespace post_p
   postprocessing::unfolded_coords(const int i, const int axis)
   { return unfolded_coords_[axis+D_*i]; }
   
+  int
+  postprocessing::load_bearing_paths(const int i, const int axis) const
+  { return load_bearing_paths_[axis+D_*i]; }
+  int&
+  postprocessing::load_bearing_paths(const int i, const int axis)
+  { return load_bearing_paths_[axis+D_*i]; }
+
   double
   postprocessing::delta_coords(const int i, const int axis) const
   { return delta_coords_[axis+D_*i]; }

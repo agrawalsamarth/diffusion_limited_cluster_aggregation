@@ -82,10 +82,26 @@ void postprocessing::dump_load_bearing_paths_file(char *filename)
 
     f=fopen(filename, "w");
 
-    fprintf(f,"axis\n");
-
+    fprintf(f,"id,");
+    
     for (int axis = 0; axis < dim(); axis++){
-        fprintf(f, "%d\n", load_bearing_paths_[axis]);
+        if (axis != (dim()-1))
+            fprintf(f, "axis_%d,",axis);
+        else
+            fprintf(f, "axis_%d\n",axis);
+    }
+
+    for (int i = 0; i < numParticles(); i++){
+        
+        fprintf(f, "%d,", i);
+
+        for (int axis = 0; axis < dim(); axis++){
+            if (axis != (dim()-1))
+                fprintf(f, "%d,",load_bearing_paths(i,axis));
+            else
+                fprintf(f, "%d\n",load_bearing_paths(i,axis));
+        }
+
     }
 
     fclose(f);
@@ -94,10 +110,26 @@ void postprocessing::dump_load_bearing_paths_file(char *filename)
 
 void postprocessing::dump_load_bearing_paths_file()
 {
-    printf("axis\n");
-
+    printf("id,");
+    
     for (int axis = 0; axis < dim(); axis++){
-        printf("%d\n", load_bearing_paths_[axis]);
+        if (axis != (dim()-1))
+            printf("axis_%d,",axis);
+        else
+            printf("axis_%d\n",axis);
+    }
+
+    for (int i = 0; i < numParticles(); i++){
+        
+        printf("%d,", i);
+
+        for (int axis = 0; axis < dim(); axis++){
+            if (axis != (dim()-1))
+                printf("%d,",load_bearing_paths(i,axis));
+            else
+                printf("%d\n",load_bearing_paths(i,axis));
+        }
+
     }
 
 }

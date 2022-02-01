@@ -69,6 +69,9 @@ class postprocessing
     int& delta_hist(const int i);
     int  cluster_percolation(const int i, const int axis) const;
     int& cluster_percolation(const int i, const int axis);
+    int  load_bearing_paths(const int i, const int axis) const;
+    int& load_bearing_paths(const int i, const int axis);
+
 
 
     double get_periodic_image(double x, const int axis);
@@ -88,11 +91,14 @@ class postprocessing
     void dump_percolation_file();
     void dump_percolation_file(char *filename);
     void dump_load_bearing_paths_file(char *filename);
+    //void dump_load_bearing_paths_file(int origin, char *filename);
     void dump_load_bearing_paths_file();
     void dump_rog();
     void dump_rog(char *filename);
     void init_unfolding();
+    void init_unfolding_for_lbp();
     void unfold(const int prev, const int next);
+    void unfold_for_lbp(const int prev, const int next);
     void calc_unfolded_rij();
     void dump_unfolded_hist_file(double bin_size);
     void calc_unfolded_hist(double bin_size);
@@ -157,6 +163,7 @@ class postprocessing
     int     max_delta_;
     int    *cluster_percolation_;
     int    *load_bearing_paths_;
+    int    *temp_lbp_;
     int     totalClusters_;
     int     N_pairs_;
     int     r_ij_hist_bins_;

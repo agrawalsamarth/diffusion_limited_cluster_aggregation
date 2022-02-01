@@ -101,9 +101,12 @@ void postprocessing::read_config_parser(char *config_filename)
     generator.seed(0);
     dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 
-    for (int i = 0; i < dim(); i++){
+    for (int i = 0; i < numParticles() * dim(); i++){
         load_bearing_paths_[i] = 0;
     }
+
+    for (int axis = 0; axis < dim(); axis++)
+        temp_lbp_[axis] = 0;
 
 }
 

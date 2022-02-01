@@ -4,7 +4,7 @@ int main(int argc, char *argv[])
 {
     post_p::postprocessing test(argv[1]);
 
-    test.check_percolation();
+    test.init_unfolding_for_lbp();
 
     if (argc < 3)
         test.dump_load_bearing_paths_file();
