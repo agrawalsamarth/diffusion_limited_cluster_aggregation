@@ -282,11 +282,12 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     for (int index = 0; index < hs.size(); index++) {
 
-        if (hs[index].min_time < fraction) {
+        if (hs[index].min_time < t_c) {
             t_c = hs[index].min_time;
-            hs_coll = true;
             hs_index_i = hs[index].i;
             hs_index_j = hs[index].j;
+
+            hs_coll = true;
         }
 
     }
@@ -305,15 +306,12 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
         
         if (bonds[index].min_time < start_zone) {
             start_zone = bonds[index].min_time;
-            index_i = bonds[index].i;
-            index_j = bonds[index].j;
+            end_zone   = bonds[index].max_time;
+            index_i    = bonds[index].i;
+            index_j    = bonds[index].j;
 
             coll = true;
         }
-
-
-        if (bonds[index].max_time < end_zone)
-            end_zone = bonds[index].max_time;
 
     }
 
@@ -350,6 +348,11 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
             fraction = start_zone + (end_zone - start_zone) * this->dis(this->generator);
 
+            if (fraction > t_c)
+                fraction = t_c;
+
+            //std::cout<<"test"<<std::endl;
+
         }
 
         else {
@@ -361,8 +364,10 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
                 
                 fraction = 0.5 * (start_zone + end_zone);
                 
-                if (fraction > 1.)
-                    fraction = 1.;
+                if (fraction > t_c)
+                    fraction = t_c;
+
+                //std::cout<<"test"<<std::endl;
 
 
             }
