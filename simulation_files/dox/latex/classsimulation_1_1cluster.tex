@@ -1,0 +1,218 @@
+\hypertarget{classsimulation_1_1cluster}{}\doxysection{simulation\+::cluster\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classsimulation_1_1cluster}\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+
+
+Inheritance diagram for simulation\+::cluster\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{classsimulation_1_1cluster__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for simulation\+::cluster\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{classsimulation_1_1cluster__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsimulation_1_1cluster_a51aa83023f70294f943aa859f079bc26}\label{classsimulation_1_1cluster_a51aa83023f70294f943aa859f079bc26}} 
+{\bfseries cluster} (const int cluster\+\_\+id, const int dim, \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+\_\+box}}$<$ type $>$ $\ast$system\+\_\+box)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1cluster_aed2349ebb1ac5dd21241be1dee440182}{move}} (type $\ast$delta\+\_\+x)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1cluster_afae27e3514b146c133878a50e26b7092}{add\+\_\+constituent}} (\mbox{\hyperlink{classsimulation_1_1constituent}{constituent}}$<$ type $>$ $\ast$single\+\_\+element)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1cluster_aa3684af049fad73fbea3a18670236f0b}{add\+\_\+constituent\+\_\+to\+\_\+cell}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1cluster_a01b657cb032cf2517da2b9f1dc10760a}{remove\+\_\+constituent\+\_\+from\+\_\+cell}} ()
+\item 
+double \mbox{\hyperlink{classsimulation_1_1cluster_a506b3b9f5690d33e145e60883a9e0f14}{get\+\_\+mass}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1cluster_a58a8a92062ff92c9b1911eac5b6b4993}{calculate\+\_\+aggregate\+\_\+mass}} ()
+\item 
+int \mbox{\hyperlink{classsimulation_1_1cluster_a325ced9033967ff42a9bf38eb0ca23ee}{get\+\_\+id}} ()
+\item 
+int \mbox{\hyperlink{classsimulation_1_1cluster_a0d94142202a40cc19e0c6417bf1bdf9e}{get\+\_\+aggregate\+\_\+id}} ()
+\item 
+int \mbox{\hyperlink{classsimulation_1_1cluster_a928b0cad4f8dc027f83cfc970da18e01}{get\+\_\+size}} ()
+\item 
+int \mbox{\hyperlink{classsimulation_1_1cluster_a7cecad5202fab0234f7d6b4f69c3720e}{get\+\_\+element\+\_\+id}} (const int i)
+\item 
+\mbox{\hyperlink{classsimulation_1_1constituent}{constituent}}$<$ type $>$ $\ast$ \mbox{\hyperlink{classsimulation_1_1cluster_ab2e985003b56c7814f75cb365f9a88ae}{get\+\_\+element}} (const int i)
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classsimulation_1_1cluster_ae0c95371cdaf604791af98c1b3b330fa}{get\+\_\+neighbour\+\_\+list}} (const int i)
+\item 
+int \mbox{\hyperlink{classsimulation_1_1cluster_a131476c2763b53b33601de35a77572e0}{get\+\_\+element\+\_\+aggregate\+\_\+id}} (const int element\+\_\+id)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1cluster_afb1e6b77993ffecd454649c9fa26ab00}{set\+\_\+current\+\_\+seed\+\_\+status}} (const int seed)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsimulation_1_1cluster_afae27e3514b146c133878a50e26b7092}\label{classsimulation_1_1cluster_afae27e3514b146c133878a50e26b7092}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!add\_constituent@{add\_constituent}}
+\index{add\_constituent@{add\_constituent}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{add\_constituent()}{add\_constituent()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::add\+\_\+constituent (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsimulation_1_1constituent}{constituent}}$<$ type $>$ $\ast$}]{single\+\_\+element }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_aa3684af049fad73fbea3a18670236f0b}\label{classsimulation_1_1cluster_aa3684af049fad73fbea3a18670236f0b}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!add\_constituent\_to\_cell@{add\_constituent\_to\_cell}}
+\index{add\_constituent\_to\_cell@{add\_constituent\_to\_cell}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{add\_constituent\_to\_cell()}{add\_constituent\_to\_cell()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::add\+\_\+constituent\+\_\+to\+\_\+cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a58a8a92062ff92c9b1911eac5b6b4993}\label{classsimulation_1_1cluster_a58a8a92062ff92c9b1911eac5b6b4993}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!calculate\_aggregate\_mass@{calculate\_aggregate\_mass}}
+\index{calculate\_aggregate\_mass@{calculate\_aggregate\_mass}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{calculate\_aggregate\_mass()}{calculate\_aggregate\_mass()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::calculate\+\_\+aggregate\+\_\+mass (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a0d94142202a40cc19e0c6417bf1bdf9e}\label{classsimulation_1_1cluster_a0d94142202a40cc19e0c6417bf1bdf9e}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_aggregate\_id@{get\_aggregate\_id}}
+\index{get\_aggregate\_id@{get\_aggregate\_id}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_aggregate\_id()}{get\_aggregate\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+aggregate\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_ab2e985003b56c7814f75cb365f9a88ae}\label{classsimulation_1_1cluster_ab2e985003b56c7814f75cb365f9a88ae}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_element@{get\_element}}
+\index{get\_element@{get\_element}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_element()}{get\_element()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+\mbox{\hyperlink{classsimulation_1_1constituent}{constituent}}$<$ type $>$ $\ast$ \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+element (\begin{DoxyParamCaption}\item[{const int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a131476c2763b53b33601de35a77572e0}\label{classsimulation_1_1cluster_a131476c2763b53b33601de35a77572e0}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_element\_aggregate\_id@{get\_element\_aggregate\_id}}
+\index{get\_element\_aggregate\_id@{get\_element\_aggregate\_id}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_element\_aggregate\_id()}{get\_element\_aggregate\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+element\+\_\+aggregate\+\_\+id (\begin{DoxyParamCaption}\item[{const int}]{element\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a7cecad5202fab0234f7d6b4f69c3720e}\label{classsimulation_1_1cluster_a7cecad5202fab0234f7d6b4f69c3720e}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_element\_id@{get\_element\_id}}
+\index{get\_element\_id@{get\_element\_id}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_element\_id()}{get\_element\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+element\+\_\+id (\begin{DoxyParamCaption}\item[{const int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a325ced9033967ff42a9bf38eb0ca23ee}\label{classsimulation_1_1cluster_a325ced9033967ff42a9bf38eb0ca23ee}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_id@{get\_id}}
+\index{get\_id@{get\_id}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_id()}{get\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a506b3b9f5690d33e145e60883a9e0f14}\label{classsimulation_1_1cluster_a506b3b9f5690d33e145e60883a9e0f14}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_mass@{get\_mass}}
+\index{get\_mass@{get\_mass}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_mass()}{get\_mass()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+double \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+mass (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_ae0c95371cdaf604791af98c1b3b330fa}\label{classsimulation_1_1cluster_ae0c95371cdaf604791af98c1b3b330fa}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_neighbour\_list@{get\_neighbour\_list}}
+\index{get\_neighbour\_list@{get\_neighbour\_list}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_neighbour\_list()}{get\_neighbour\_list()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+neighbour\+\_\+list (\begin{DoxyParamCaption}\item[{const int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a928b0cad4f8dc027f83cfc970da18e01}\label{classsimulation_1_1cluster_a928b0cad4f8dc027f83cfc970da18e01}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!get\_size@{get\_size}}
+\index{get\_size@{get\_size}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::get\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_aed2349ebb1ac5dd21241be1dee440182}\label{classsimulation_1_1cluster_aed2349ebb1ac5dd21241be1dee440182}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!move@{move}}
+\index{move@{move}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::move (\begin{DoxyParamCaption}\item[{type $\ast$}]{delta\+\_\+x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_a01b657cb032cf2517da2b9f1dc10760a}\label{classsimulation_1_1cluster_a01b657cb032cf2517da2b9f1dc10760a}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!remove\_constituent\_from\_cell@{remove\_constituent\_from\_cell}}
+\index{remove\_constituent\_from\_cell@{remove\_constituent\_from\_cell}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{remove\_constituent\_from\_cell()}{remove\_constituent\_from\_cell()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::remove\+\_\+constituent\+\_\+from\+\_\+cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1cluster_afb1e6b77993ffecd454649c9fa26ab00}\label{classsimulation_1_1cluster_afb1e6b77993ffecd454649c9fa26ab00}} 
+\index{simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}!set\_current\_seed\_status@{set\_current\_seed\_status}}
+\index{set\_current\_seed\_status@{set\_current\_seed\_status}!simulation::cluster$<$ type $>$@{simulation::cluster$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_current\_seed\_status()}{set\_current\_seed\_status()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1cluster}{simulation\+::cluster}}$<$ type $>$\+::set\+\_\+current\+\_\+seed\+\_\+status (\begin{DoxyParamCaption}\item[{const int}]{seed }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+cluster.\+hh\end{DoxyCompactItemize}

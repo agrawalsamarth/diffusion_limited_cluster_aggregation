@@ -1,0 +1,50 @@
+\hypertarget{check__aggregation__offlattice_8hh_source}{}\doxysection{check\+\_\+aggregation\+\_\+offlattice.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}check\_aggregation.hh"{}}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef CHECK\_AGGREGATION\_OFFLATTICE\_H}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define CHECK\_AGGREGATION\_OFFLATTICE\_H}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{template} <\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1check__aggregation__offlattice}{check\_aggregation\_offlattice}}: \textcolor{keyword}{public} \mbox{\hyperlink{classsimulation_1_1check__aggregation}{check\_aggregation}}<type>\{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11     \textcolor{keyword}{public}:}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13         \mbox{\hyperlink{classsimulation_1_1check__aggregation__offlattice}{check\_aggregation\_offlattice}}(\mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *system\_state, \mbox{\hyperlink{classsimulation_1_1normal__bind}{normal\_bind<type>}} *bind\_system, \mbox{\hyperlink{classsimulation_1_1aggregation__condition}{aggregation\_condition<type>}} *ref\_condition, \textcolor{keywordtype}{double} tolerance);}
+\DoxyCodeLine{14         \textcolor{keywordtype}{void} check\_for\_aggregation(\mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} *c\_1);}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16     \textcolor{keyword}{private}:}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18         \mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *sys\_state;}
+\DoxyCodeLine{19         \mbox{\hyperlink{classsimulation_1_1normal__bind}{normal\_bind<type>}} *bind\_sys;}
+\DoxyCodeLine{20         \mbox{\hyperlink{classsimulation_1_1aggregation__condition}{aggregation\_condition<type>}} *condition;}
+\DoxyCodeLine{21         std::vector<int> neighbours;}
+\DoxyCodeLine{22         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}}* temp;}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24         \textcolor{keywordtype}{int} neighbour\_id;}
+\DoxyCodeLine{25         \textcolor{keywordtype}{int} neighbour\_cluster\_id;}
+\DoxyCodeLine{26         \textcolor{keywordtype}{int} cluster\_id;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28         type distance;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}}* particle\_1;}
+\DoxyCodeLine{31         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}}* particle\_2;}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33         type temp\_r;}
+\DoxyCodeLine{34         type r2;}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36         \textcolor{keywordtype}{double} agg\_tolerance;}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \};}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

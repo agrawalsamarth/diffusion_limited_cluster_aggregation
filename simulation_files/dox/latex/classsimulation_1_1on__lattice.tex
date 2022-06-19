@@ -1,0 +1,127 @@
+\hypertarget{classsimulation_1_1on__lattice}{}\doxysection{simulation\+::on\+\_\+lattice\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classsimulation_1_1on__lattice}\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+
+
+Inheritance diagram for simulation\+::on\+\_\+lattice\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=206pt]{classsimulation_1_1on__lattice__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for simulation\+::on\+\_\+lattice\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=206pt]{classsimulation_1_1on__lattice__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_a5b58ba6248783bc70fe003e644624ba8}\label{classsimulation_1_1on__lattice_a5b58ba6248783bc70fe003e644624ba8}} 
+{\bfseries on\+\_\+lattice} (const int dim, type $\ast$box\+\_\+lengths, std\+::vector$<$ \mbox{\hyperlink{classsimulation_1_1boundary__conditions}{boundary\+\_\+conditions}}$<$ type $>$ $\ast$ $>$ system\+\_\+bc)
+\item 
+type \mbox{\hyperlink{classsimulation_1_1on__lattice_a499f234baa3a7b75294f0eb9cbf17173}{get\+\_\+refill}} (type x, int axis)
+\item 
+type \mbox{\hyperlink{classsimulation_1_1on__lattice_a2cc334c60c60c643e4cc0cbbb8b5e454}{get\+\_\+L}} (const int axis)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1on__lattice_a62c91e1aeb5de99f6398f0cf808a902a}{add\+\_\+particle\+\_\+to\+\_\+cell}} (const int id, type $\ast$pos)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1on__lattice_aed5192923c81ac080dbb41cfce65c5fc}{remove\+\_\+particle\+\_\+from\+\_\+cell}} (const int id, type $\ast$pos)
+\item 
+int \mbox{\hyperlink{classsimulation_1_1on__lattice_ac510aa851fea148bb81ee7335e9d9d98}{get\+\_\+particle\+\_\+id}} (type $\ast$pos)
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classsimulation_1_1on__lattice_a1c3ed116dd4a0ba396cb2211e7bcaf83}{get\+\_\+neighbour\+\_\+list}} (type $\ast$pos)
+\item 
+int \mbox{\hyperlink{classsimulation_1_1on__lattice_ad801073596ce32fb521edcece9e8d1ff}{get\+\_\+periodicity}} (const int axis)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_a62c91e1aeb5de99f6398f0cf808a902a}\label{classsimulation_1_1on__lattice_a62c91e1aeb5de99f6398f0cf808a902a}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!add\_particle\_to\_cell@{add\_particle\_to\_cell}}
+\index{add\_particle\_to\_cell@{add\_particle\_to\_cell}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{add\_particle\_to\_cell()}{add\_particle\_to\_cell()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::add\+\_\+particle\+\_\+to\+\_\+cell (\begin{DoxyParamCaption}\item[{const int}]{id,  }\item[{type $\ast$}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_a2cc334c60c60c643e4cc0cbbb8b5e454}\label{classsimulation_1_1on__lattice_a2cc334c60c60c643e4cc0cbbb8b5e454}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!get\_L@{get\_L}}
+\index{get\_L@{get\_L}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_L()}{get\_L()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+type \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::get\+\_\+L (\begin{DoxyParamCaption}\item[{const int}]{axis }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_a1c3ed116dd4a0ba396cb2211e7bcaf83}\label{classsimulation_1_1on__lattice_a1c3ed116dd4a0ba396cb2211e7bcaf83}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!get\_neighbour\_list@{get\_neighbour\_list}}
+\index{get\_neighbour\_list@{get\_neighbour\_list}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_neighbour\_list()}{get\_neighbour\_list()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::get\+\_\+neighbour\+\_\+list (\begin{DoxyParamCaption}\item[{type $\ast$}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_ac510aa851fea148bb81ee7335e9d9d98}\label{classsimulation_1_1on__lattice_ac510aa851fea148bb81ee7335e9d9d98}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!get\_particle\_id@{get\_particle\_id}}
+\index{get\_particle\_id@{get\_particle\_id}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_particle\_id()}{get\_particle\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::get\+\_\+particle\+\_\+id (\begin{DoxyParamCaption}\item[{type $\ast$}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_ad801073596ce32fb521edcece9e8d1ff}\label{classsimulation_1_1on__lattice_ad801073596ce32fb521edcece9e8d1ff}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!get\_periodicity@{get\_periodicity}}
+\index{get\_periodicity@{get\_periodicity}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_periodicity()}{get\_periodicity()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::get\+\_\+periodicity (\begin{DoxyParamCaption}\item[{const int}]{axis }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_a499f234baa3a7b75294f0eb9cbf17173}\label{classsimulation_1_1on__lattice_a499f234baa3a7b75294f0eb9cbf17173}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!get\_refill@{get\_refill}}
+\index{get\_refill@{get\_refill}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_refill()}{get\_refill()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+type \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::get\+\_\+refill (\begin{DoxyParamCaption}\item[{type}]{x,  }\item[{int}]{axis }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1on__lattice_aed5192923c81ac080dbb41cfce65c5fc}\label{classsimulation_1_1on__lattice_aed5192923c81ac080dbb41cfce65c5fc}} 
+\index{simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}!remove\_particle\_from\_cell@{remove\_particle\_from\_cell}}
+\index{remove\_particle\_from\_cell@{remove\_particle\_from\_cell}!simulation::on\_lattice$<$ type $>$@{simulation::on\_lattice$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{remove\_particle\_from\_cell()}{remove\_particle\_from\_cell()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1on__lattice}{simulation\+::on\+\_\+lattice}}$<$ type $>$\+::remove\+\_\+particle\+\_\+from\+\_\+cell (\begin{DoxyParamCaption}\item[{const int}]{id,  }\item[{type $\ast$}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+::simulation\+\_\+box$<$ type $>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+on\+\_\+lattice.\+hh\end{DoxyCompactItemize}

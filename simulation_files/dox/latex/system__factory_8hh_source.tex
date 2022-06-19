@@ -1,0 +1,33 @@
+\hypertarget{system__factory_8hh_source}{}\doxysection{system\+\_\+factory.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}particle.hh"{}}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include "{}cluster.hh"{}}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}periodic\_bc.hh"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}on\_lattice.hh"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}off\_lattice.hh"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#ifndef SYSTEM\_FACTORY\_H}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define SYSTEM\_FACTORY\_H}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{template}<\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{14 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1system__factory}{system\_factory}}\{}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16     \textcolor{keyword}{public}:}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}}*               create\_constituent(\textcolor{keywordtype}{int} constituent\_id, \textcolor{keywordtype}{int} lattice, \textcolor{keywordtype}{int} dim, std::string name\_type, \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\_box<type>}} *box);}
+\DoxyCodeLine{19         \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\_box<type>}}*            create\_simulation\_box(\textcolor{keywordtype}{int} lattice, \textcolor{keywordtype}{int} dim, type *box\_lengths, std::vector<\mbox{\hyperlink{classsimulation_1_1boundary__conditions}{boundary\_conditions<type>}}*> system\_bc, \textcolor{keywordtype}{double} tolerance);}
+\DoxyCodeLine{20         \mbox{\hyperlink{classsimulation_1_1boundary__conditions}{boundary\_conditions<type>}}*       create\_boundary\_conditions(std::string name\_type);}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

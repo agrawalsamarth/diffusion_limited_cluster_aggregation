@@ -1,4 +1,5 @@
 #include <dlma_system.hh>
+#include <misc.hh>
 
 #ifndef DLMA_SYSTEM_OFFLATTICE_H
 #define DLMA_SYSTEM_OFFLATTICE_H
@@ -20,7 +21,8 @@ class dlma_system_offlattice: public dlma_system<type>{
 
         void calc_rij();
         //bool check_rij();
-
+        std::vector<coll_deets> build_collision_list(int i, double alpha, type *dr);
+        coll_deets calc_quad_eqn(type *dr, double alpha, constituent<type> *ref_particle, constituent<type> *nb_particle);
         type fix_overlap(const int i, type *dr);
         constituent<type> *image;
         std::vector<int>   actual_list;
@@ -28,6 +30,10 @@ class dlma_system_offlattice: public dlma_system<type>{
         std::vector<int>   neighbours;
         int iters = 0;
         double *rij;
+        std::vector<coll_deets> bonds;
+        std::vector<coll_deets> hs;
+
+
 
 
 };

@@ -1,0 +1,44 @@
+\hypertarget{iterator__factory_8hh_source}{}\doxysection{iterator\+\_\+factory.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}brownian\_movement.hh"{}}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include "{}mass\_aggregation\_condition.hh"{}}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}dlma\_save\_config.hh"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}normal\_bind.hh"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}dlma\_system\_onlattice.hh"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}dlma\_system.hh"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}brownian\_movement\_offlattice.hh"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}check\_aggregation\_offlattice.hh"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}check\_aggregation\_onlattice.hh"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}dlma\_system\_offlattice.hh"{}}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#ifndef ITERATOR\_FACTORY\_H}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define ITERATOR\_FACTORY\_H}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{template} <\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{18 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1iterator__factory}{iterator\_factory}}\{}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20     \textcolor{keyword}{public}:}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22         \mbox{\hyperlink{classsimulation_1_1particle__movement}{particle\_movement<type>}}* create\_movement(std::string name\_type, \textcolor{keywordtype}{int} dim, \textcolor{keywordtype}{int} rng\_seed, \textcolor{keywordtype}{int} lattice);}
+\DoxyCodeLine{23         \mbox{\hyperlink{classsimulation_1_1aggregation__condition}{aggregation\_condition<type>}}* create\_aggregation\_condition(std::string name\_type, \mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *system\_state); }
+\DoxyCodeLine{24         \mbox{\hyperlink{classsimulation_1_1check__aggregation}{check\_aggregation<type>}}* create\_check\_aggregation(std::string name\_type, \textcolor{keywordtype}{int} lattice, \mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *system\_state, \mbox{\hyperlink{classsimulation_1_1normal__bind}{normal\_bind<type>}} *bind\_system, \mbox{\hyperlink{classsimulation_1_1aggregation__condition}{aggregation\_condition<type>}} *ref\_condition}
+\DoxyCodeLine{25         , \textcolor{keywordtype}{double} tolerance);}
+\DoxyCodeLine{26         \mbox{\hyperlink{classsimulation_1_1save__config}{save\_config<type>}}* create\_save\_config(std::string name\_type, \mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *ref\_sys, \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\_box<type>}} *ref\_box);}
+\DoxyCodeLine{27         \mbox{\hyperlink{classsimulation_1_1normal__bind}{normal\_bind<type>}}* create\_bind\_system(std::string name\_type, \mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *system\_ptr);}
+\DoxyCodeLine{28         \mbox{\hyperlink{classsimulation_1_1system}{system<type>}}* create\_new\_system(std::string name\_type, \textcolor{keywordtype}{int} lattice, \textcolor{keywordtype}{char} *filename);}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \};}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,32 @@
+\hypertarget{system__iterator_8hh_source}{}\doxysection{system\+\_\+iterator.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}iterator\_factory.hh"{}}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef SYSTEM\_IETRATOR\_H}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define SYSTEM\_IETRATOR\_H}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{namespace }simulation}
+\DoxyCodeLine{7 \{}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{template} <\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1system__iterator}{system\_iterator}}\{}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12     \textcolor{keyword}{public}:}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} run\_system() \{\};}
+\DoxyCodeLine{15         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} iteration\_step() \{\};}
+\DoxyCodeLine{16         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} save\_config\_file() \{\};}
+\DoxyCodeLine{17         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} save\_config\_file(\textcolor{keywordtype}{char} *filename) \{\};}
+\DoxyCodeLine{18         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} create\_movie\_files(\textcolor{keywordtype}{char} *filename) \{\};}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

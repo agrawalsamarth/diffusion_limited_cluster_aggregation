@@ -1,0 +1,63 @@
+\hypertarget{cluster_8hh_source}{}\doxysection{cluster.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}constituent.hh"{}}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef CLUSTER\_H}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define CLUSTER\_H}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{template} <\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1cluster}{cluster}}: \textcolor{keyword}{public} \mbox{\hyperlink{classsimulation_1_1constituent}{constituent}}<type>\{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11     \textcolor{keyword}{public}:}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13         \mbox{\hyperlink{classsimulation_1_1cluster}{cluster}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} cluster\_id, \textcolor{keyword}{const} \textcolor{keywordtype}{int} dim, \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\_box<type>}} *system\_box);}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15         \textcolor{keywordtype}{void} move(type *delta\_x);}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17         \textcolor{comment}{//type  element\_pos(const int i, const int axis) const;}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19         \textcolor{keywordtype}{void} add\_constituent(\mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} *single\_element);}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21         \textcolor{keywordtype}{void} add\_constituent\_to\_cell();}
+\DoxyCodeLine{22         \textcolor{keywordtype}{void} remove\_constituent\_from\_cell();}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24         \textcolor{comment}{//void set\_aggregate\_id(const int id);}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26         \textcolor{keywordtype}{double} get\_mass();}
+\DoxyCodeLine{27         \textcolor{keywordtype}{void}   calculate\_aggregate\_mass();}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29         \textcolor{keywordtype}{int}   get\_id();}
+\DoxyCodeLine{30         \textcolor{keywordtype}{int}   get\_aggregate\_id();}
+\DoxyCodeLine{31         \textcolor{keywordtype}{int}   get\_size();}
+\DoxyCodeLine{32         \textcolor{keywordtype}{int}   get\_element\_id(\textcolor{keyword}{const} \textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}}* get\_element(\textcolor{keyword}{const} \textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{35         std::vector<int> get\_neighbour\_list(\textcolor{keyword}{const} \textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37         \textcolor{keywordtype}{int} get\_element\_aggregate\_id(\textcolor{keyword}{const} \textcolor{keywordtype}{int} element\_id);}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39         \textcolor{keywordtype}{void} set\_current\_seed\_status(\textcolor{keyword}{const} \textcolor{keywordtype}{int} seed);}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{keyword}{private}:}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44         std::vector<constituent<type>*> elements;}
+\DoxyCodeLine{45         \textcolor{keywordtype}{int} id;}
+\DoxyCodeLine{46         \textcolor{keywordtype}{int} aggregate\_id;}
+\DoxyCodeLine{47         \textcolor{keywordtype}{int} D;}
+\DoxyCodeLine{48         \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\_box<type>}}* box;}
+\DoxyCodeLine{49         \textcolor{keywordtype}{double} mass;}
+\DoxyCodeLine{50         type temp\_pos;}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \};}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,40 @@
+\hypertarget{mass__aggregation__condition_8hh_source}{}\doxysection{mass\+\_\+aggregation\+\_\+condition.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include <aggregation\_condition.hh>}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef MASS\_AGGREGATION\_CONDITION\_H}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define MASS\_AGGREGATION\_CONDITION\_H}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{template}<\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1mass__aggregation__condition}{mass\_aggregation\_condition}}: \textcolor{keyword}{public} \mbox{\hyperlink{classsimulation_1_1aggregation__condition}{aggregation\_condition}}<type>\{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11     \textcolor{keyword}{public}:}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13         \mbox{\hyperlink{classsimulation_1_1mass__aggregation__condition}{mass\_aggregation\_condition}}(\mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *ref\_sys);}
+\DoxyCodeLine{14         \textcolor{keywordtype}{bool} agg\_condition(\mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} * c\_1, \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} * c\_2);}
+\DoxyCodeLine{15         \textcolor{keywordtype}{void} show\_out();}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17     \textcolor{keyword}{private}:}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19         \mbox{\hyperlink{classsimulation_1_1system}{system<type>}} *sys\_state;}
+\DoxyCodeLine{20         \textcolor{keywordtype}{int} id\_1;}
+\DoxyCodeLine{21         \textcolor{keywordtype}{int} id\_2;}
+\DoxyCodeLine{22         \textcolor{keywordtype}{int} agg\_1;}
+\DoxyCodeLine{23         \textcolor{keywordtype}{int} agg\_2;}
+\DoxyCodeLine{24         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} *cluster\_1;}
+\DoxyCodeLine{25         \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} *cluster\_2;}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -166,20 +166,37 @@ void dlma_system<type>::read_params_parser(char *params_name)
         exit(EXIT_FAILURE);
     }
 
-    type L_total = 1;
+    type L_total = 1.;
+    type L_total_temp = 1.;
 
     if (L_flag_and == false){
 
         for (int axis = 0; axis < D; axis++){
             L[axis] = (type)(pow((1.*N)/(1.*phi), 1./(1.*D)));
-            //std::cout<<L[axis]<<std::endl;
         }
-        
+       
+
+        for (int axis = 0; axis < D; axis++){
+            L_total      *=  L[axis];
+            L_total_temp *= (L[axis]+1.);
+        } 
+
+        //std::cout<<"1 = "<<fabs(phi - ((1.*N)/(1*L_total)))<<std::endl;
+        //std::cout<<"2 = "<<fabs(phi - ((1.*N)/(1*L_total_temp)))<<std::endl;
+
+        if (fabs(phi - ((1.*N)/(1*L_total))) > fabs(phi-((1.*N)/(1*L_total_temp)))){
+
+            for (int axis = 0; axis < D; axis++)
+                L[axis] += 1;
+        }
+
+        L_total = 1.;
 
         for (int axis = 0; axis < D; axis++)
             L_total *= L[axis];
 
         phi = (1.*N)/(1*L_total);
+
 
     }
 

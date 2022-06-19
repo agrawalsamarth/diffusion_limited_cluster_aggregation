@@ -1,0 +1,46 @@
+\hypertarget{simulation__box_8hh_source}{}\doxysection{simulation\+\_\+box.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}periodic\_bc.hh"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#ifndef SIMULATION\_BOX\_H}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#define SIMULATION\_BOX\_H}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{template}<\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\_box}}\{}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14     \textcolor{keyword}{public}:}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} add\_bc(\mbox{\hyperlink{classsimulation_1_1boundary__conditions}{boundary\_conditions<type>}} *bc) \{\};}
+\DoxyCodeLine{17         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_L(\textcolor{keyword}{const} type L\_val, \textcolor{keyword}{const} \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{18         \textcolor{keyword}{virtual} type get\_L(\textcolor{keyword}{const} \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20         \textcolor{keyword}{virtual} type get\_refill(type x, \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{21         \textcolor{keyword}{virtual} type get\_refill(\textcolor{keywordtype}{int} old\_pos, \textcolor{keywordtype}{int} new\_pos, \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23         \textcolor{keyword}{virtual} type periodic\_distance(type x, \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} add\_particle\_to\_cell(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id}, type *pos) \{\};}
+\DoxyCodeLine{26         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} remove\_particle\_from\_cell(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id}, type *pos) \{\};}
+\DoxyCodeLine{27         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int}  get\_particle\_id(type *pos) \{\};}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29         \textcolor{keyword}{virtual} std::vector<int> get\_neighbour\_list(type *ref\_pos) \{\};}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int}  get\_periodicity(\textcolor{keyword}{const} \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{32         \textcolor{keyword}{virtual} type get\_periodic\_distance(type x, type y, \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34         }
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \};}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -156,7 +156,6 @@ void postprocessing::unfold(const int prev, const int next)
                 if ((posDiff(axis) > halfL(axis)) || (posDiff(axis) < -halfL(axis))){
                     cluster_percolation(totalClusters_,axis) = 1;
                     load_bearing_paths_[axis]++;
-                    std::cout<<"lbp = "<<load_bearing_paths_[axis]<<std::endl;
                 }
             }
 

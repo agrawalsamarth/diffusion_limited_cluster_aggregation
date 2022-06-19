@@ -1,0 +1,63 @@
+\hypertarget{constituent_8hh_source}{}\doxysection{constituent.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}on\_lattice.hh"{}}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef CONSTITUENT\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define CONSTITUENT\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{template} <\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{11 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1constituent}{constituent}}\{}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13     \textcolor{keyword}{public}:}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void}   set\_mass(\textcolor{keyword}{const} \textcolor{keywordtype}{double} constituent\_mass) \{\}; }
+\DoxyCodeLine{16         \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} get\_mass() \{\};}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void}  move(type *delta\_x) \{\};}
+\DoxyCodeLine{19         \textcolor{keyword}{virtual} type  pos(\textcolor{keyword}{const} \textcolor{keywordtype}{int} axis)\textcolor{keyword}{ const }\{\};}
+\DoxyCodeLine{20         \textcolor{keyword}{virtual} type\& pos(\textcolor{keyword}{const} \textcolor{keywordtype}{int} axis) \{\};}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} add\_constituent(\mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}} *single\_element) \{\};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} add\_constituent\_to\_cell() \{\};}
+\DoxyCodeLine{25         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} remove\_constituent\_from\_cell() \{\};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_aggregate\_id(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id}) \{\};}
+\DoxyCodeLine{28         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} calculate\_aggregate\_mass() \{\};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} get\_id() \{\};}
+\DoxyCodeLine{31         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} get\_aggregate\_id() \{\};}
+\DoxyCodeLine{32         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} get\_size() \{\};}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34         \textcolor{keyword}{virtual} \mbox{\hyperlink{classsimulation_1_1constituent}{constituent<type>}}* get\_element(\textcolor{keyword}{const} \textcolor{keywordtype}{int} i) \{\};}
+\DoxyCodeLine{35         \textcolor{keyword}{virtual} std::vector<int>   get\_neighbour\_list(\textcolor{keyword}{const} \textcolor{keywordtype}{int} i) \{\};}
+\DoxyCodeLine{36         \textcolor{keyword}{virtual} std::vector<int>   get\_neighbour\_list() \{\};}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} get\_element\_aggregate\_id(\textcolor{keyword}{const} \textcolor{keywordtype}{int} element\_id) \{\};}
+\DoxyCodeLine{39         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} get\_element\_id(\textcolor{keyword}{const} \textcolor{keywordtype}{int} i) \{\};}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_diameter(\textcolor{keyword}{const} \textcolor{keywordtype}{double} dia) \{\};}
+\DoxyCodeLine{42         \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} get\_diameter() \{\};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_original\_seed\_status(\textcolor{keyword}{const} \textcolor{keywordtype}{int} seed) \{\};}
+\DoxyCodeLine{45         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int}  get\_original\_seed\_status() \{\};}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_current\_seed\_status(\textcolor{keyword}{const} \textcolor{keywordtype}{int} seed) \{\};}
+\DoxyCodeLine{48         \textcolor{keyword}{virtual} \textcolor{keywordtype}{int}  get\_current\_seed\_status() \{\};}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50         \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} print\_neighbours() \{\};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

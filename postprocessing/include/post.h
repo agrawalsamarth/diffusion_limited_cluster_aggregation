@@ -104,6 +104,8 @@ class postprocessing
     void calc_unfolded_hist(double bin_size);
     void dump_scattering_function(double q_min, double q_max, int num_q);
     void dump_scattering_function(double q_min, double q_max, int num_q, char *filename);
+    //void dump_lr_scattering_function(double q_min, double q_max, int num_q, double bin_size);
+    void dump_lr_scattering_function(double q_min, double q_max, int num_q, double bin_size, char *filename);
     void calc_scattering_function(double q_min, double q_max, int num_q);
     void calc_density_correlation(double bin_size);
     void save_config();
@@ -158,6 +160,7 @@ class postprocessing
     double  dq;
     int     num_q;
     double *sq_;
+    double *lr_sq_;
     int    *unfolded_num_attachments_;
     int    *delta_hist_;
     int     max_delta_;

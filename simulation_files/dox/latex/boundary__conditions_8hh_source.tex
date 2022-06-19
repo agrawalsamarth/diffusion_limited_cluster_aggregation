@@ -1,0 +1,24 @@
+\hypertarget{boundary__conditions_8hh_source}{}\doxysection{boundary\+\_\+conditions.\+hh}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef BOUNDARY\_CONDITIONS\_H}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define BOUNDARY\_CONDITIONS\_H}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{namespace }simulation\{}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{template} <\textcolor{keyword}{typename} type>}
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{classsimulation_1_1boundary__conditions}{boundary\_conditions}}\{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11     \textcolor{keyword}{public}:}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13         \textcolor{keyword}{virtual} type refill(type x, type L) \{\};}
+\DoxyCodeLine{14         \textcolor{keyword}{virtual} type refill(type old\_pos, type new\_pos, type L) \{\};}
+\DoxyCodeLine{15 \};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

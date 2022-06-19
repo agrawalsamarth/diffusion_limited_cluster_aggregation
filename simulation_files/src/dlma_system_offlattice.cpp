@@ -10,6 +10,8 @@ dlma_system_offlattice<type>::dlma_system_offlattice(char *params_name)
 
     int N_pair = (this->N * (this->N - 1))/2; 
     rij = (double*)malloc(sizeof(double)*N_pair);
+
+
 }
 
 template <typename type>
@@ -154,7 +156,7 @@ void dlma_system_offlattice<type>::initialize_system()
     
 }*/
 
-template <typename type>
+/*template <typename type>
 void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
 {
 
@@ -170,25 +172,222 @@ void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
     //std::cout<<"i="<<this->aggregates[i]->get_id()<<std::endl;
     //calc_rij();
 
-}
+}*/
 
-/*template <typename type>
+template <typename type>
 void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
 {
 
-    constituent<type> *temp;
-    temp = this->get_particle_by_id(i);
+    type scale = fix_overlap(i, dr);
 
-    temp->pos(0) = i;    
+    for (int axis = 0; axis < this->D; axis++)
+        dr[axis] = scale * dr[axis];
 
-    //std::cout<<"i="<<this->aggregates[i]->get_id()<<std::endl;
-    //calc_rij();
+    this->aggregates[i]->remove_constituent_from_cell();
+    this->aggregates[i]->move(dr);
+    this->aggregates[i]->add_constituent_to_cell();
+
+
+}
+
+
+/*template<typename type>
+type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
+{
+    hs = build_collision_list(i, 0., dr);
+
+    double t_c = 1.;
+    double fraction = 1.;
+
+    bool hs_coll = false;
+
+    for (int index = 0; index < hs.size(); index++) {
+
+        if (hs[index].min_time < fraction) {
+            t_c = hs[index].min_time;
+            hs_coll = true;
+        }
+
+    }
+
+    bonds = build_collision_list(i, this->tolerance, dr);
+
+    double start_zone = 1.;
+    double end_zone   = 1e8;
+
+    int index_i;
+    int index_j;
+
+    for (int index = 0; index < bonds.size(); index++) {
+        
+        if (bonds[index].min_time < start_zone) {
+            start_zone = bonds[index].min_time;
+            index_i = bonds[index].i;
+            index_j = bonds[index].j;
+        }
+
+
+        if (bonds[index].max_time < end_zone)
+            end_zone = bonds[index].max_time;
+
+    }
+
+    bool tbc = false;
+    double tbc_min = 1.;
+    double tbc_max = t_c;
+
+    double tbc_time_start;
+    double tbc_time_end;
+
+    for (int index = 0; index < bonds.size(); index++) {
+
+        if ((bonds[index].i == index_i) && (bonds[index].j != index_j))
+        {
+
+            tbc_time_start = bonds[index].min_time;
+            tbc_time_end   = bonds[index].max_time;
+
+            tbc = true;
+
+            if (tbc_time_start < end_zone) {
+
+                
+
+            }
+
+
+
+        }
+
+
+    }
+    
+
+    return fraction;
 
 }*/
 
 template<typename type>
 type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 {
+    hs = build_collision_list(i, 0., dr);
+
+    double t_c = 1.;
+    double fraction = 1.;
+
+    bool hs_coll = false;
+
+    int hs_index_i;
+    int hs_index_j;
+
+    for (int index = 0; index < hs.size(); index++) {
+
+        if (hs[index].min_time < fraction) {
+            t_c = hs[index].min_time;
+            hs_coll = true;
+            hs_index_i = hs[index].i;
+            hs_index_j = hs[index].j;
+        }
+
+    }
+
+    bonds = build_collision_list(i, this->tolerance, dr);
+
+    double start_zone = 1.;
+    double end_zone   = 1e8;
+
+    int index_i;
+    int index_j;
+
+    bool coll = false;
+
+    for (int index = 0; index < bonds.size(); index++) {
+        
+        if (bonds[index].min_time < start_zone) {
+            start_zone = bonds[index].min_time;
+            index_i = bonds[index].i;
+            index_j = bonds[index].j;
+
+            coll = true;
+        }
+
+
+        if (bonds[index].max_time < end_zone)
+            end_zone = bonds[index].max_time;
+
+    }
+
+    bool tbc = false;
+    double tbc_min = 1.;
+    double tbc_max = t_c;
+
+    double tbc_time_start;
+    double tbc_time_end;
+
+    for (int index = 0; index < bonds.size(); index++) {
+
+        if ((bonds[index].i == index_i) && (bonds[index].j != index_j) && (bonds[index].min_time < end_zone)) {
+
+            tbc = true;
+            
+            if (bonds[index].min_time < tbc_min)
+                tbc_min = bonds[index].min_time;
+
+            if (bonds[index].max_time < tbc_max)
+                tbc_max = bonds[index].max_time;
+
+        }
+
+
+    }
+
+    if (coll){
+    
+        if (tbc == true) {
+
+            if (tbc_max < end_zone)
+                end_zone = tbc_max;
+
+            fraction = start_zone + (end_zone - start_zone) * this->dis(this->generator);
+
+        }
+
+        else {
+
+            if ((hs_coll == true) && (hs_index_i == index_i) && (hs_index_j = index_j))
+                fraction = t_c;
+                
+            else {
+                
+                fraction = 0.5 * (start_zone + end_zone);
+                
+                if (fraction > 1.)
+                    fraction = 1.;
+
+
+            }
+    
+
+        }
+
+    }
+
+
+    return fraction;
+
+}
+
+template<typename type>
+std::vector<coll_deets> dlma_system_offlattice<type>::build_collision_list(int i, double alpha, type *dr)
+{
+
+    type diff[this->D];
+    type beta;
+    type q;
+    type dia_distance;
+    type diff_2;
+
+    std::vector<coll_deets> list_coll;
 
     constituent<type> *c_1 = this->aggregates[i];
     constituent<type> *ref_particle;
@@ -201,12 +400,7 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
     int neighbour_id;
     int neighbour_cluster_id;
 
-    type diff[this->D];
-    type beta;
-    type q;
-    type dia_distance;
-    type diff_2;
-    type alpha;
+    coll_deets t_c;
 
     for (int i = 0; i < c_1->get_size(); i++){
 
@@ -233,43 +427,9 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
             if (neighbour_cluster_id != cluster_id){
 
                 nb_particle = this->get_particle_by_id(neighbour_id);
+                t_c = calc_quad_eqn(dr, alpha, ref_particle, nb_particle);
 
-                for (int axis = 0; axis < this->D; axis++)
-                    diff[axis] = this->box->get_periodic_distance(nb_particle->pos(axis), ref_particle->pos(axis), axis);
-
-                q = 0;
-
-                for (int axis = 0; axis < this->D; axis++)
-                    q += diff[axis] * dr[axis];
-
-                diff_2 = 0;
-
-                for (int axis = 0; axis < this->D; axis++)
-                    diff_2 += diff[axis] * diff[axis];
-
-                dia_distance = 0.5 * (ref_particle->get_diameter() + nb_particle->get_diameter());
-                dia_distance = dia_distance * dia_distance;
-
-                beta = (q * q) - diff_2 + dia_distance;
-
-
-                if (beta >= 0.){
-
-                    alpha = q - sqrt(beta);
-
-                    if (fabs(alpha) < 1e-10){
-                        return 0.;
-                    }
-
-                    if (alpha >= 0){
-
-                        if (alpha < fraction){
-                            fraction  = alpha;
-                        } 
-
-                    }
-
-                }
+                list_coll.push_back(t_c);
 
 
             }
@@ -278,8 +438,74 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     }
 
-    return fraction;
+    return list_coll;
 
+
+}
+
+template<typename type>
+coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, constituent<type> *ref_particle, constituent<type> *nb_particle)
+{
+
+    //nb_particle = this->get_particle_by_id(neighbour_id);
+
+    coll_deets temp_coll;
+    temp_coll.i = ref_particle->get_id();
+    temp_coll.j = nb_particle->get_id();
+
+    type diff[this->D];
+
+    for (int axis = 0; axis < this->D; axis++)
+        diff[axis] = this->box->get_periodic_distance(nb_particle->pos(axis), ref_particle->pos(axis), axis);
+
+    double q = 0.;
+
+    for (int axis = 0; axis < this->D; axis++)
+        q += diff[axis] * dr[axis];
+
+    double diff_2 = 0.;
+
+    for (int axis = 0; axis < this->D; axis++)
+        diff_2 += diff[axis] * diff[axis];
+
+    double dia_distance = 0.;
+
+    dia_distance = (1.+ alpha)* 0.5 * (ref_particle->get_diameter() + nb_particle->get_diameter());
+    dia_distance = dia_distance * dia_distance;
+
+    double beta = 0.;
+    double t_c[2];
+
+    beta = (q * q) - diff_2 + dia_distance;
+
+    t_c[0] = q - sqrt(beta);
+    t_c[1] = q + sqrt(beta);
+
+    if (t_c[0] >= 0.){
+
+        if (fabs(t_c[0]) < 1e-10){
+            
+            temp_coll.min_time = 0.;
+            temp_coll.max_time = 0.;
+        }
+
+        else{
+
+            temp_coll.min_time = t_c[0];
+            temp_coll.max_time = t_c[1];
+
+        }
+
+    }
+
+    else {
+
+        temp_coll.min_time = 1e8;
+        temp_coll.max_time = 1e8;
+
+    }
+
+    return temp_coll;
 
 }
 
@@ -314,6 +540,7 @@ void dlma_system_offlattice<type>::calc_rij()
 
         }
     }
+
 
 
 }

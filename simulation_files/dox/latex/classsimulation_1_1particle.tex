@@ -1,0 +1,270 @@
+\hypertarget{classsimulation_1_1particle}{}\doxysection{simulation\+::particle\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classsimulation_1_1particle}\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+
+
+Inheritance diagram for simulation\+::particle\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{classsimulation_1_1particle__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for simulation\+::particle\texorpdfstring{$<$}{<} type \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{classsimulation_1_1particle__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsimulation_1_1particle_adefdcf9d162ba9abb6da2b05f67c7bf3}\label{classsimulation_1_1particle_adefdcf9d162ba9abb6da2b05f67c7bf3}} 
+{\bfseries particle} (const int particle\+\_\+id, const int dim, \mbox{\hyperlink{classsimulation_1_1simulation__box}{simulation\+\_\+box}}$<$ type $>$ $\ast$system\+\_\+box)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_aecaa64ffa33a6b13f88b261c0920adc3}{move}} (type $\ast$delta\+\_\+x)
+\item 
+double \mbox{\hyperlink{classsimulation_1_1particle_a7b96954eb44879119e06a7d021ab476e}{get\+\_\+mass}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_affbd5d2102c5b9decc142fac039489ef}{set\+\_\+mass}} (const double constituent\+\_\+mass)
+\item 
+type \mbox{\hyperlink{classsimulation_1_1particle_aa27e7731fc3ced6a349339b195ab89a1}{pos}} (const int axis) const
+\item 
+type \& \mbox{\hyperlink{classsimulation_1_1particle_ac7537d139ec73aa3b39674df35d724f7}{pos}} (const int axis)
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_a42e70a1526d70056736246c876f258c0}{add\+\_\+constituent\+\_\+to\+\_\+cell}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_a9f537a717a40903c7d5cdff9e890f995}{remove\+\_\+constituent\+\_\+from\+\_\+cell}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_ac826b742d2f2bac3bbb2718004308370}{set\+\_\+aggregate\+\_\+id}} (const int id)
+\item 
+int \mbox{\hyperlink{classsimulation_1_1particle_ab483c7dfb5bbc330b54a47084e7e91c2}{get\+\_\+id}} ()
+\item 
+int \mbox{\hyperlink{classsimulation_1_1particle_ae0ae1c3f103dae4bf56b5f0d0e63960e}{get\+\_\+aggregate\+\_\+id}} ()
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classsimulation_1_1particle_af5f7321d56d0c7dabdad2e9a40113f76}{get\+\_\+neighbour\+\_\+list}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_a4f686c515a9bb3e1e8fb13a1063a89f3}{set\+\_\+diameter}} (const double dia)
+\item 
+double \mbox{\hyperlink{classsimulation_1_1particle_a654bf274081ee54af5d86935b21d7044}{get\+\_\+diameter}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_a0eeb866c660e19c229b015dbc8524c33}{set\+\_\+original\+\_\+seed\+\_\+status}} (const int seed)
+\item 
+int \mbox{\hyperlink{classsimulation_1_1particle_ab4bf89842da2744fb5bd738f02379286}{get\+\_\+original\+\_\+seed\+\_\+status}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_aa35ad5cdd30c904f63ce0228dab0867f}{set\+\_\+current\+\_\+seed\+\_\+status}} (const int seed)
+\item 
+int \mbox{\hyperlink{classsimulation_1_1particle_a9007d6643348f398c6e10558287e6c83}{get\+\_\+current\+\_\+seed\+\_\+status}} ()
+\item 
+void \mbox{\hyperlink{classsimulation_1_1particle_a9283975a95364a5adc277ee6a7799623}{print\+\_\+neighbours}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsimulation_1_1particle_a42e70a1526d70056736246c876f258c0}\label{classsimulation_1_1particle_a42e70a1526d70056736246c876f258c0}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!add\_constituent\_to\_cell@{add\_constituent\_to\_cell}}
+\index{add\_constituent\_to\_cell@{add\_constituent\_to\_cell}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{add\_constituent\_to\_cell()}{add\_constituent\_to\_cell()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::add\+\_\+constituent\+\_\+to\+\_\+cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_ae0ae1c3f103dae4bf56b5f0d0e63960e}\label{classsimulation_1_1particle_ae0ae1c3f103dae4bf56b5f0d0e63960e}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_aggregate\_id@{get\_aggregate\_id}}
+\index{get\_aggregate\_id@{get\_aggregate\_id}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_aggregate\_id()}{get\_aggregate\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+aggregate\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a9007d6643348f398c6e10558287e6c83}\label{classsimulation_1_1particle_a9007d6643348f398c6e10558287e6c83}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_current\_seed\_status@{get\_current\_seed\_status}}
+\index{get\_current\_seed\_status@{get\_current\_seed\_status}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_current\_seed\_status()}{get\_current\_seed\_status()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+current\+\_\+seed\+\_\+status (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a654bf274081ee54af5d86935b21d7044}\label{classsimulation_1_1particle_a654bf274081ee54af5d86935b21d7044}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_diameter@{get\_diameter}}
+\index{get\_diameter@{get\_diameter}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_diameter()}{get\_diameter()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+double \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+diameter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_ab483c7dfb5bbc330b54a47084e7e91c2}\label{classsimulation_1_1particle_ab483c7dfb5bbc330b54a47084e7e91c2}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_id@{get\_id}}
+\index{get\_id@{get\_id}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_id()}{get\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a7b96954eb44879119e06a7d021ab476e}\label{classsimulation_1_1particle_a7b96954eb44879119e06a7d021ab476e}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_mass@{get\_mass}}
+\index{get\_mass@{get\_mass}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_mass()}{get\_mass()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+double \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+mass (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_af5f7321d56d0c7dabdad2e9a40113f76}\label{classsimulation_1_1particle_af5f7321d56d0c7dabdad2e9a40113f76}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_neighbour\_list@{get\_neighbour\_list}}
+\index{get\_neighbour\_list@{get\_neighbour\_list}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_neighbour\_list()}{get\_neighbour\_list()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+neighbour\+\_\+list (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_ab4bf89842da2744fb5bd738f02379286}\label{classsimulation_1_1particle_ab4bf89842da2744fb5bd738f02379286}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!get\_original\_seed\_status@{get\_original\_seed\_status}}
+\index{get\_original\_seed\_status@{get\_original\_seed\_status}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{get\_original\_seed\_status()}{get\_original\_seed\_status()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+int \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::get\+\_\+original\+\_\+seed\+\_\+status (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_aecaa64ffa33a6b13f88b261c0920adc3}\label{classsimulation_1_1particle_aecaa64ffa33a6b13f88b261c0920adc3}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!move@{move}}
+\index{move@{move}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::move (\begin{DoxyParamCaption}\item[{type $\ast$}]{delta\+\_\+x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_ac7537d139ec73aa3b39674df35d724f7}\label{classsimulation_1_1particle_ac7537d139ec73aa3b39674df35d724f7}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!pos@{pos}}
+\index{pos@{pos}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{pos()}{pos()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+type \& \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::pos (\begin{DoxyParamCaption}\item[{const int}]{axis }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_aa27e7731fc3ced6a349339b195ab89a1}\label{classsimulation_1_1particle_aa27e7731fc3ced6a349339b195ab89a1}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!pos@{pos}}
+\index{pos@{pos}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{pos()}{pos()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+type \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::pos (\begin{DoxyParamCaption}\item[{const int}]{axis }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a9283975a95364a5adc277ee6a7799623}\label{classsimulation_1_1particle_a9283975a95364a5adc277ee6a7799623}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!print\_neighbours@{print\_neighbours}}
+\index{print\_neighbours@{print\_neighbours}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{print\_neighbours()}{print\_neighbours()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::print\+\_\+neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a9f537a717a40903c7d5cdff9e890f995}\label{classsimulation_1_1particle_a9f537a717a40903c7d5cdff9e890f995}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!remove\_constituent\_from\_cell@{remove\_constituent\_from\_cell}}
+\index{remove\_constituent\_from\_cell@{remove\_constituent\_from\_cell}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{remove\_constituent\_from\_cell()}{remove\_constituent\_from\_cell()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::remove\+\_\+constituent\+\_\+from\+\_\+cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_ac826b742d2f2bac3bbb2718004308370}\label{classsimulation_1_1particle_ac826b742d2f2bac3bbb2718004308370}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!set\_aggregate\_id@{set\_aggregate\_id}}
+\index{set\_aggregate\_id@{set\_aggregate\_id}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_aggregate\_id()}{set\_aggregate\_id()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::set\+\_\+aggregate\+\_\+id (\begin{DoxyParamCaption}\item[{const int}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_aa35ad5cdd30c904f63ce0228dab0867f}\label{classsimulation_1_1particle_aa35ad5cdd30c904f63ce0228dab0867f}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!set\_current\_seed\_status@{set\_current\_seed\_status}}
+\index{set\_current\_seed\_status@{set\_current\_seed\_status}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_current\_seed\_status()}{set\_current\_seed\_status()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::set\+\_\+current\+\_\+seed\+\_\+status (\begin{DoxyParamCaption}\item[{const int}]{seed }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a4f686c515a9bb3e1e8fb13a1063a89f3}\label{classsimulation_1_1particle_a4f686c515a9bb3e1e8fb13a1063a89f3}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!set\_diameter@{set\_diameter}}
+\index{set\_diameter@{set\_diameter}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_diameter()}{set\_diameter()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::set\+\_\+diameter (\begin{DoxyParamCaption}\item[{const double}]{dia }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_affbd5d2102c5b9decc142fac039489ef}\label{classsimulation_1_1particle_affbd5d2102c5b9decc142fac039489ef}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!set\_mass@{set\_mass}}
+\index{set\_mass@{set\_mass}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_mass()}{set\_mass()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::set\+\_\+mass (\begin{DoxyParamCaption}\item[{const double}]{constituent\+\_\+mass }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+\mbox{\Hypertarget{classsimulation_1_1particle_a0eeb866c660e19c229b015dbc8524c33}\label{classsimulation_1_1particle_a0eeb866c660e19c229b015dbc8524c33}} 
+\index{simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}!set\_original\_seed\_status@{set\_original\_seed\_status}}
+\index{set\_original\_seed\_status@{set\_original\_seed\_status}!simulation::particle$<$ type $>$@{simulation::particle$<$ type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_original\_seed\_status()}{set\_original\_seed\_status()}}
+{\footnotesize\ttfamily template$<$typename type $>$ \\
+void \mbox{\hyperlink{classsimulation_1_1particle}{simulation\+::particle}}$<$ type $>$\+::set\+\_\+original\+\_\+seed\+\_\+status (\begin{DoxyParamCaption}\item[{const int}]{seed }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classsimulation_1_1constituent}{simulation\+::constituent$<$ type $>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+particle.\+hh\end{DoxyCompactItemize}
