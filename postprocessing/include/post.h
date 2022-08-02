@@ -134,6 +134,7 @@ class postprocessing
     void postprocess_lbp();
     void switch_off_alt_lbp(int i);
     void reset_bond_map(bool status);
+    void activate_path(std::vector<std::pair<int,int>> bonds, bool status);
 
     private:
 

@@ -38,6 +38,22 @@ void postprocessing::switch_on_bonds(std::pair<int,int> bond)
 
 }
 
+void postprocessing::activate_path(std::vector<std::pair<int,int>> bonds, bool status)
+{
+
+    for (int i = 0; i < bonds.size(); i++){
+
+        if (status)
+            switch_on_bonds(bonds[i]);
+
+        else
+            switch_off_bonds(bonds[i]);
+        
+
+    }
+
+}
+
 void postprocessing::reset_bond_map(bool status)
 {
 
@@ -173,6 +189,12 @@ void postprocessing::init_unfolding_for_lbp()
     int ref_axis = 0;
     total_lbp = 0;
 
+    for (int i = 0; i < numParticles(); i++){
+        for (int axis = 0; axis < dim(); axis++){
+            cluster_percolation(i,axis) = 0;
+        }
+    }
+
     do {
 
         reset_unfolding_params();
@@ -190,6 +212,13 @@ void postprocessing::init_unfolding_for_lbp()
                     create_subsystem();
                     percolation_detection();
                     path_percolation = true;
+
+                    /*for (int axis = 0; axis < dim(); axis++){
+                        std::cout<<"temp_lbp_"<<axis<<"="<<temp_lbp_[axis]<<std::endl;
+                        cluster_percolation(total_lbp, axis) = temp_lbp_[axis];
+                    }*/
+
+
                     total_lbp++;
                     erase_subsystem();
                     break;
@@ -203,7 +232,7 @@ void postprocessing::init_unfolding_for_lbp()
     } while (path_percolation);
 
     postprocess_lbp();
-    print_lbp();
+    //print_lbp();
 
 }
 
@@ -332,12 +361,15 @@ void postprocessing::unfold_for_lbp(const int prev, const int next, bool build_p
             else {
                 
                 for (int axis = 0; axis < dim(); axis++) {
+
                     posDiff(axis) = unfolded_coords(temp_next, axis) - unfolded_coords(next, axis);
+
                     if ((posDiff(axis) > halfL(axis)) || (posDiff(axis) < -halfL(axis))){
-                        cluster_percolation(totalClusters_,axis) = 1;
+                        cluster_percolation(total_lbp,axis) = 1;
                         temp_lbp_[axis]++;
                         path_percolation = true;
                     }
+
                 }
 
             }
