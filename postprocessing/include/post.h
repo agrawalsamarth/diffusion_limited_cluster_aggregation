@@ -9,6 +9,8 @@
 #include <fstream>
 #include <random>
 //#include <voro++/voro++.hh>
+#include <map>
+#include <algorithm>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -98,7 +100,7 @@ class postprocessing
     void init_unfolding();
     void init_unfolding_for_lbp();
     void unfold(const int prev, const int next);
-    void unfold_for_lbp(const int prev, const int next);
+    void unfold_for_lbp(const int prev, const int next, bool build_pb);
     void calc_unfolded_rij();
     void dump_unfolded_hist_file(double bin_size);
     void calc_unfolded_hist(double bin_size);
@@ -118,6 +120,20 @@ class postprocessing
     void psd(int total_iters);
     void save_radius_distribution();
     void save_radius_distribution(char *filename);
+    void init_unfolding_without_recursion();
+    void place_attachments(int i);
+
+    void build_bond_map();
+    void percolation_detection();
+    void reset_unfolding_params();
+    void switch_off_bonds(std::pair<int,int> bond);
+    void switch_on_bonds(std::pair<int,int> bond);
+    void create_subsystem();
+    void erase_subsystem();
+    void print_lbp();
+    void postprocess_lbp();
+    void switch_off_alt_lbp(int i);
+    void reset_bond_map(bool status);
 
     private:
 
@@ -188,6 +204,20 @@ class postprocessing
     double  *centres;
     int     *type_dis;
     int      max_psd_iters;
+    int      total_lbp;
+
+    std::map<std::pair<int,int>, int> bond_map_status;
+    std::vector<std::pair<int,int>> percolating_bonds;
+    std::pair<int,int> temp_pair;
+    int *divisors;
+    int *bond_bit_repr;
+    std::vector<int> path_components;
+    std::vector<std::pair<int,int>> current_path;
+    bool path_percolation;
+    std::vector<std::vector<std::pair<int,int>>> final_percolating_bonds;
+    std::vector<std::vector<std::pair<int,int>>> weak_links;
+
+
 
 };
 
