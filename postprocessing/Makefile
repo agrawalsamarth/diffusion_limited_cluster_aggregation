@@ -12,7 +12,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 
-all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq
+all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force
 #all: psd_test
 
 density_correlation: $(OBJ_FILES) | $(BIN_DIR)
@@ -46,6 +46,12 @@ percolation: $(OBJ_FILES) | $(BIN_DIR)
 load_bearing_paths: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o load_bearing_paths.o target/load_bearing_paths.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ load_bearing_paths.o
+
+lbp_brute_force: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o lbp_brute_force.o target/lbp_brute_force.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lbp_brute_force.o
+
+
 
 lr_iq: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lr_iq.o target/lr_iq.cpp

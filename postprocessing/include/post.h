@@ -11,6 +11,7 @@
 //#include <voro++/voro++.hh>
 #include <map>
 #include <algorithm>
+#include <bits/stdc++.h>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -135,6 +136,13 @@ class postprocessing
     void switch_off_alt_lbp(int i);
     void reset_bond_map(bool status);
     void activate_path(std::vector<std::pair<int,int>> bonds, bool status);
+    void shred_path(int i);
+    void isolation_routine();
+    void martin_test();
+    void lbp_brute_force();
+    void makeCombiUtil(int n, int left, int k);
+    void makeCombi(int n, int k);
+
 
     private:
 
@@ -217,6 +225,10 @@ class postprocessing
     bool path_percolation;
     std::vector<std::vector<std::pair<int,int>>> final_percolating_bonds;
     std::vector<std::vector<std::pair<int,int>>> weak_links;
+    std::vector<bool> pb_status;
+
+	std::vector<std::vector<int> > ans;
+	std::vector<int> tmp;
 
 
 
