@@ -227,8 +227,9 @@ class postprocessing
     std::vector<std::vector<std::pair<int,int>>> weak_links;
     std::vector<bool> pb_status;
 
-	std::vector<std::vector<int> > ans;
+    std::vector<std::pair<int,int>> unique_bonds;
 	std::vector<int> tmp;
+    std::vector<int> ans;
 
 
 

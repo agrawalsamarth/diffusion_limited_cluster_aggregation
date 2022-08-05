@@ -3,35 +3,6 @@
 namespace post_p
 {
 
-void postprocessing::makeCombiUtil(int n, int left, int k)
-{
-	// Pushing this vector to a vector of vector
-	if (k == 0) {
-		ans.push_back(tmp);
-		return;
-	}
-
-	// i iterates from left to n. First time
-	// left will be 1
-	for (int i = left; i < n; ++i)
-	{
-		tmp.push_back(i);
-		makeCombiUtil(n, i + 1, k - 1);
-
-		// Popping out last inserted element
-		// from the vector
-		tmp.pop_back();
-	}
-}
-
-// Prints all combinations of size k of numbers
-// from 1 to n.
-void postprocessing::makeCombi(int n, int k)
-{
-	makeCombiUtil(n, 0, k);
-}
-
-
 void postprocessing::build_bond_map()
 {
 
@@ -469,10 +440,10 @@ void postprocessing::martin_test()
 
     std::vector<std::pair<int,int>> test_bonds;
 
-    test_bonds.push_back({170,3101});
-    test_bonds.push_back({483,736});
+    //test_bonds.push_back({99,112});
+    /*test_bonds.push_back({483,736});
     test_bonds.push_back({1477,1905});
-    test_bonds.push_back({683,1700});
+    test_bonds.push_back({683,1700});*/
     //test_bonds.push_back({1965,2576});
 
     for (int i = 0; i < test_bonds.size(); i++)
@@ -481,7 +452,6 @@ void postprocessing::martin_test()
     path_percolation = false;
     reset_unfolding_params();
 
-
     for (int i = 0; i < numParticles(); i++){
 
         if (is_placed(i) == false){
@@ -489,10 +459,11 @@ void postprocessing::martin_test()
             unfold_for_lbp(i, i, false);
         }
 
-        if (path_percolation)
-            std::cout<<"still percolating"<<std::endl;
-
     }
+
+
+    if (path_percolation)
+        std::cout<<"still percolating"<<std::endl;
 
     if (!path_percolation)
         std::cout<<"no percolation at all"<<std::endl;
@@ -500,11 +471,72 @@ void postprocessing::martin_test()
 
 }
 
+void postprocessing::makeCombiUtil(int n, int left, int k)
+{
+	// Pushing this vector to a vector of vector
+	if (k == 0) {
+
+        if (path_percolation){
+            
+            reset_bond_map(true);
+            
+            for (int index = 0; index < tmp.size(); index++)
+                switch_off_bonds(unique_bonds[tmp[index]]);
+
+            path_percolation = false;
+            reset_unfolding_params();
+
+            for (int index = 0; index < numParticles(); index++){
+
+                if (is_placed(index) == false){
+                    unfold_for_lbp(index, index, false);
+                }
+
+            }
+
+            if (!path_percolation){
+
+                for (int index = 0; index < tmp.size(); index++)
+                    ans.push_back(tmp[index]);
+
+            }
+
+        }
+        
+		return;
+	}
+
+	// i iterates from left to n. First time
+	// left will be 1
+	for (int i = left; i < n; ++i)
+	{
+        if (!path_percolation)
+            return;
+        
+		tmp.push_back(i);
+		makeCombiUtil(n, i + 1, k - 1);
+
+		// Popping out last inserted element
+		// from the vector
+		tmp.pop_back();
+
+	}
+
+}
+
+// Prints all combinations of size k of numbers
+// from 1 to n.
+void postprocessing::makeCombi(int n, int k)
+{
+	makeCombiUtil(n, 0, k);
+}
+
 void postprocessing::lbp_brute_force()
 {
 
+    //makeCombi(5,3);
+
     reset_bond_map(true);
-    std::vector<std::pair<int,int>> unique_bonds;
 
     int num_bonds = 0;
     int bond_sum = 0;
@@ -522,69 +554,20 @@ void postprocessing::lbp_brute_force()
         }
     }
 
-    /*for (int i = 1; i <= 2; i++){
-        std::cout<<"i = "<<i<<std::endl;
-
-        tmp.clear();
-        ans.clear();
-
-        makeCombi(num_bonds, i);
-
-        for (int j = 0; j < ans.size(); j++){
-            for (int k = 0; k < ans[i].size(); k++){
-                std::cout<<ans[j][k]<<"\t";
-            }
-            std::cout<<"\n";
-        }
-
-    }*/
-
+    path_percolation = true;
 
     for (int i = 1; i < num_bonds; i++) {
 
-        tmp.clear();
-        ans.clear();
-
         makeCombi(num_bonds, i);
 
-        for (int j = 0; j < ans.size(); j++){
-
-            reset_bond_map(true);
-         
-            for (int k = 0; k < ans[j].size(); k++){
-
-                switch_off_bonds(unique_bonds[ans[j][k]]);
-                
-            }
-
-            path_percolation = false;
-            reset_unfolding_params();
-
-            for (int index = 0; index < numParticles(); index++){
-
-                if (is_placed(index) == false){
-                    unfold_for_lbp(index, index, false);
-                }
-
-            }
-
-            //std::cout<<"pp = "<<path_percolation<<std::endl;
-
-            if (!path_percolation){
-
-                for (int k = 0; k < ans[j].size(); k++)
-                    std::cout<<unique_bonds[ans[j][k]].first<<"-"<<unique_bonds[ans[j][k]].second<<"\n";
-
-                break;
-
-            }
-
-        }
-
         if (!path_percolation){
-            break;
-        }
 
+            for (int k = 0; k < ans.size(); k++)
+                std::cout<<unique_bonds[ans[k]].first<<"-"<<unique_bonds[ans[k]].second<<"\n";
+
+            break;
+
+        }
 
     }
 
