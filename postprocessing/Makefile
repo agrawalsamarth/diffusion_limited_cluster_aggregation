@@ -1,7 +1,8 @@
 IDIR =./include
 CXX=g++
-CPPFLAGS=-g -I$(IDIR) -I/home/samarth/codes/voronoi/include -std=c++11 -O3 -w -Wall
-LDFLAGS=-I$(IDIR) -std=c++11 -O3 -w -Wall
+#CPPFLAGS=-g -I$(IDIR) -I/home/samarth/codes/voronoi/include -std=c++11 -O3 -w -Wall
+CPPFLAGS=-g -I$(IDIR) -O3
+LDFLAGS=-O3
 POSTFIX=-L/home/samarth/codes/voronoi/lib/ -lvoro++
 
 
@@ -12,7 +13,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 
-all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force
+all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA
 #all: psd_test
 
 density_correlation: $(OBJ_FILES) | $(BIN_DIR)
@@ -51,7 +52,13 @@ lbp_brute_force: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lbp_brute_force.o target/lbp_brute_force.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lbp_brute_force.o
 
+percolation_invA: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o percolation_invA.o target/percolation_invA.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ percolation_invA.o
 
+lb_bonds_invA: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o lb_bonds_invA.o target/lb_bonds_invA.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lb_bonds_invA.o
 
 lr_iq: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lr_iq.o target/lr_iq.cpp

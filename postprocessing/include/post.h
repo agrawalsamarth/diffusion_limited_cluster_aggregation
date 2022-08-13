@@ -12,6 +12,7 @@
 #include <map>
 #include <algorithm>
 #include <bits/stdc++.h>
+#include <Eigen/Sparse>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -23,6 +24,7 @@ class postprocessing
     public:
 
     postprocessing(char *config_filename);
+    postprocessing(char *config_filename, bool build);
     ~postprocessing();
     void read_params();
     void read_config();
@@ -31,6 +33,8 @@ class postprocessing
     std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
     void read_params_parser(char *config_filename);
     void read_config_parser(char *config_filename);
+
+    void read_params_for_percolation_build(char *config_filename);
 
     int dim() const;
     int numParticles() const;
@@ -93,6 +97,8 @@ class postprocessing
     void dump_density_correlation(double bin_size, char *filename);
     void dump_percolation_file();
     void dump_percolation_file(char *filename);
+    void dump_percolation_via_invA_file();
+    void dump_percolation_via_invA_file(char *filename);
     void dump_load_bearing_paths_file(char *filename);
     //void dump_load_bearing_paths_file(int origin, char *filename);
     void dump_load_bearing_paths_file();
@@ -143,6 +149,16 @@ class postprocessing
     void makeCombiUtil(int n, int left, int k);
     void makeCombi(int n, int k);
 
+    void dump_percolation_via_inverse();
+    void percolation_via_inverse();
+    void modify_coords();
+    void modify_coords_after_minimization(int axis);
+    void build_A();
+    void build_b(int axis);
+    void calculate_bond_lengths_direction_wise(int axis);
+    void calculate_bond_lengths();
+    void determine_LB_bonds();
+    void copy_positions();
 
     private:
 
@@ -231,6 +247,19 @@ class postprocessing
 	std::vector<int> tmp;
     std::vector<int> ans;
 
+    
+    Eigen::SparseMatrix<double> A;
+    Eigen::VectorXd x;
+    Eigen::VectorXd b;
+    Eigen::SparseLU<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
+    Eigen::MatrixXd modified_folded_x;
+    Eigen::VectorXd ref_pos;
+    Eigen::VectorXd bond_lengths;
+    Eigen::MatrixXd bond_lengths_direction_wise;
+    Eigen::VectorXd check_for_solver_mk;
+
+
+    int num_bonds;
 
 
 };

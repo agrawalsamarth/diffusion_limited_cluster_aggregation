@@ -9,6 +9,14 @@ postprocessing::postprocessing(char *config_filename)
     read_config_parser(config_filename);
 }
 
+postprocessing::postprocessing(char *config_filename, bool build)
+{
+
+    
+
+
+}
+
 
 postprocessing::~postprocessing()
 {

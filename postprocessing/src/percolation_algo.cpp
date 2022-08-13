@@ -223,6 +223,7 @@ void postprocessing::init_unfolding_for_lbp()
     /*bool build_pb = false;
     int ref_axis = 0;
     total_lbp = 0;
+    path_percolation = false;
 
     for (int i = 0; i < numParticles(); i++){
         for (int axis = 0; axis < dim(); axis++){
@@ -335,8 +336,6 @@ void postprocessing::postprocess_lbp()
 
                 if (is_placed(k) == false){
 
-                    unfold_for_lbp(k,k,false);
-
                     if (path_percolation == true)
                         break;
                     
@@ -445,6 +444,9 @@ void postprocessing::martin_test()
     test_bonds.push_back({1477,1905});
     test_bonds.push_back({683,1700});*/
     //test_bonds.push_back({1965,2576});
+
+    test_bonds.push_back({3,18});
+    test_bonds.push_back({12,45});
 
     for (int i = 0; i < test_bonds.size(); i++)
         switch_off_bonds(test_bonds[i]);
