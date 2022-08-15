@@ -160,6 +160,20 @@ class postprocessing
     void determine_LB_bonds();
     void copy_positions();
 
+    void copy_positions_for_cluster();
+    void unfold_for_clusterwise(int prev, int next);
+    void determine_LB_bonds_clusterwise();
+    bool check_if_particles_placed();
+    void modify_coords_for_cluster();
+    void modify_coords_after_minimization_for_cluster(int axis);
+    void build_A_for_cluster();
+    void build_b_for_cluster(int axis);
+    void calculate_bond_lengths_direction_wise_for_cluster(int axis);
+    void calculate_bond_lengths_for_cluster();
+    void dump_lb_bonds_for_cluster_via_invA();
+
+
+
     private:
 
     std::mt19937 generator;
@@ -260,6 +274,14 @@ class postprocessing
 
 
     int num_bonds;
+
+    int num_bonds_for_cluster;
+    int num_particles_for_cluster;
+    std::vector<std::pair<int,int>> unique_bonds_for_cluster;
+    std::map<int, int> particles_to_index;
+    std::map<int, int> index_to_particles;
+    int index_i;
+    int index_j;
 
 
 };

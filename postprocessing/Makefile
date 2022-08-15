@@ -59,6 +59,10 @@ percolation_invA: $(OBJ_FILES) | $(BIN_DIR)
 lb_bonds_invA: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lb_bonds_invA.o target/lb_bonds_invA.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lb_bonds_invA.o
+	
+lb_bonds_clusterwise_invA: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o lb_bonds_clusterwise_invA.o target/lb_bonds_clusterwise_invA.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lb_bonds_clusterwise_invA.o
 
 lr_iq: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lr_iq.o target/lr_iq.cpp
