@@ -3,9 +3,9 @@
 namespace post_p
 {
 
-void postprocessing::dump_lb_bonds_for_cluster_via_invA()
+void postprocessing::dump_lb_bonds_for_cluster_via_invA(char *filename)
 {
-    determine_LB_bonds_clusterwise();
+    determine_LB_bonds_clusterwise(filename);
 }
 
 bool postprocessing::check_if_particles_placed()
@@ -23,7 +23,7 @@ bool postprocessing::check_if_particles_placed()
 
 }
 
-void postprocessing::determine_LB_bonds_clusterwise()
+void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 {
 
     reset_unfolding_params();
@@ -37,6 +37,17 @@ void postprocessing::determine_LB_bonds_clusterwise()
     //int totalClusters;
     ref_pos.resize(dim());
     totalClusters_ = 0;
+
+    FILE *f;
+
+    f = fopen(filename, "w");
+
+    fprintf(f,"clusterNumber,bond,");
+
+    for (int axis = 0; axis < dim(); axis++)
+        fprintf(f,"bond_component_x%d,",axis);
+
+    fprintf(f,"bond_length\n");
 
 
     while (!check_if_particles_placed()) {
@@ -99,8 +110,15 @@ void postprocessing::determine_LB_bonds_clusterwise()
             if (max_length > 1e-10){
 
                 switch_off_bonds({index_to_particles[unique_bonds[max_row].first], index_to_particles[unique_bonds[max_row].second]});
-                std::cout<<totalClusters_<<","<<index_to_particles[unique_bonds[max_row].first]<<"-"<<index_to_particles[unique_bonds[max_row].second]<<std::endl;
-                total_lbp++;
+                //std::cout<<totalClusters_<<","<<index_to_particles[unique_bonds[max_row].first]<<"-"<<index_to_particles[unique_bonds[max_row].second]<<std::endl;
+                //total_lbp++;
+
+                fprintf(f, "%d,%d-%d,",totalClusters_,index_to_particles[unique_bonds[max_row].first],index_to_particles[unique_bonds[max_row].second]);
+
+                for (int print_axis = 0; print_axis < dim(); print_axis++)
+                    fprintf(f, "%lf,", sqrt(bond_lengths_direction_wise(max_row,print_axis)));
+
+                fprintf(f, "%lf\n", max_length);
 
             }
 
@@ -110,6 +128,8 @@ void postprocessing::determine_LB_bonds_clusterwise()
         totalClusters_++;
 
     }
+
+    fclose(f);
 
 }
 

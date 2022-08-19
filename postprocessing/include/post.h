@@ -162,7 +162,7 @@ class postprocessing
 
     void copy_positions_for_cluster();
     void unfold_for_clusterwise(int prev, int next);
-    void determine_LB_bonds_clusterwise();
+    void determine_LB_bonds_clusterwise(char *filename);
     bool check_if_particles_placed();
     void modify_coords_for_cluster();
     void modify_coords_after_minimization_for_cluster(int axis);
@@ -170,7 +170,7 @@ class postprocessing
     void build_b_for_cluster(int axis);
     void calculate_bond_lengths_direction_wise_for_cluster(int axis);
     void calculate_bond_lengths_for_cluster();
-    void dump_lb_bonds_for_cluster_via_invA();
+    void dump_lb_bonds_for_cluster_via_invA(char *filename);
 
 
 

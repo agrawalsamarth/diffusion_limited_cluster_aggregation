@@ -16,6 +16,7 @@ class dlma_iterator: public system_iterator<type>{
         void save_config_file();
         void save_config_file(char *filename);
         void create_movie_files(char *filename);
+        void run_system_for_percolation();
 
 
 

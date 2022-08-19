@@ -137,15 +137,22 @@ dlma_iterator<type>::dlma_iterator(char *filename)
         tolerance = 0.;
     }
 
+    //std::cout<<"1"<<std::endl;
     sys_state   = factory->create_new_system(save_config_name, lattice, filename);
+    //std::cout<<"2"<<std::endl;
     binding_obj = factory->create_bind_system(bind_name, sys_state);
+    //std::cout<<"3"<<std::endl;
     agg_condition = factory->create_aggregation_condition(agg_condition_name, sys_state);
+    //std::cout<<"4"<<std::endl;
     aggregation_check_obj = factory->create_check_aggregation(check_agg_name, lattice, sys_state, binding_obj, agg_condition, tolerance);
+    //std::cout<<"5"<<std::endl;
     movement_test = factory->create_movement(movement_name, sys_state->get_dim(), rng_seed, lattice);
+    //std::cout<<"6"<<std::endl;
     save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
+    //std::cout<<"7"<<std::endl;
 
-    //for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
-    /*for (int i = 0; i < 1; i++){
+    for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
+    //for (int i = 0; i < 1; i++){
     
         temp_c = sys_state->get_aggregate(i);
 
@@ -155,7 +162,7 @@ dlma_iterator<type>::dlma_iterator(char *filename)
 
     }
 
-    std::cout<<"total aggregates = "<<sys_state->total_aggregates()<<std::endl;*/    
+    //std::cout<<"total aggregates = "<<sys_state->total_aggregates()<<std::endl;    
 }
 
 template <typename type>
@@ -241,6 +248,13 @@ void dlma_iterator<type>::create_movie_files(char *filename)
     free(filename_m);
 
 
+}
+
+template <typename type>
+void dlma_iterator<type>::run_system_for_percolation()
+{
+    sys_state->build_attachment_list();
+    return;
 }
 
 

@@ -58,6 +58,17 @@ int main(int argc, char *argv[])
             test->save_config_file(argv[2]);
     }
 
+    else if((sys_name == "random_site_percolation") && (lattice_val == 1)){
+        system_iterator<int> *test = new dlma_iterator<int>(argv[1]);
+        test->run_system_for_percolation();
+
+        if (argc < 3)
+            test->save_config_file();
+        else
+            test->save_config_file(argv[2]);
+
+    }
+
     else{
         std::cout<<"please check system and lattice values"<<std::endl;
         exit(EXIT_FAILURE);
