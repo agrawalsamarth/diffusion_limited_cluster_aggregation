@@ -49,6 +49,11 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
     fprintf(f,"bond_length\n");
 
+    int nnz;
+
+    if (!A.isCompressed()){
+        A.makeCompressed();
+    }
 
     while (!check_if_particles_placed()) {
 
@@ -75,6 +80,10 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
         copy_positions_for_cluster();
 
         A.resize((num_particles_for_cluster-1), (num_particles_for_cluster-1));
+
+        nnz = 2 * num_bonds_for_cluster + num_particles_for_cluster;
+        A.reserve(nnz);
+
         b.resize((num_particles_for_cluster-1));
         x.resize((num_particles_for_cluster-1));
         bond_lengths_direction_wise.resize(num_bonds_for_cluster, dim());
@@ -85,10 +94,6 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
             A.setZero();
             modify_coords_for_cluster();
             build_A_for_cluster();
-
-            if (!A.isCompressed()){
-                A.makeCompressed();
-            }
 
             solver.analyzePattern(A);
             solver.factorize(A);
