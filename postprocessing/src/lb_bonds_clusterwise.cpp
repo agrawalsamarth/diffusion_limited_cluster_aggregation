@@ -76,61 +76,66 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
         //std::cout<<"num_particles_for_cluster = "<<num_particles_for_cluster<<std::endl;
         //std::cout<<"num_bonds_for_cluster = "<<num_bonds_for_cluster<<std::endl;
 
-        modified_folded_x.resize(num_particles_for_cluster,dim());
-        copy_positions_for_cluster();
+        if (num_particles_for_cluster > 1) {
 
-        A.resize((num_particles_for_cluster-1), (num_particles_for_cluster-1));
+            modified_folded_x.resize(num_particles_for_cluster,dim());
+            copy_positions_for_cluster();
 
-        nnz = 2 * num_bonds_for_cluster + num_particles_for_cluster;
-        A.reserve(nnz);
+            A.resize((num_particles_for_cluster-1), (num_particles_for_cluster-1));
 
-        b.resize((num_particles_for_cluster-1));
-        x.resize((num_particles_for_cluster-1));
-        bond_lengths_direction_wise.resize(num_bonds_for_cluster, dim());
-        bond_lengths.resize(num_bonds_for_cluster);
+            nnz = 2 * num_bonds_for_cluster + num_particles_for_cluster;
+            A.reserve(nnz);
 
-        do {
+            b.resize((num_particles_for_cluster-1));
+            x.resize((num_particles_for_cluster-1));
+            bond_lengths_direction_wise.resize(num_bonds_for_cluster, dim());
+            bond_lengths.resize(num_bonds_for_cluster);
 
-            A.setZero();
-            modify_coords_for_cluster();
-            build_A_for_cluster();
+            do {
 
-            solver.analyzePattern(A);
-            solver.factorize(A);
+                A.setZero();
+                modify_coords_for_cluster();
+                build_A_for_cluster();
 
-            for (int axis = 0; axis < dim(); axis++){
+                solver.analyzePattern(A);
+                solver.factorize(A);
 
-                b.setZero();
-                build_b_for_cluster(axis);
-                x = solver.solve(b);
-                modify_coords_after_minimization_for_cluster(axis);
+                for (int axis = 0; axis < dim(); axis++){
 
-            }
+                    b.setZero();
+                    build_b_for_cluster(axis);
+                    x = solver.solve(b);
+                    modify_coords_after_minimization_for_cluster(axis);
 
-            calculate_bond_lengths_for_cluster();
-            max_length = bond_lengths.maxCoeff(&max_row);
+                }
 
-            //std::cout<<"max_length = "<<max_length<<std::endl;
+                calculate_bond_lengths_for_cluster();
+                max_length = bond_lengths.maxCoeff(&max_row);
 
-            if (max_length > 1e-10){
+                //std::cout<<"max_length = "<<max_length<<std::endl;
 
-                switch_off_bonds({index_to_particles[unique_bonds[max_row].first], index_to_particles[unique_bonds[max_row].second]});
-                //std::cout<<totalClusters_<<","<<index_to_particles[unique_bonds[max_row].first]<<"-"<<index_to_particles[unique_bonds[max_row].second]<<std::endl;
-                //total_lbp++;
+                if (max_length > 1e-10){
 
-                fprintf(f, "%d,%d-%d,",totalClusters_,index_to_particles[unique_bonds[max_row].first],index_to_particles[unique_bonds[max_row].second]);
+                    switch_off_bonds({index_to_particles[unique_bonds[max_row].first], index_to_particles[unique_bonds[max_row].second]});
+                    //std::cout<<totalClusters_<<","<<index_to_particles[unique_bonds[max_row].first]<<"-"<<index_to_particles[unique_bonds[max_row].second]<<std::endl;
+                    //total_lbp++;
 
-                for (int print_axis = 0; print_axis < dim(); print_axis++)
-                    fprintf(f, "%lf,", sqrt(bond_lengths_direction_wise(max_row,print_axis)));
+                    fprintf(f, "%d,%d-%d,",totalClusters_,index_to_particles[unique_bonds[max_row].first],index_to_particles[unique_bonds[max_row].second]);
 
-                fprintf(f, "%lf\n", max_length);
+                    for (int print_axis = 0; print_axis < dim(); print_axis++)
+                        fprintf(f, "%lf,", sqrt(bond_lengths_direction_wise(max_row,print_axis)));
 
-            }
+                    fprintf(f, "%lf\n", max_length);
+
+                }
 
 
-        } while(max_length > 1e-10);
+            } while(max_length > 1e-10);
+
+        }
 
         totalClusters_++;
+
 
     }
 
