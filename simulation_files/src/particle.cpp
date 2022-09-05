@@ -95,6 +95,10 @@ int  particle<type>::get_current_seed_status()
 { return current_seed_status;}
 
 template<typename type>
+int particle<type>::get_size()
+{ return 1;}
+
+template<typename type>
 void particle<type>::print_neighbours()
 {
 

@@ -16,6 +16,10 @@ class dlma_system_onlattice: public dlma_system<type>{
         void move_aggregate(int i, type *dr);
         void print_grid();
 
+    private:
+
+        void initialize_system_for_percolation();
+
 };
 
 

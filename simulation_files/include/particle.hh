@@ -39,6 +39,7 @@ class particle: public constituent<type>{
         int  get_current_seed_status();
 
         void print_neighbours();
+        int  get_size();
 
         
     private:

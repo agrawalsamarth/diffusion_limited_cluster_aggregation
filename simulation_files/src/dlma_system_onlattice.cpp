@@ -6,7 +6,18 @@ template <typename type>
 dlma_system_onlattice<type>::dlma_system_onlattice(char *params_name)
 {
     this->read_params_parser(params_name);
-    initialize_system();
+
+    if (this->system_type == "dlma")
+        initialize_system();
+
+    else if (this->system_type == "random_site_percolation")
+        initialize_system_for_percolation();
+
+    else{
+        std::cout<<"system not defined"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
 }
 
 template <typename type>
@@ -78,6 +89,88 @@ void dlma_system_onlattice<type>::initialize_system()
     this->calculate_propensity();
     
 }
+
+template<typename type>
+void dlma_system_onlattice<type>::initialize_system_for_percolation()
+{
+
+    constituent<type> *temp;
+    std::string name_type = "particle";
+
+    int L_eff[this->D];
+
+    for (int axis = 0; axis < this->D; axis++)
+        L_eff[axis] = 1;
+
+    for (int axis = 0; axis < this->D; axis++)
+    {
+        for (int itr = axis+1; itr < this->D; itr++)
+            L_eff[axis] *= this->L[itr];
+    }
+
+    //for (int axis = 0; axis < this->D; axis++)
+        //std::cout<<"L_eff = "<<L[axis]<<std::endl;
+
+    int L_total = 1;
+
+    for (int axis = 0; axis < this->D; axis++)
+        L_total *= this->L[axis];
+
+    int div, rem;
+
+    this->N = 0;
+
+    for (int i = 0; i < L_total; i++){
+
+        if (this->dis(this->generator) < this->phi){
+
+            temp = this->factory.create_constituent(this->N, this->lattice, this->D, name_type, this->box);
+            this->N += 1;
+            temp->set_diameter(1.);
+            temp->set_mass(this->seed_mass);
+            temp->set_original_seed_status(1);
+            temp->set_current_seed_status(1);
+
+            rem = i;
+
+            for (int axis = 0; axis < this->D; axis++){
+                div = rem/L_eff[axis];
+                temp->pos(axis) = div;
+                rem = rem % L_eff[axis];
+            }
+
+            //std::cout<<temp->pos(0)<<" "<<temp->pos(1)<<std::endl;
+
+            temp->add_constituent_to_cell();
+            this->all_particles.push_back(temp);
+
+        }
+
+    }
+
+    name_type = "cluster";
+
+    for (int i = 0; i < this->N; i++){
+
+        temp = this->factory.create_constituent(this->get_latest_cluster_id(), this->lattice, this->D, name_type, this->box);
+        temp->add_constituent(this->all_particles[i]);
+        temp->calculate_aggregate_mass();
+        //std::cout<<"seed mass = "<<get_seedmass()<<std::endl;
+
+        this->aggregates.push_back(temp);
+
+    }
+
+    this->attachments.resize(this->N);
+    this->build_id_map();
+
+    for (int i = 0; i < this->N; i++)
+        this->add_attachment(this->aggregates[i]);
+    
+
+}
+
+
 
 template <typename type>
 bool dlma_system_onlattice<type>::check_viability(constituent<type> *c_1, type *dr)

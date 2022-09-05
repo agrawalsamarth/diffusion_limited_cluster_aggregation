@@ -86,12 +86,17 @@ void dlma_system<type>::read_params_parser(char *params_name)
             tolerance_flag = true;
         }
 
+        if (results[0] == "system"){
+            //strcpy(system_type.c_str(), results[1].c_str());
+            system_type = results[1];
+        }
+
     }
 
     parser.close();
 
     if (D_flag == false){
-        std::cout<<"please provide dimensions value"<<std::endl;
+        std::cout<<"please provide number of dimensions"<<std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -165,6 +170,38 @@ void dlma_system<type>::read_params_parser(char *params_name)
         std::cout<<"please provide boundary conditions in each direction"<<std::endl;
         exit(EXIT_FAILURE);
     }
+
+    if (system_type == "dlma")
+        check_for_dlma_params();
+
+    else if (system_type == "random_site_percolation")
+        check_for_percolation_params();
+
+    else{
+        std::cout<<system_type<<"is an unknown system type"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+
+    box = factory.create_simulation_box(lattice, D, L, system_bc, tolerance);
+
+    generator.seed(rng_seed);
+    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
+    
+    if (system_type == "dlma")
+        attachments.resize(N);
+
+    halfL = (type*)malloc(sizeof(type) * D);
+
+    for (int axis = 0; axis < D; axis++)
+        halfL[axis] = 0.5 * L[axis];
+
+}
+
+template<typename type>
+void dlma_system<type>::check_for_dlma_params()
+{
+
 
     type L_total = 1.;
     type L_total_temp = 1.;
@@ -299,16 +336,24 @@ void dlma_system<type>::read_params_parser(char *params_name)
         tolerance = 0.;
     }
 
-    box = factory.create_simulation_box(lattice, D, L, system_bc, tolerance);
 
-    generator.seed(rng_seed);
-    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
-    attachments.resize(N);
+}
 
-    halfL = (type*)malloc(sizeof(type) * D);
+template<typename type>
+void dlma_system<type>::check_for_percolation_params()
+{
 
-    for (int axis = 0; axis < D; axis++)
-        halfL[axis] = 0.5 * L[axis];
+    if (L_flag_and == false){
+        std::cout<<"please provide length in each direction"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (phi_flag == false){
+        std::cout<<"please provide phi in each direction"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    seed_mass = 1.;
 
 }
 

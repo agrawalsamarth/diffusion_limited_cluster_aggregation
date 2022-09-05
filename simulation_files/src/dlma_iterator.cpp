@@ -99,7 +99,7 @@ dlma_iterator<type>::dlma_iterator(char *filename)
 
     parser.close();
 
-    if (bind_flag == false){
+    /*if (bind_flag == false){
         std::cout<<"please provide bind"<<std::endl;
         exit(EXIT_FAILURE);
     }
@@ -124,13 +124,37 @@ dlma_iterator<type>::dlma_iterator(char *filename)
         exit(EXIT_FAILURE);
     }
 
-    if (rng_seed_flag == false){
-        rng_seed=1;
-    }
-
     if (lattice_flag == false){
         std::cout<<"please provide lattice type"<<std::endl;
         exit(EXIT_FAILURE);
+    }*/
+
+    if (bind_flag == false){
+        bind_name = "normal";
+    }
+
+    if (agg_condition_flag == false){
+        agg_condition_name = "mass";
+    }
+
+    if (check_agg_flag == false){
+        check_agg_name = "normal";
+    }
+
+    if (movement_flag == false){
+        movement_name = "brownian";
+    }
+
+    if (save_config_flag == false){
+        save_config_name = "dlma";
+    }
+
+    if (lattice_flag == false){
+        lattice = 1;
+    }
+
+    if (rng_seed_flag == false){
+        rng_seed=1;
     }
 
     if (tolerance_flag == false){
@@ -151,15 +175,19 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     save_obj = factory->create_save_config(save_config_name, sys_state, sys_state->get_box());
     //std::cout<<"7"<<std::endl;
 
-    for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
-    //for (int i = 0; i < 1; i++){
-    
-        temp_c = sys_state->get_aggregate(i);
 
-        if (temp_c){
-            aggregation_check_obj->check_for_aggregation(temp_c);
+    if (save_config_name == "dlma"){
+
+        for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
+        //for (int i = 0; i < 1; i++){
+        
+            temp_c = sys_state->get_aggregate(i);
+
+            if (temp_c){
+                aggregation_check_obj->check_for_aggregation(temp_c);
+            }
+
         }
-
     }
 
     //std::cout<<"total aggregates = "<<sys_state->total_aggregates()<<std::endl;    

@@ -85,7 +85,7 @@ class dlma_system: public system<type>{
         bool   lattice_flag = false;
         double phi;
         bool   phi_flag = false;
-        double alpha;
+        double alpha = 0.5;
         bool   alpha_flag = false;
         double seed_mass;
         bool   seed_mass_flag = false;
@@ -106,6 +106,13 @@ class dlma_system: public system<type>{
         bool    is_viable;
         type    temp_r;
         type    r2;
+        std::string system_type = "none";
+
+    
+    private:
+
+        void check_for_dlma_params();
+        void check_for_percolation_params();
 
 };
 
