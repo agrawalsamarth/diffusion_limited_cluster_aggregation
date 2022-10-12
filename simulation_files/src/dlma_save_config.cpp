@@ -100,6 +100,8 @@ void dlma_save_config<type>::save_configuration(char *filename)
     /*FILE *f;
     f= fopen(filename,"w");*/
 
+    //std::cout<<"1"<<std::endl;
+
     std::ofstream f;
     f.open(filename);
 
@@ -170,6 +172,8 @@ void dlma_save_config<type>::save_configuration(char *filename)
             f << "att_"<<att<<",";
     }
 
+    //std::cout<<"2"<<std::endl;
+
     convert_data_to_string();
 
     for (int i = 0; i < N; i++){
@@ -178,6 +182,8 @@ void dlma_save_config<type>::save_configuration(char *filename)
         f << print_data[i] << "\n";
 
     }
+
+    //std::cout<<"3"<<std::endl;
 
     f.close();
 

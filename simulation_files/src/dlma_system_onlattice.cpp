@@ -14,6 +14,7 @@ dlma_system_onlattice<type>::dlma_system_onlattice(char *params_name)
     }
 
     else if (this->system_type == "random_site_percolation"){
+        std::srand(this->rng_seed);
         build_site_vector_for_rsp();
         initialize_system_for_percolation();
     }
@@ -169,11 +170,11 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
             temp->set_original_seed_status(1);
             temp->set_current_seed_status(1);
 
-            random_index = available_sites.size() * this->dis(this->generator);
-            //std::cout<<"size = "<<available_sites.size()<<"\t random_index = "<<random_index
-            pos_index    = available_sites[random_index];
+            //random_index = available_sites.size() * this->dis(this->generator);
+            //std::cout<<"size = "<<available_sites.size()<<"\t random_index = "<<random_index<<std::endl;
+            pos_index    = available_sites[i];
             temp_pos_arr = get_array_from_index(pos_index);
-            remove_site_from_vector(pos_index);
+            //remove_site_from_vector(pos_index);
 
             for (int axis = 0; axis < this->D; axis++)
                 temp->pos(axis) = temp_pos_arr[axis];
@@ -261,6 +262,8 @@ void dlma_system_onlattice<type>::build_site_vector_for_rsp()
 
     for (int i = 0; i < L_total; i++)
         available_sites.push_back(i);
+
+    std::random_shuffle(available_sites.begin(), available_sites.end());
 
 }
 
