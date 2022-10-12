@@ -23,11 +23,15 @@ class particle: public constituent<type>{
         void add_constituent_to_cell();
         void remove_constituent_from_cell();
 
+        void add_agg_to_cell();
+        void remove_agg_from_cell();
+
         void set_aggregate_id(const int id);
         
         int get_id();
         int get_aggregate_id();
         std::vector<int> get_neighbour_list();
+        std::vector<int> get_neighbour_list_agg();
 
         void set_diameter(const double dia);
         double get_diameter();

@@ -45,6 +45,7 @@ class system{
         virtual simulation_box<type>* get_box() {};
 
         virtual constituent<type>* get_constituent(const int i) {};
+        virtual constituent<type>* get_particle_by_index(const int i) {};
         virtual void print_id_map() {};
         virtual void print_grid() {};
         virtual bool check_viability(constituent<type> *c_1, type *dr) {};

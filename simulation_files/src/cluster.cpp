@@ -48,6 +48,24 @@ void cluster<type>::remove_constituent_from_cell()
 }
 
 template<typename type>
+void cluster<type>::add_agg_to_cell()
+{
+
+    for (int i = 0; i < elements.size(); i++)
+        elements[i]->add_agg_to_cell();
+
+}
+
+template<typename type>
+void cluster<type>::remove_agg_from_cell()
+{
+
+    for (int i = 0; i < elements.size(); i++)
+        elements[i]->remove_agg_from_cell();
+
+}
+
+template<typename type>
 void cluster<type>::calculate_aggregate_mass()
 {
 
@@ -86,6 +104,10 @@ int cluster<type>::get_element_aggregate_id(const int element_id)
 template<typename type>
 std::vector<int> cluster<type>::get_neighbour_list(const int i)
 {  return elements[i]->get_neighbour_list();}
+
+template<typename type>
+std::vector<int> cluster<type>::get_neighbour_list_agg(const int i)
+{  return elements[i]->get_neighbour_list_agg();}
 
 template<typename type>
 int cluster<type>::get_element_id(const int i)

@@ -18,11 +18,19 @@ class on_lattice: public simulation_box<type>{
 
         void add_particle_to_cell(const int id, type *pos);
         void remove_particle_from_cell(const int id, type *pos);
+
+        void add_agg_to_cell(const int id, type *pos);
+        void remove_agg_from_cell(const int id, type *pos);
+
         int  get_particle_id(type *pos);
+        int  get_agg_id(type *pos);
 
         std::vector<int> get_neighbour_list(type *pos);
+        std::vector<int> get_neighbour_list_for_agg(int id, type *ref_pos);
 
         int get_periodicity(const int axis);
+        
+        void clear_cell_field();
         
     private:
 
@@ -30,12 +38,15 @@ class on_lattice: public simulation_box<type>{
         type *L;
         int *L_eff;
         int *grid;
+        int *agg_grid;
         int  counter;
         int  D;
         std::vector<int> neighbours;
         type *temp_pos;
         type *neighbour_pos;
-        int *periodic;
+        int  *periodic;
+
+        int agg_index;
 
 
 };

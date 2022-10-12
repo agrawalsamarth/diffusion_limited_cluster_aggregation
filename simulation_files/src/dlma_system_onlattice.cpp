@@ -6,17 +6,50 @@ template <typename type>
 dlma_system_onlattice<type>::dlma_system_onlattice(char *params_name)
 {
     this->read_params_parser(params_name);
+    build_L_arrs();
 
-    if (this->system_type == "dlma")
+    if (this->system_type == "dlma"){
+        build_site_vector();
         initialize_system();
+    }
 
-    else if (this->system_type == "random_site_percolation")
+    else if (this->system_type == "random_site_percolation"){
+        build_site_vector_for_rsp();
         initialize_system_for_percolation();
+    }
 
     else{
         std::cout<<"system not defined"<<std::endl;
         exit(EXIT_FAILURE);
     }
+
+}
+
+template <typename type>
+void dlma_system_onlattice<type>::build_L_arrs()
+{
+
+    L_eff    = (int*)malloc(sizeof(int) * this->D);
+    temp_arr = (type*)malloc(sizeof(type) * this->D);
+    axis_arr = (int*)malloc(sizeof(int) * this->D);
+    neighbour_pos = (type*)malloc(sizeof(type) * this->D);
+
+    for (int axis = 0; axis < this->D; axis++)
+        L_eff[axis] = 1;
+
+    for (int axis = 0; axis < this->D; axis++)
+    {
+        for (int itr = axis+1; itr < this->D; itr++)
+            L_eff[axis] *= this->L[itr];
+    }
+
+    //for (int axis = 0; axis < this->D; axis++)
+        //std::cout<<"L_eff = "<<L[axis]<<std::endl;
+
+    L_total = 1;
+
+    for (int axis = 0; axis < this->D; axis++)
+        L_total *= this->L[axis];
 
 }
 
@@ -51,7 +84,9 @@ void dlma_system_onlattice<type>::initialize_system()
             temp->set_current_seed_status(0);
         }
 
-        while (is_placed == false){
+        this->all_particles.push_back(temp);
+
+        /*while (is_placed == false){
 
             for (int axis = 0; axis < this->D; axis++)
                 temp_pos[axis] = (int)(this->dis(this->generator) * this-> L[axis]);
@@ -66,11 +101,30 @@ void dlma_system_onlattice<type>::initialize_system()
                 is_placed = true;
             }
 
-        }
+        }*/
 
     }
 
+    int  counter_pc = 0;
+    int  random_index;
+    int  pos_index;
+    //int* temp_pos_arr;
 
+    while (counter_pc < this->N) {
+
+        random_index = available_sites.size() * this->dis(this->generator);
+        pos_index    = available_sites[random_index];
+        temp_pos_arr = get_array_from_index(pos_index);
+
+        for (int axis = 0; axis < this->D; axis++)
+            this->all_particles[counter_pc]->pos(axis) = temp_pos_arr[axis];
+
+        this->all_particles[counter_pc]->add_constituent_to_cell();
+
+        remove_site_from_vector(pos_index);
+
+        counter_pc++;
+    }
 
     name_type = "cluster";
 
@@ -97,54 +151,37 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
     constituent<type> *temp;
     std::string name_type = "particle";
 
-    int L_eff[this->D];
-
-    for (int axis = 0; axis < this->D; axis++)
-        L_eff[axis] = 1;
-
-    for (int axis = 0; axis < this->D; axis++)
-    {
-        for (int itr = axis+1; itr < this->D; itr++)
-            L_eff[axis] *= this->L[itr];
-    }
-
-    //for (int axis = 0; axis < this->D; axis++)
-        //std::cout<<"L_eff = "<<L[axis]<<std::endl;
-
-    int L_total = 1;
-
-    for (int axis = 0; axis < this->D; axis++)
-        L_total *= this->L[axis];
-
     int div, rem;
 
-    this->N = 0;
+    this->N = L_total * this->phi;
 
-    for (int i = 0; i < L_total; i++){
+    int random_index;
+    int pos_index;
 
-        if (this->dis(this->generator) < this->phi){
+    for (int i = 0; i < this->N; i++){
 
-            temp = this->factory.create_constituent(this->N, this->lattice, this->D, name_type, this->box);
-            this->N += 1;
+        //if (this->dis(this->generator) < this->phi){
+
+            temp = this->factory.create_constituent(i, this->lattice, this->D, name_type, this->box);
+            //this->N += 1;
             temp->set_diameter(1.);
             temp->set_mass(this->seed_mass);
             temp->set_original_seed_status(1);
             temp->set_current_seed_status(1);
 
-            rem = i;
+            random_index = available_sites.size() * this->dis(this->generator);
+            //std::cout<<"size = "<<available_sites.size()<<"\t random_index = "<<random_index
+            pos_index    = available_sites[random_index];
+            temp_pos_arr = get_array_from_index(pos_index);
+            remove_site_from_vector(pos_index);
 
-            for (int axis = 0; axis < this->D; axis++){
-                div = rem/L_eff[axis];
-                temp->pos(axis) = div;
-                rem = rem % L_eff[axis];
-            }
-
-            //std::cout<<temp->pos(0)<<" "<<temp->pos(1)<<std::endl;
+            for (int axis = 0; axis < this->D; axis++)
+                temp->pos(axis) = temp_pos_arr[axis];
 
             temp->add_constituent_to_cell();
             this->all_particles.push_back(temp);
 
-        }
+        //}
 
     }
 
@@ -161,6 +198,10 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
 
     }
 
+    /*for (int i = 0; i < this->aggregates.size(); i++){
+        this->aggregates[i]->add_agg_to_cell();
+    }*/
+
     this->attachments.resize(this->N);
     this->build_id_map();
 
@@ -170,6 +211,114 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
 
 }
 
+template <typename type>
+void dlma_system_onlattice<type>::build_site_vector()
+{
+
+    available_sites.clear();
+    std::vector<int> temp_neighbours;
+    int neighbour_flag;
+
+    //for (int i = 0; i < L_total; i++)
+        //available_sites.push_back(i);
+
+    //constituent<type> *temp;
+    //temp = this->factory.create_constituent(0, this->lattice, this->D, name_type, this->box);
+
+    for (int i = 0; i < L_total; i++){
+
+        temp_pos_arr    = get_array_from_index(i);
+        temp_neighbours = this->box->get_neighbour_list(temp_pos_arr);
+
+        neighbour_flag = 0;
+
+        //if (temp_neighbours.size() == 0){
+
+        for (int j = 0; j < temp_neighbours.size(); j++){
+
+            if (temp_neighbours[j] != -1){
+                neighbour_flag = 1;
+                break;
+            }
+        }
+        //}
+
+        if (neighbour_flag == 0){
+            available_sites.push_back(i);
+            this->box->add_particle_to_cell(i, temp_pos_arr);
+        }
+                
+    }
+
+    this->box->clear_cell_field();
+
+}
+
+template <typename type>
+void dlma_system_onlattice<type>::build_site_vector_for_rsp()
+{
+    available_sites.clear();
+
+    for (int i = 0; i < L_total; i++)
+        available_sites.push_back(i);
+
+}
+
+template <typename type>
+void dlma_system_onlattice<type>::remove_site_from_vector(int index)
+{
+    available_sites.erase(std::remove(available_sites.begin(), available_sites.end(), index), available_sites.end());
+}
+
+template <typename type>
+void dlma_system_onlattice<type>::exclude_neighbours(int random_index)
+{
+
+    temp_pos_arr = get_array_from_index(random_index);
+
+    for (int axis = 0; axis < this->D; axis++){
+        for (int i = 0; i < 2; i++){
+
+            for (int axis_2 = 0; axis_2 < this->D; axis_2++)
+                axis_arr[axis_2] = (axis_2 == axis) * (-1 + 2*i);
+
+            for (int axis_2 = 0; axis_2 < this->D; axis_2++){
+                neighbour_pos[axis_2]  = (temp_pos_arr[axis_2] + axis_arr[axis_2]);
+                neighbour_pos[axis_2] += (this->L[axis_2] * (neighbour_pos[axis_2]==-1)) - (this->L[axis_2] * (neighbour_pos[axis_2]==this->L[axis_2]));
+            }
+
+            neighbour_index = get_index_from_array(neighbour_pos);
+            remove_site_from_vector(neighbour_index);
+
+        }
+    }
+
+
+
+}
+
+template <typename type>
+type* dlma_system_onlattice<type>::get_array_from_index(int index)
+{
+    for (int axis = 0; axis < this->D; axis++){
+        div = index/L_eff[axis];
+        temp_arr[axis] = div;
+        index = index % L_eff[axis];
+    }
+
+    return temp_arr;
+}
+
+template <typename type>
+int dlma_system_onlattice<type>::get_index_from_array(type *arr)
+{
+    counter = 0;
+
+    for (int axis = 0; axis < this->D; axis++)
+            counter += arr[axis] * L_eff[axis];
+
+    return counter;
+}
 
 
 template <typename type>

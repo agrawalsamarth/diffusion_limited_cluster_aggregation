@@ -1,5 +1,6 @@
 #include <dlma_iterator.hh>
 #include <split_string.hh>
+//#include <chrono>
 
 using namespace simulation;
 
@@ -36,6 +37,8 @@ int main(int argc, char *argv[])
         }
 
     }
+
+    //std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
     if ((sys_name == "dlma") && (lattice_val == 1)){
         system_iterator<int> *test = new dlma_iterator<int>(argv[1]);;
@@ -74,6 +77,9 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    //std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+    //std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
 
     return 0;
 

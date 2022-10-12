@@ -55,6 +55,14 @@ void particle<type>::remove_constituent_from_cell()
 { box->remove_particle_from_cell(id, pos_); }
 
 template<typename type>
+void particle<type>::add_agg_to_cell()
+{ box->add_agg_to_cell(aggregate_id, pos_); }
+
+template<typename type>
+void particle<type>::remove_agg_from_cell()
+{ box->remove_agg_from_cell(aggregate_id, pos_); }
+
+template<typename type>
 void particle<type>::set_aggregate_id(const int cluster_id)
 { aggregate_id = cluster_id;}
 
@@ -69,6 +77,10 @@ int particle<type>::get_aggregate_id()
 template<typename type>
 std::vector<int> particle<type>::get_neighbour_list()
 {   return box->get_neighbour_list(pos_);}
+
+template<typename type>
+std::vector<int> particle<type>::get_neighbour_list_agg()
+{   return box->get_neighbour_list_for_agg(aggregate_id, pos_);}
 
 template<typename type>
 void particle<type>::set_diameter(const double dia)

@@ -90,6 +90,8 @@ void postprocessing::init_unfolding()
         }
     }
 
+    std::cout<<"totalClusters = "<<totalClusters_<<std::endl;
+
 }
 
 

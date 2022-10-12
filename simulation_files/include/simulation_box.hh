@@ -25,11 +25,17 @@ class simulation_box{
         virtual void add_particle_to_cell(const int id, type *pos) {};
         virtual void remove_particle_from_cell(const int id, type *pos) {};
         virtual int  get_particle_id(type *pos) {};
+        virtual int  get_agg_id(type *pos) {};
 
         virtual std::vector<int> get_neighbour_list(type *ref_pos) {};
+        virtual std::vector<int> get_neighbour_list_for_agg(int id, type *ref_pos) {};
 
         virtual int  get_periodicity(const int axis) {};
         virtual type get_periodic_distance(type x, type y, int axis) {};
+
+        virtual void add_agg_to_cell(const int id, type *pos) {};
+        virtual void remove_agg_from_cell(const int id, type *pos) {};
+        virtual void clear_cell_field() {};
 
         
 

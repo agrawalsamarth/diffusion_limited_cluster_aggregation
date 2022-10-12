@@ -178,8 +178,9 @@ dlma_iterator<type>::dlma_iterator(char *filename)
 
     if (save_config_name == "dlma"){
 
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
         for (int i = 0; i < sys_state->get_latest_cluster_id_without_increment(); i++){
-        //for (int i = 0; i < 1; i++){
         
             temp_c = sys_state->get_aggregate(i);
 
@@ -187,7 +188,14 @@ dlma_iterator<type>::dlma_iterator(char *filename)
                 aggregation_check_obj->check_for_aggregation(temp_c);
             }
 
+            //std::cout<<"i = "<<i<<std::endl;
+
         }
+
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+        //std::cout << "Time difference for aggregation calc = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
+
     }
 
     //std::cout<<"total aggregates = "<<sys_state->total_aggregates()<<std::endl;    
@@ -197,10 +205,15 @@ template <typename type>
 void dlma_iterator<type>::iteration_step()
 {
 
+    //std::cout<<"1"<<std::endl;
     temp   = sys_state->choose_aggregate();
-    temp_c = sys_state->get_constituent(temp); 
+    //std::cout<<"2"<<std::endl;
+    temp_c = sys_state->get_constituent(temp);
+    //std::cout<<"3"<<std::endl;
     sys_state->move_aggregate(temp, movement_test->delta_x());
+    //std::cout<<"4"<<std::endl;
     aggregation_check_obj->check_for_aggregation(temp_c);
+    //std::cout<<"5"<<std::endl;
 
 
 }

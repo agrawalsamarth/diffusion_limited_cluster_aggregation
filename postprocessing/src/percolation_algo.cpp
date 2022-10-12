@@ -445,8 +445,14 @@ void postprocessing::martin_test()
     test_bonds.push_back({683,1700});*/
     //test_bonds.push_back({1965,2576});
 
-    test_bonds.push_back({3,18});
-    test_bonds.push_back({12,45});
+    test_bonds.push_back({4382,5191});
+    test_bonds.push_back({33283,33267});
+    test_bonds.push_back({1912,1911});
+    test_bonds.push_back({11105,11912});
+    test_bonds.push_back({19788,19805});
+    test_bonds.push_back({16062,16852});
+    test_bonds.push_back({9050,9841});
+    test_bonds.push_back({9408,9409});
 
     for (int i = 0; i < test_bonds.size(); i++)
         switch_off_bonds(test_bonds[i]);

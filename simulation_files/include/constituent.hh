@@ -24,6 +24,9 @@ class constituent{
         virtual void add_constituent_to_cell() {};
         virtual void remove_constituent_from_cell() {};
 
+        virtual void add_agg_to_cell() {};
+        virtual void remove_agg_from_cell() {};
+
         virtual void set_aggregate_id(const int id) {};
         virtual void calculate_aggregate_mass() {};
 
@@ -34,6 +37,9 @@ class constituent{
         virtual constituent<type>* get_element(const int i) {};
         virtual std::vector<int>   get_neighbour_list(const int i) {};
         virtual std::vector<int>   get_neighbour_list() {};
+
+        virtual std::vector<int>   get_neighbour_list_agg(const int i) {};
+        virtual std::vector<int>   get_neighbour_list_agg() {};
 
         virtual int get_element_aggregate_id(const int element_id) {};
         virtual int get_element_id(const int i) {};

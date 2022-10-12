@@ -52,6 +52,7 @@ class dlma_system: public system<type>{
         virtual int choose_aggregate();
 
         virtual void build_attachment_list() {};
+        virtual constituent<type>* get_particle_by_index(const int i);
 
 
         

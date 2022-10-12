@@ -596,6 +596,12 @@ type dlma_system<type>::get_interparticle_distance(constituent<type> *p_1, const
 
 }
 
+template<typename type>
+constituent<type>* dlma_system<type>::get_particle_by_index(const int i)
+{
+    return all_particles[i];
+}
+
 template class dlma_system<int>;
 template class dlma_system<double>;
 

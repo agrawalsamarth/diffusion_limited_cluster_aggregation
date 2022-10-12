@@ -21,7 +21,7 @@ void check_aggregation_onlattice<type>::check_for_aggregation(constituent<type> 
     for (int i = 0; i < c_1->get_size(); i++){
 
         neighbours  = c_1->get_neighbour_list(i);
-        particle_id = c_1->get_element_id(i); 
+        particle_id = c_1->get_element_id(i);
 
         for (int j = 0; j < neighbours.size(); j++) { 
 
