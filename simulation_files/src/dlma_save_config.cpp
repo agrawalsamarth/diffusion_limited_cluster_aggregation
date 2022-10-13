@@ -155,9 +155,9 @@ void dlma_save_config<type>::save_configuration(char *filename)
     f << "id,";
 
     for (int axis = 0; axis < D; axis++)
-        f << "x"<<axis;
+        f << "x"<<axis<<",";
     
-    f << "assignedSeedStatus,currentSeedStatus,diameter";
+    f << "assignedSeedStatus,currentSeedStatus,diameter,";
     //fprintf(f, "currentSeedStatus,");
     //fprintf(f, "diameter,");
     if (max_attachments > 0)

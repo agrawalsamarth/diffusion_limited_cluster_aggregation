@@ -93,7 +93,9 @@ dlma_iterator<type>::dlma_iterator(char *filename)
             tolerance_flag = true;
         }
 
-        
+        if (results[0] == "final_aggregate_number"){
+            final_aggregate_number = stoi(results[1]);
+        }        
 
     }
 
@@ -221,7 +223,7 @@ void dlma_iterator<type>::iteration_step()
 template <typename type>
 void dlma_iterator<type>::run_system()
 {
-    while (sys_state->total_aggregates() != 1){
+    while (sys_state->total_aggregates() != final_aggregate_number){
         //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
         iteration_step();
     }

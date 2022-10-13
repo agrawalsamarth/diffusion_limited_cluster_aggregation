@@ -37,6 +37,7 @@ class dlma_iterator: public system_iterator<type>{
 
         int temp;
         constituent<type> *temp_c;
+        int final_aggregate_number = 1;
 
 };
 
