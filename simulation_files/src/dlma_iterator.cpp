@@ -208,14 +208,24 @@ void dlma_iterator<type>::iteration_step()
 {
 
     //std::cout<<"1"<<std::endl;
+    //cp_1 = std::chrono::steady_clock::now();
     temp   = sys_state->choose_aggregate();
+    //cp_2 = std::chrono::steady_clock::now();
     //std::cout<<"2"<<std::endl;
     temp_c = sys_state->get_constituent(temp);
+    //cp_3 = std::chrono::steady_clock::now();
     //std::cout<<"3"<<std::endl;
     sys_state->move_aggregate(temp, movement_test->delta_x());
+    //cp_4 = std::chrono::steady_clock::now();
     //std::cout<<"4"<<std::endl;
     aggregation_check_obj->check_for_aggregation(temp_c);
+    //cp_5 = std::chrono::steady_clock::now();
     //std::cout<<"5"<<std::endl;
+
+    //time_1 += std::chrono::duration_cast<std::chrono::seconds>(cp_2 - cp_1).count();
+    //time_2 += std::chrono::duration_cast<std::chrono::seconds>(cp_3 - cp_2).count();
+    //time_3 += std::chrono::duration_cast<std::chrono::seconds>(cp_4 - cp_3).count();
+    //time_4 += std::chrono::duration_cast<std::chrono::seconds>(cp_5 - cp_4).count();
 
 
 }
@@ -223,11 +233,22 @@ void dlma_iterator<type>::iteration_step()
 template <typename type>
 void dlma_iterator<type>::run_system()
 {
+    //std::cout<<"1"<<std::endl;
+
     while (sys_state->total_aggregates() != final_aggregate_number){
         //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
         iteration_step();
     }
     sys_state->build_attachment_list();
+
+    /*std::cout<<"aggregate choosing time = "<<time_1<<"(s)";
+    std::cout<<"get constituent time = "<<time_2<<"(s)";
+    std::cout<<"move aggregate time = "<<time_3<<"(s)";
+    std::cout<<"check aggregation time = "<<time_4<<"(s)";*/
+
+    //aggregation_check_obj->display_compute_times();
+    
+
     return;
 }
 

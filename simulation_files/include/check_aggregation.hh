@@ -12,6 +12,7 @@ class check_aggregation{
     public:
 
         virtual void check_for_aggregation(constituent<type> *c_1) {};
+        virtual void display_compute_times() {};
 
 };
 

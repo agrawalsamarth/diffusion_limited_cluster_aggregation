@@ -30,6 +30,7 @@ class dlma_system: public system<type>{
         virtual int get_dim();
         virtual int get_max_attachments();
         virtual int get_N();
+        virtual void build_idx_map_for_agg();
         virtual double get_phi();
         virtual double get_alpha();
         virtual std::vector<int> get_attachment_vector(const int i);
@@ -53,8 +54,6 @@ class dlma_system: public system<type>{
 
         virtual void build_attachment_list() {};
         virtual constituent<type>* get_particle_by_index(const int i);
-
-
         
 
     protected:
@@ -69,6 +68,7 @@ class dlma_system: public system<type>{
         std::vector<constituent<type>*> aggregates;
 
         std::map<int, int> id_map;
+        std::map<int, int> agg_id_map;
         std::vector<std::vector<int>> attachments;
 
         std::vector<double> propensity;
@@ -114,6 +114,8 @@ class dlma_system: public system<type>{
 
         void check_for_dlma_params();
         void check_for_percolation_params();
+        int agg_id;
+        void print_agg_map();
 
 };
 

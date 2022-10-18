@@ -62,6 +62,7 @@ class system{
         virtual int choose_aggregate() {};
 
         virtual void build_attachment_list() {};
+        virtual void build_idx_map_for_agg() {};
 
 };
 

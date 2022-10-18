@@ -39,6 +39,17 @@ class dlma_iterator: public system_iterator<type>{
         constituent<type> *temp_c;
         int final_aggregate_number = 1;
 
+        double time_1 = 0.;
+        double time_2 = 0.;
+        double time_3 = 0.;
+        double time_4 = 0.;
+
+        std::chrono::steady_clock::time_point cp_1;
+        std::chrono::steady_clock::time_point cp_2;
+        std::chrono::steady_clock::time_point cp_3;
+        std::chrono::steady_clock::time_point cp_4;
+        std::chrono::steady_clock::time_point cp_5;
+
 };
 
 

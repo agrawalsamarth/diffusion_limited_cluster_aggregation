@@ -407,14 +407,17 @@ template<typename type>
 constituent<type>* dlma_system<type>::get_aggregate(const int id)
 {
 
-    for (int i = 0; i < aggregates.size(); i++){
+    /*for (int i = 0; i < aggregates.size(); i++){
 
         if (aggregates[i]->get_id() == id)
             return aggregates[i];
 
-    }
+    }*/
 
-    return NULL;
+    agg_id = agg_id_map[id];
+    return aggregates[agg_id];
+
+    //return NULL;
 
 
 }
@@ -600,6 +603,35 @@ template<typename type>
 constituent<type>* dlma_system<type>::get_particle_by_index(const int i)
 {
     return all_particles[i];
+}
+
+template<typename type>
+void dlma_system<type>::print_agg_map()
+{
+
+    std::cout<<"---------------------------------------"<<std::endl;
+
+    for (const auto& [key, value] : agg_id_map)
+        std::cout << "[" << key << "] = " << value << "\n";
+
+    std::cout<<"---------------------------------------"<<std::endl;
+
+}
+
+template<typename type>
+void dlma_system<type>::build_idx_map_for_agg()
+{
+    //std::cout<<"here"<<std::endl;
+
+    agg_id_map.clear();
+
+    for (int i = 0; i < aggregates.size(); i++){
+        agg_id = aggregates[i]->get_id();
+        agg_id_map[agg_id] = i;
+    }
+
+    //print_agg_map();
+
 }
 
 template class dlma_system<int>;

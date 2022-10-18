@@ -87,6 +87,7 @@ void dlma_system_offlattice<type>::initialize_system()
     image = this->factory.create_constituent(this->N, this->lattice, this->D, name_type, this->box);
 
     this->calculate_propensity();
+    this->build_idx_map_for_agg();
     
 }
 

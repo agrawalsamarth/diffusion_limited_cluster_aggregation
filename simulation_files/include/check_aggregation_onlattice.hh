@@ -1,4 +1,5 @@
 #include "check_aggregation.hh"
+#include <chrono>
 
 #ifndef CHECK_AGGREGATION_ONLATTICE_H
 #define CHECK_AGGREGATION_ONLATTICE_H
@@ -12,6 +13,7 @@ class check_aggregation_onlattice: public check_aggregation<type>{
 
         check_aggregation_onlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition);
         void check_for_aggregation(constituent<type> *c_1);
+        void display_compute_times();
 
     private:
 
@@ -27,6 +29,20 @@ class check_aggregation_onlattice: public check_aggregation<type>{
 
         constituent<type>* particle_1;
         constituent<type>* particle_2;
+
+        double time_1 = 0.;
+        double time_2 = 0.;
+        double time_3 = 0.;
+        double time_4 = 0.;
+
+        std::chrono::steady_clock::time_point cp_1;
+        std::chrono::steady_clock::time_point cp_2;
+        std::chrono::steady_clock::time_point cp_3;
+        std::chrono::steady_clock::time_point cp_4;
+        std::chrono::steady_clock::time_point cp_5;
+
+
+
 
 
 
