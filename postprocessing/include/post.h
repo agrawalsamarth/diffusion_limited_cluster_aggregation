@@ -163,14 +163,18 @@ class postprocessing
     void copy_positions_for_cluster();
     void unfold_for_clusterwise(int prev, int next);
     void determine_LB_bonds_clusterwise(char *filename);
+    void determine_LB_bonds_clusterwise_via_cg(char *filename);
     bool check_if_particles_placed();
     void modify_coords_for_cluster();
     void modify_coords_after_minimization_for_cluster(int axis);
     void build_A_for_cluster();
     void build_b_for_cluster(int axis);
+    void build_A_for_cluster_for_cg();
+    void build_b_for_cluster_for_cg(int axis);
     void calculate_bond_lengths_direction_wise_for_cluster(int axis);
     void calculate_bond_lengths_for_cluster();
     void dump_lb_bonds_for_cluster_via_invA(char *filename);
+    void dump_lb_bonds_for_cluster_via_cg(char *filename);
 
 
 
@@ -266,6 +270,7 @@ class postprocessing
     Eigen::VectorXd x;
     Eigen::VectorXd b;
     Eigen::SparseLU<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
+    Eigen::ConjugateGradient<Eigen::SparseMatrix<double>, Eigen::Lower|Eigen::Upper> cg;
     Eigen::MatrixXd modified_folded_x;
     Eigen::VectorXd ref_pos;
     Eigen::VectorXd bond_lengths;

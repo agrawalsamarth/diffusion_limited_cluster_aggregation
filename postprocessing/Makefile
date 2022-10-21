@@ -63,6 +63,10 @@ lb_bonds_invA: $(OBJ_FILES) | $(BIN_DIR)
 lb_bonds_clusterwise_invA: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lb_bonds_clusterwise_invA.o target/lb_bonds_clusterwise_invA.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lb_bonds_clusterwise_invA.o
+	
+lb_bonds_via_cg: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o lb_bonds_via_cg.o target/lb_bonds_via_cg.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lb_bonds_via_cg.o
 
 lr_iq: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lr_iq.o target/lr_iq.cpp

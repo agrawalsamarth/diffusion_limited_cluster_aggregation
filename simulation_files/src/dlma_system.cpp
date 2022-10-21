@@ -202,7 +202,6 @@ template<typename type>
 void dlma_system<type>::check_for_dlma_params()
 {
 
-
     type L_total = 1.;
     type L_total_temp = 1.;
 
@@ -213,26 +212,37 @@ void dlma_system<type>::check_for_dlma_params()
         }
        
 
-        for (int axis = 0; axis < D; axis++){
-            L_total      *=  L[axis];
-            L_total_temp *= (L[axis]+1.);
-        } 
+        if (lattice == 1) {
 
-        //std::cout<<"1 = "<<fabs(phi - ((1.*N)/(1*L_total)))<<std::endl;
-        //std::cout<<"2 = "<<fabs(phi - ((1.*N)/(1*L_total_temp)))<<std::endl;
+            for (int axis = 0; axis < D; axis++){
+                L_total      *=  L[axis];
+                L_total_temp *= (L[axis]+1.);
+            } 
 
-        if (fabs(phi - ((1.*N)/(1*L_total))) > fabs(phi-((1.*N)/(1*L_total_temp)))){
+            //std::cout<<"1 = "<<fabs(phi - ((1.*N)/(1*L_total)))<<std::endl;
+            //std::cout<<"2 = "<<fabs(phi - ((1.*N)/(1*L_total_temp)))<<std::endl;
+
+            if (((int)L_total) % 2 == 1){
+
+                //if (fabs(phi - ((1.*N)/(1*L_total))) > fabs(phi-((1.*N)/(1*L_total_temp)))){
+
+                    
+                        for (int axis = 0; axis < D; axis++)
+                            L[axis] += 1;
+                    
+                    
+                //}
+
+            }
+
+            L_total = 1.;
 
             for (int axis = 0; axis < D; axis++)
-                L[axis] += 1;
+                L_total *= L[axis];
+
+            phi = (1.*N)/(1.*L_total);
+
         }
-
-        L_total = 1.;
-
-        for (int axis = 0; axis < D; axis++)
-            L_total *= L[axis];
-
-        phi = (1.*N)/(1*L_total);
 
 
     }
