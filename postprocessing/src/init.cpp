@@ -7,6 +7,9 @@ postprocessing::postprocessing(char *config_filename)
     read_params_parser(config_filename);
     memory_allocation_function();
     read_config_parser(config_filename);
+
+    generator.seed(0);
+    dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 }
 
 postprocessing::postprocessing(char *config_filename, bool build)

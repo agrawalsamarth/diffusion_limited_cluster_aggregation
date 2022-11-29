@@ -13,7 +13,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 
-all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA
+all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA chemical_distance lb_bonds_clusterwise_invA lbp_bfs
 #all: psd_test
 
 density_correlation: $(OBJ_FILES) | $(BIN_DIR)
@@ -67,14 +67,18 @@ lb_bonds_clusterwise_invA: $(OBJ_FILES) | $(BIN_DIR)
 lb_bonds_via_cg: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lb_bonds_via_cg.o target/lb_bonds_via_cg.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lb_bonds_via_cg.o
-
+	
+chemical_distance: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o chemical_distance.o target/chemical_distance.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ chemical_distance.o
+	
 lr_iq: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lr_iq.o target/lr_iq.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lr_iq.o
-
-
-
-
+	
+lbp_bfs: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o lbp_bfs.o target/lbp_bfs.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lbp_bfs.o
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)

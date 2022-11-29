@@ -144,7 +144,7 @@ class postprocessing
     void activate_path(std::vector<std::pair<int,int>> bonds, bool status);
     void shred_path(int i);
     void isolation_routine();
-    void martin_test();
+    void martin_test(char *lb_file);
     void lbp_brute_force();
     void makeCombiUtil(int n, int left, int k);
     void makeCombi(int n, int k);
@@ -176,7 +176,20 @@ class postprocessing
     void dump_lb_bonds_for_cluster_via_invA(char *filename);
     void dump_lb_bonds_for_cluster_via_cg(char *filename);
 
+    void dump_chemical_distance(char *lb_filename, char *cd_filename);
+    void reset_chemical_distance_index();
+    void find_chemical_distance(int i, int j);
+    void find_shortest_path(int i, int j);
 
+    void find_paths_for_all_bonds(char *lb_file, char *cd_filename);
+    void find_all_paths(int source, int destination);
+    void find_all_paths_recursion(int source, int destination);
+    
+    void distort_positions();
+    void increase_stiffness();
+    void copy_b();
+    void calculate_b_diff();
+    
 
     private:
 
@@ -269,6 +282,8 @@ class postprocessing
     Eigen::SparseMatrix<double> A;
     Eigen::VectorXd x;
     Eigen::VectorXd b;
+    Eigen::VectorXd old_b;
+    Eigen::VectorXd b_diff;
     Eigen::SparseLU<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
     Eigen::ConjugateGradient<Eigen::SparseMatrix<double>, Eigen::Lower|Eigen::Upper> cg;
     Eigen::MatrixXd modified_folded_x;
@@ -287,6 +302,23 @@ class postprocessing
     std::map<int, int> index_to_particles;
     int index_i;
     int index_j;
+
+    int *chemical_distance_index;
+    std::vector<int> ref_nodes;
+    std::vector<int> neighbour_nodes;
+    std::vector<std::string> full_lb_list;
+    std::vector<std::string> lb_bonds_str;
+
+    bool *in_path;
+    std::vector<int> source_to_destination_path;
+    int current_path_index;
+
+    FILE *f_bfs;
+
+    double stiffness_coef;
+    double inv_stiffness_coef;
+
+    int *over_the_boundary;
 
 
 };

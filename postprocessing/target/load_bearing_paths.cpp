@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 
     //test->init_unfolding_for_lbp();
 
-    test->martin_test();
+    test->martin_test(argv[2]);
 
     /*if (argc < 3)
         test->dump_load_bearing_paths_file();

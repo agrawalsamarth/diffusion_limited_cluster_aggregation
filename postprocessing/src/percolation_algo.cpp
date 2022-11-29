@@ -218,7 +218,7 @@ void postprocessing::init_unfolding_for_lbp()
 {
 
     build_bond_map();
-    martin_test();
+    //martin_test();
 
     /*bool build_pb = false;
     int ref_axis = 0;
@@ -432,43 +432,52 @@ void postprocessing::unfold_for_lbp(const int prev, const int next, bool build_p
 
 }
 
-void postprocessing::martin_test()
+void postprocessing::martin_test(char *lb_file)
 {
 
     reset_bond_map(true);
 
-    std::vector<std::pair<int,int>> test_bonds;
+    std::ifstream parser(lb_file, std::ifstream::in);
+    std::string str;
+    std::vector<std::string> results;
+    std::vector<std::pair<int,int>> lb_bonds;
+    getline(parser,str);
 
-    //test_bonds.push_back({99,112});
-    /*test_bonds.push_back({483,736});
-    test_bonds.push_back({1477,1905});
-    test_bonds.push_back({683,1700});*/
-    //test_bonds.push_back({1965,2576});
+    //std::vector<std::pair<int,int>> test_bonds;
+    
+    while (getline(parser,str)){
 
-    test_bonds.push_back({4382,5191});
-    test_bonds.push_back({33283,33267});
-    test_bonds.push_back({1912,1911});
-    test_bonds.push_back({11105,11912});
-    test_bonds.push_back({19788,19805});
-    test_bonds.push_back({16062,16852});
-    test_bonds.push_back({9050,9841});
-    test_bonds.push_back({9408,9409});
+        results = split_string_by_delimiter(str, ',');
+        str = results[1];
+        results = split_string_by_delimiter(str, '-');
+        lb_bonds_str.push_back(str);
+        lb_bonds.push_back({stoi(results[0]), stoi(results[1])});
 
-    for (int i = 0; i < test_bonds.size(); i++)
-        switch_off_bonds(test_bonds[i]);
+    }
+
+    parser.close();
+
+    
+
+    for (int i = 0; i < lb_bonds.size(); i++)
+        switch_off_bonds(lb_bonds[i]);
 
     path_percolation = false;
     reset_unfolding_params();
 
+    int test_cluster_number = 0;
+
     for (int i = 0; i < numParticles(); i++){
 
         if (is_placed(i) == false){
-            std::cout<<"i="<<i<<std::endl;
+            //std::cout<<"i="<<i<<std::endl;
             unfold_for_lbp(i, i, false);
+            test_cluster_number++;
         }
 
     }
 
+    std::cout<<"total clusters = "<<test_cluster_number<<std::endl;
 
     if (path_percolation)
         std::cout<<"still percolating"<<std::endl;
@@ -569,6 +578,8 @@ void postprocessing::lbp_brute_force()
         makeCombi(num_bonds, i);
 
         if (!path_percolation){
+
+            std::cout<<"bonds"<<std::endl;
 
             for (int k = 0; k < ans.size(); k++)
                 std::cout<<unique_bonds[ans[k]].first<<"-"<<unique_bonds[ans[k]].second<<"\n";

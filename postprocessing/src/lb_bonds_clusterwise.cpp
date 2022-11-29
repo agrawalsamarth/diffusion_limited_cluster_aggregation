@@ -23,9 +23,26 @@ bool postprocessing::check_if_particles_placed()
 
 }
 
+void postprocessing::distort_positions()
+{
+
+    for (int i = 0; i < numParticles(); i++){
+        for (int axis = 0; axis < dim(); axis++){
+            //std::cout<<"old position = "<<pos(i,axis)<<"\t";
+            pos(i,axis) += ((0.1 * dis(generator))-0.05);
+            //std::cout<<"new position = "<<pos(i,axis)<<"\t";
+        }
+        //std::cout<<"\n";
+    }
+
+    //std::cout<<"distorted"<<std::endl;
+
+}
+
 void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 {
 
+    //distort_positions();
     reset_unfolding_params();
     build_bond_map();
     reset_bond_map(true);
@@ -37,6 +54,9 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
     //int totalClusters;
     ref_pos.resize(dim());
     totalClusters_ = 0;
+
+    stiffness_coef = 100.;
+
 
     FILE *f;
 
@@ -54,6 +74,10 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
     if (!A.isCompressed()){
         A.makeCompressed();
     }
+
+    double tolerance = 1e-6;
+
+    //std::cout<<"bond,bond_component_x0,bond_component_x1,bond_component_x2,bond_length"<<std::endl;
 
     while (!check_if_particles_placed()) {
 
@@ -76,6 +100,11 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
         //std::cout<<"num_particles_for_cluster = "<<num_particles_for_cluster<<std::endl;
         //std::cout<<"num_bonds_for_cluster = "<<num_bonds_for_cluster<<std::endl;
 
+        over_the_boundary = (int*)malloc(sizeof(int) * num_bonds_for_cluster);
+
+        for (int otb = 0; otb < num_bonds_for_cluster; otb++)
+            over_the_boundary[otb] = 0;
+
         if (num_particles_for_cluster > 1) {
 
             modified_folded_x.resize(num_particles_for_cluster,dim());
@@ -87,6 +116,7 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
             A.reserve(nnz);
 
             b.resize((num_particles_for_cluster-1));
+            old_b.resize((num_particles_for_cluster-1));
             x.resize((num_particles_for_cluster-1));
             bond_lengths_direction_wise.resize(num_bonds_for_cluster, dim());
             bond_lengths.resize(num_bonds_for_cluster);
@@ -104,17 +134,34 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
                     b.setZero();
                     build_b_for_cluster(axis);
+                    //increase_stiffness();
+
+                    /*for (int stiff_index = 0; stiff_index < b.size(); stiff_index++)
+                        std::cout<<b(stiff_index)<<std::endl;
+
+                    std::cout<<"clusters = "<<totalClusters_<<"-------------------------------------------\n";*/
+
+
                     x = solver.solve(b);
                     modify_coords_after_minimization_for_cluster(axis);
 
+                    /*copy_b();
+                    b.setZero();
+                    build_b_for_cluster(axis);
+                    calculate_b_diff();*/
+
                 }
+                
 
                 calculate_bond_lengths_for_cluster();
                 max_length = bond_lengths.maxCoeff(&max_row);
 
+                //for (int stiff_index = 0; stiff_index < bond_lengths.size(); stiff_index++)
+                    //std::cout<<bond_lengths[stiff_index]<<std::endl;
+
                 //std::cout<<"max_length = "<<max_length<<std::endl;
 
-                if (max_length > 1e-10){
+                if (max_length > tolerance){
 
                     switch_off_bonds({index_to_particles[unique_bonds[max_row].first], index_to_particles[unique_bonds[max_row].second]});
                     //std::cout<<totalClusters_<<","<<index_to_particles[unique_bonds[max_row].first]<<"-"<<index_to_particles[unique_bonds[max_row].second]<<std::endl;
@@ -127,14 +174,25 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
                     fprintf(f, "%lf\n", max_length);
 
+                    /*for (int test_index = 0; test_index < unique_bonds.size(); test_index++){
+                        std::cout<<index_to_particles[unique_bonds[test_index].first]<<"-"<<index_to_particles[unique_bonds[test_index].second]<<",";
+
+                        for (int print_axis = 0; print_axis < dim(); print_axis++)
+                            std::cout<<sqrt(bond_lengths_direction_wise(test_index, print_axis))<<",";
+
+                        std::cout<<bond_lengths[test_index]<<std::endl;
+                    }*/
+
+
                 }
+                
 
-
-            } while(max_length > 1e-10);
+            } while(max_length > tolerance);
 
         }
 
         totalClusters_++;
+        free(over_the_boundary);
 
 
     }
@@ -356,12 +414,37 @@ void postprocessing::build_b_for_cluster(int axis)
                 b(j) += dx;
             }
 
+            over_the_boundary[index] = dx;            
+
         }
 
 
     }
 
 }
+
+void postprocessing::copy_b()
+{
+    for (int i = 0; i < b.size(); i++)
+        old_b(i) = b(i);
+}
+
+void postprocessing::calculate_b_diff()
+{
+    b_diff = b - old_b;
+
+    if (b_diff.norm() > 1e-4)
+        std::cout<<"b vector changes"<<std::endl;
+
+}
+
+void postprocessing::increase_stiffness()
+{
+    for (int i = 0; i < b.size(); i++){
+        b(i) = 1. * b(i);
+    }
+}
+
 
 void postprocessing::calculate_bond_lengths_direction_wise_for_cluster(int axis)
 {
@@ -382,6 +465,7 @@ void postprocessing::calculate_bond_lengths_direction_wise_for_cluster(int axis)
             //bond_lengths(index) = get_periodic_image(pos(i,axis)-pos(j,axis), axis) * get_periodic_image(pos(i,axis)-pos(j,axis), axis);
             bond_lengths_direction_wise(index, axis)  = (modified_folded_x(i, axis) - modified_folded_x(j, axis));
             bond_lengths_direction_wise(index, axis) -= (L(axis) * round(bond_lengths_direction_wise(index, axis)/L(axis)));
+            //bond_lengths_direction_wise(index,axis)  -= L(axis) * over_the_boundary[index];
             bond_lengths_direction_wise(index, axis) *= bond_lengths_direction_wise(index, axis); 
         }
 
