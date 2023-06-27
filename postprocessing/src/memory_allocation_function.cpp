@@ -20,6 +20,7 @@ namespace post_p
         posDiff_         = (double*)malloc(sizeof(double) * dim());
 
         is_placed_                = (bool*)malloc(sizeof(bool) * numParticles());
+        attachments_placed_       = (bool*)malloc(sizeof(bool) * numParticles());
         unfolded_coords_          = (double*)malloc(sizeof(double) * numParticles() * dim());
         unfolded_num_attachments_ = (int*)malloc(sizeof(int) * numParticles());
         cluster_percolation_      = (int*)malloc(sizeof(int) * numParticles() * dim());

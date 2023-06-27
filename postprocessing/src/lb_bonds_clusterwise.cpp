@@ -5,7 +5,9 @@ namespace post_p
 
 void postprocessing::dump_lb_bonds_for_cluster_via_invA(char *filename)
 {
+    //std::cout<<"1 new"<<std::endl;
     determine_LB_bonds_clusterwise(filename);
+    //std::cout<<"2"<<std::endl;
 }
 
 bool postprocessing::check_if_particles_placed()
@@ -39,166 +41,127 @@ void postprocessing::distort_positions()
 
 }
 
-void postprocessing::determine_LB_bonds_clusterwise(char *filename)
+void postprocessing::set_lbb_params(char *filename)
 {
-
-    //distort_positions();
+    
     reset_unfolding_params();
     build_bond_map();
     reset_bond_map(true);
 
-    double max_length;
-    int max_row, max_col;
-
-    int total_lbp = 0;
-    //int totalClusters;
+    total_lbp = 0;
     ref_pos.resize(dim());
     totalClusters_ = 0;
 
-    stiffness_coef = 100.;
+    f_lbp = fopen(filename, "w");
 
-
-    FILE *f;
-
-    f = fopen(filename, "w");
-
-    fprintf(f,"clusterNumber,bond,");
+    fprintf(f_lbp,"clusterNumber,bond,");
 
     for (int axis = 0; axis < dim(); axis++)
-        fprintf(f,"bond_component_x%d,",axis);
+        fprintf(f_lbp,"bond_component_x%d,",axis);
 
-    fprintf(f,"bond_length\n");
+    fprintf(f_lbp,"bond_length\n");
 
-    int nnz;
-
-    if (!A.isCompressed()){
+    /*if (!A.isCompressed()){
         A.makeCompressed();
+    }*/
+
+    lbp_tolerance = 1e-6;
+
+
+}
+
+void postprocessing::init_lbb_unfolding()
+{
+
+    num_bonds_for_cluster = 0;
+    num_particles_for_cluster = 0;
+    unique_bonds.clear();
+    index_to_particles.clear();
+    particles_to_index.clear();
+
+    for (int i = 0; i < numParticles(); i++){
+        if (is_placed(i) == false){
+            particles_to_index[i] = 0;
+            index_to_particles[0] = i;
+            num_particles_for_cluster += 1;
+            unfold_for_clusterwise(i,i);
+            break;
+        }
     }
 
-    double tolerance = 1e-6;
+    //std::cout<<"num_particles_for_cluster = "<<num_particles_for_cluster<<"\t num_bonds = "<<num_bonds_for_cluster<<std::endl;
 
-    //std::cout<<"bond,bond_component_x0,bond_component_x1,bond_component_x2,bond_length"<<std::endl;
+}
 
-    while (!check_if_particles_placed()) {
+void postprocessing::init_lbb_unfolding_without_recursion()
+{
+    num_bonds_for_cluster = 0;
+    num_particles_for_cluster = 0;
+    unique_bonds.clear();
+    index_to_particles.clear();
+    particles_to_index.clear();
+    to_build_list.clear();
 
-        num_bonds_for_cluster = 0;
-        num_particles_for_cluster = 0;
-        unique_bonds.clear();
-        index_to_particles.clear();
-        particles_to_index.clear();
+    for (int i = 0; i < numParticles(); i++){
+        if (is_placed(i) == false){
+            particles_to_index[i] = num_particles_for_cluster;
+            index_to_particles[num_particles_for_cluster] = i;
 
-        for (int i = 0; i < numParticles(); i++){
-            if (is_placed(i) == false){
-                particles_to_index[i] = 0;
-                index_to_particles[0] = i;
-                num_particles_for_cluster += 1;
-                unfold_for_clusterwise(i,i);
-                break;
+            num_particles_for_cluster++;
+
+            unfold_for_clusterwise_without_recursion(i);
+            is_placed(i) = true;
+            
+            for (int temp_index = 0; temp_index < to_build_list.size(); temp_index++){
+
+                //if ((is_placed(temp_index) == true) && (attachments_placed(temp_index) == false)){
+                unfold_for_clusterwise_without_recursion(to_build_list[temp_index]);
+                //}
+
             }
+
+            break;
         }
+    }
 
-        //std::cout<<"num_particles_for_cluster = "<<num_particles_for_cluster<<std::endl;
-        //std::cout<<"num_bonds_for_cluster = "<<num_bonds_for_cluster<<std::endl;
+    //std::cout<<"num_particles_for_cluster = "<<num_particles_for_cluster<<"\t num_bonds = "<<num_bonds_for_cluster<<std::endl;
 
-        over_the_boundary = (int*)malloc(sizeof(int) * num_bonds_for_cluster);
+}
 
-        for (int otb = 0; otb < num_bonds_for_cluster; otb++)
-            over_the_boundary[otb] = 0;
+void postprocessing::unfold_for_clusterwise_without_recursion(int i)
+{
+    for (int att = 0; att < numAttachments(i); att++)
+    {
 
-        if (num_particles_for_cluster > 1) {
+        index_j = attachment(i, att);
 
-            modified_folded_x.resize(num_particles_for_cluster,dim());
-            copy_positions_for_cluster();
+        if (attachments_placed(index_j) == false)
+        {
 
-            A.resize((num_particles_for_cluster-1), (num_particles_for_cluster-1));
+            if (is_placed(index_j) == false){
+                particles_to_index[index_j] = num_particles_for_cluster;
+                index_to_particles[num_particles_for_cluster] = index_j;
+                num_particles_for_cluster++;
+                is_placed(index_j) = true;
+                to_build_list.push_back(index_j);
 
-            nnz = 2 * num_bonds_for_cluster + num_particles_for_cluster;
-            A.reserve(nnz);
+                //std::cout<<"index_i = "<<i<<"\t index_j = "<<index_j<<std::endl;
+            }
 
-            b.resize((num_particles_for_cluster-1));
-            old_b.resize((num_particles_for_cluster-1));
-            x.resize((num_particles_for_cluster-1));
-            bond_lengths_direction_wise.resize(num_bonds_for_cluster, dim());
-            bond_lengths.resize(num_bonds_for_cluster);
+            i_map = particles_to_index[i];
+            j_map = particles_to_index[index_j];
 
-            do {
+            unique_bonds.push_back({i_map,j_map});
+            num_bonds_for_cluster += 1;
 
-                A.setZero();
-                modify_coords_for_cluster();
-                build_A_for_cluster();
+            //std::cout<<"i = "<<i<<"\t j = "<<index_j<<std::endl;
 
-                solver.analyzePattern(A);
-                solver.factorize(A);
-
-                for (int axis = 0; axis < dim(); axis++){
-
-                    b.setZero();
-                    build_b_for_cluster(axis);
-                    //increase_stiffness();
-
-                    /*for (int stiff_index = 0; stiff_index < b.size(); stiff_index++)
-                        std::cout<<b(stiff_index)<<std::endl;
-
-                    std::cout<<"clusters = "<<totalClusters_<<"-------------------------------------------\n";*/
-
-
-                    x = solver.solve(b);
-                    modify_coords_after_minimization_for_cluster(axis);
-
-                    /*copy_b();
-                    b.setZero();
-                    build_b_for_cluster(axis);
-                    calculate_b_diff();*/
-
-                }
-                
-
-                calculate_bond_lengths_for_cluster();
-                max_length = bond_lengths.maxCoeff(&max_row);
-
-                //for (int stiff_index = 0; stiff_index < bond_lengths.size(); stiff_index++)
-                    //std::cout<<bond_lengths[stiff_index]<<std::endl;
-
-                //std::cout<<"max_length = "<<max_length<<std::endl;
-
-                if (max_length > tolerance){
-
-                    switch_off_bonds({index_to_particles[unique_bonds[max_row].first], index_to_particles[unique_bonds[max_row].second]});
-                    //std::cout<<totalClusters_<<","<<index_to_particles[unique_bonds[max_row].first]<<"-"<<index_to_particles[unique_bonds[max_row].second]<<std::endl;
-                    //total_lbp++;
-
-                    fprintf(f, "%d,%d-%d,",totalClusters_,index_to_particles[unique_bonds[max_row].first],index_to_particles[unique_bonds[max_row].second]);
-
-                    for (int print_axis = 0; print_axis < dim(); print_axis++)
-                        fprintf(f, "%lf,", sqrt(bond_lengths_direction_wise(max_row,print_axis)));
-
-                    fprintf(f, "%lf\n", max_length);
-
-                    /*for (int test_index = 0; test_index < unique_bonds.size(); test_index++){
-                        std::cout<<index_to_particles[unique_bonds[test_index].first]<<"-"<<index_to_particles[unique_bonds[test_index].second]<<",";
-
-                        for (int print_axis = 0; print_axis < dim(); print_axis++)
-                            std::cout<<sqrt(bond_lengths_direction_wise(test_index, print_axis))<<",";
-
-                        std::cout<<bond_lengths[test_index]<<std::endl;
-                    }*/
-
-
-                }
-                
-
-            } while(max_length > tolerance);
 
         }
-
-        totalClusters_++;
-        free(over_the_boundary);
-
 
     }
 
-    fclose(f);
-
+    attachments_placed(i) = true;
 }
 
 void postprocessing::unfold_for_clusterwise(const int prev, const int next)
@@ -274,6 +237,235 @@ void postprocessing::unfold_for_clusterwise(const int prev, const int next)
 
 }
 
+
+void postprocessing::init_lbb_cluster_matrices()
+{
+
+    modified_folded_x.resize(num_particles_for_cluster,dim());
+    copy_positions_for_cluster();
+
+    nnz = 2 * num_bonds_for_cluster + num_particles_for_cluster;
+    A.reserve(nnz);
+    A.resize((num_particles_for_cluster-1), (num_particles_for_cluster-1));
+
+    b.resize((num_particles_for_cluster-1));
+    old_b.resize((num_particles_for_cluster-1));
+    x.resize((num_particles_for_cluster-1));
+    bond_lengths_direction_wise.resize(num_bonds_for_cluster, dim());
+    bond_lengths.resize(num_bonds_for_cluster);
+
+    A.setZero();
+    build_A_for_cluster();
+    A.makeCompressed();
+
+}
+
+void postprocessing::modify_A_matrix()
+{
+    a_i = unique_bonds[max_row].first;
+    a_j = unique_bonds[max_row].second;
+
+    if (a_i == (num_particles_for_cluster-1)){
+        A.coeffRef(a_j,a_j) += 1;
+    }
+
+    else if (a_j == (num_particles_for_cluster-1)){
+        A.coeffRef(a_i, a_i) += 1;
+    }
+
+    else{
+
+        A.coeffRef(a_i,a_j)  = 0;
+        A.coeffRef(a_j,a_i)  = 0;
+        A.coeffRef(a_i,a_i) += 1;
+        A.coeffRef(a_j,a_j) += 1;
+
+    }
+
+
+
+}
+
+void postprocessing::print_lbb_info()
+{
+
+    max_length = bond_lengths.maxCoeff(&max_row);
+
+    if (max_length > lbp_tolerance){
+
+        switch_off_bonds({index_to_particles[unique_bonds[max_row].first], index_to_particles[unique_bonds[max_row].second]});
+        modify_A_matrix();
+
+        fprintf(f_lbp, "%d,%d-%d,",totalClusters_,index_to_particles[unique_bonds[max_row].first],index_to_particles[unique_bonds[max_row].second]);
+
+        for (int print_axis = 0; print_axis < dim(); print_axis++)
+            fprintf(f_lbp, "%lf,", sqrt(bond_lengths_direction_wise(max_row,print_axis)));
+
+        fprintf(f_lbp, "%lf\n", max_length);
+        n_lbb++;
+
+    }
+
+}
+
+void postprocessing::print_minimized_coords(char *filename, int filenum)
+{
+
+    std::string file_test(filename);
+    /*std::vector<std::string> results;
+    
+    results = split_string_by_delimiter(file_test, '.');
+
+    std::string full_filename = results[0] + "_" + std::to_string(filenum) + "." + results[1];
+    
+    for (int i = 0; i < results.size(); i++)
+        std::cout<<"results "<<i<<" = "<<results[i]<<std::endl;*/
+
+    file_test = file_test.substr(0, file_test.size()-4);
+    std::string full_filename = file_test + "_" + std::to_string(filenum) + ".csv";
+
+    std::ofstream f_coords;
+    f_coords.open(full_filename);
+    f_coords << "id,";
+
+    for (int axis = 0; axis < dim(); axis++){
+
+        if (axis == (dim() - 1)){
+            f_coords<<"x"<<axis<<"\n";
+        }
+
+        else{
+            f_coords<<"x"<<axis<<",";
+        }
+
+    }
+
+    int p_index;
+
+    for (int i = 0; i < num_particles_for_cluster; i++){
+
+        p_index = particles_to_index[i];
+        f_coords<<i<<",";
+
+        for (int axis = 0; axis < dim(); axis++){
+
+            if (axis == (dim()-1)){
+                f_coords<<modified_folded_x(p_index,axis)<<"\n";
+            }
+
+            else{
+                f_coords<<modified_folded_x(p_index,axis)<<",";
+            }
+
+        }
+
+    }
+
+    f_coords.close();
+}
+
+void postprocessing::determine_LB_bonds_clusterwise(char *filename)
+{
+
+    /*std::chrono::steady_clock::time_point cp_1;
+    std::chrono::steady_clock::time_point cp_2;
+    std::chrono::steady_clock::time_point cp_3;
+    std::chrono::steady_clock::time_point cp_4;
+    std::chrono::steady_clock::time_point cp_5;
+    std::chrono::steady_clock::time_point cp_6;*/
+
+    /*double unf_time = 0.;
+    double A_time = 0.;
+    double invA_time = 0.;*/
+
+    int min_cluster_size = 2;
+
+    set_lbb_params(filename);
+
+    //int num_A_constructions = 0;
+    //int num_invAb_ops = 0;
+
+
+
+    while (!check_if_particles_placed()) {
+
+        //cp_1 = std::chrono::steady_clock::now();
+        init_lbb_unfolding_without_recursion();
+        //init_lbb_unfolding();
+        //cp_2 = std::chrono::steady_clock::now();
+
+        //unf_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
+
+
+        if (num_particles_for_cluster >= min_cluster_size) {
+
+            //cp_3 = std::chrono::steady_clock::now();
+            init_lbb_cluster_matrices();
+            //num_A_constructions++;
+            //cp_4 = std::chrono::steady_clock::now();
+
+            //A_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_4 - cp_3).count();
+
+
+            //cp_5 = std::chrono::steady_clock::now();
+
+            do {
+
+                
+                modify_coords_for_cluster();
+                
+                solver.analyzePattern(A);
+                solver.factorize(A);
+
+                for (int axis = 0; axis < dim(); axis++){
+
+                    b.setZero();
+                    build_b_for_cluster(axis);
+                    x = solver.solve(b);
+                    //num_invAb_ops++;
+                    modify_coords_after_minimization_for_cluster(axis);
+
+                }
+                
+
+                calculate_bond_lengths_for_cluster();
+
+                //print_minimized_coords(filename, n_lbb);
+                print_lbb_info();
+                
+
+            } while(max_length > lbp_tolerance);
+
+            //cp_6 = std::chrono::steady_clock::now();
+
+            //invA_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_6 - cp_5).count();
+
+
+
+        }
+
+        totalClusters_++;
+
+
+    }
+
+    fclose(f_lbp);
+
+    /*std::cout<<"unfolding time = "<<unf_time * 1e-9<<std::endl;
+    std::cout<<"A time = "<<A_time * 1e-9<<std::endl;
+    std::cout<<"invA time = "<<invA_time * 1e-9<<std::endl;
+    std::cout<<"n_lbb = "<<n_lbb<<std::endl;
+    std::cout<<"num_A_constructions = "<<num_A_constructions<<std::endl;
+    std::cout<<"num_invAb_ops = "<<num_invAb_ops<<std::endl;*/
+
+    //std::cout<<"A1 module = "<<time_A1<<std::endl;
+    //std::cout<<"A2 module = "<<time_A2<<std::endl;
+
+
+}
+
+
+
 void postprocessing::copy_positions_for_cluster()
 {
 
@@ -334,25 +526,42 @@ void postprocessing::modify_coords_after_minimization_for_cluster(int axis)
 
 }
 
-void postprocessing::build_A_for_cluster()
+void postprocessing::put_particles_back_in_box(int axis)
+{
+
+    for (int i = 0; i < num_particles_for_cluster; i++)
+        modified_folded_x(i,axis) -= L(axis) * round(modified_folded_x(i,axis)/L(axis));
+
+
+}
+
+/*void postprocessing::build_A_for_cluster()
 {
 
     int i,j;
-    int index_i, index_j;
+    //int index_i, index_j;
 
     for (int index = 0; index < num_bonds_for_cluster; index++){
+
+        cp_A1 = std::chrono::steady_clock::now();
 
         i = unique_bonds[index].first;
         j = unique_bonds[index].second;
 
-        index_i = index_to_particles[i];
-        index_j = index_to_particles[j];
+        cp_A2 = std::chrono::steady_clock::now();
+
+        time_A1 += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_A2 - cp_A1).count();
+
+        //index_i = index_to_particles[i];
+        //index_j = index_to_particles[j];
 
         /*if (bond_map_status.count({index_i,index_j}) == 0){
             std::cout<<"problem with A"<<std::endl;
-        }*/
+        }
 
-        if (bond_map_status[{index_i,index_j}] == 1){
+        //if (bond_map_status[{index_i,index_j}] == 1){
+
+        cp_A3 = std::chrono::steady_clock::now();
 
             if (i == (num_particles_for_cluster-1)){
                 A.coeffRef(j,j) -= 1;
@@ -371,11 +580,84 @@ void postprocessing::build_A_for_cluster()
 
             }
 
-        }
+        cp_A4 = std::chrono::steady_clock::now();
+
+        time_A2 += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_A4 - cp_A3).count();
+
+
+        //}
 
 
     }
 
+    //std::cout<<"old method"<<std::endl;
+
+}*/
+
+void postprocessing::build_A_for_cluster()
+{
+
+    int i,j;
+    //int index_i, index_j;
+
+    for (int index = 0; index < num_bonds_for_cluster; index++){
+
+        //cp_A1 = std::chrono::steady_clock::now();
+
+        i = unique_bonds[index].first;
+        j = unique_bonds[index].second;
+
+        //cp_A2 = std::chrono::steady_clock::now();
+
+        //time_A1 += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_A2 - cp_A1).count();
+
+        //index_i = index_to_particles[i];
+        //index_j = index_to_particles[j];
+
+        /*if (bond_map_status.count({index_i,index_j}) == 0){
+            std::cout<<"problem with A"<<std::endl;
+        }*/
+
+        //if (bond_map_status[{index_i,index_j}] == 1){
+
+        cp_A3 = std::chrono::steady_clock::now();
+
+            if (i == (num_particles_for_cluster-1)){
+                tripleList.push_back(Eigen::Triplet<double>(j,j,-1));
+            }
+
+            else if (j == (num_particles_for_cluster-1)){
+                tripleList.push_back(Eigen::Triplet<double>(i,i,-1));
+            }
+
+            else{
+
+                tripleList.push_back(Eigen::Triplet<double>(i,j,1));
+                tripleList.push_back(Eigen::Triplet<double>(j,i,1));
+                tripleList.push_back(Eigen::Triplet<double>(i,i,-1));
+                tripleList.push_back(Eigen::Triplet<double>(j,j,-1));
+
+            }
+
+        //cp_A4 = std::chrono::steady_clock::now();
+
+        //time_A2 += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_A4 - cp_A3).count();
+
+
+        //}
+
+
+    }
+
+    A.setFromTriplets(tripleList.begin(), tripleList.end());
+    tripleList.clear();
+
+}
+
+
+void postprocessing::switch_off_transverse_forces(int axis)
+{    
+    return;
 }
 
 void postprocessing::build_b_for_cluster(int axis)
@@ -414,8 +696,6 @@ void postprocessing::build_b_for_cluster(int axis)
                 b(j) += dx;
             }
 
-            over_the_boundary[index] = dx;            
-
         }
 
 
@@ -445,7 +725,6 @@ void postprocessing::increase_stiffness()
     }
 }
 
-
 void postprocessing::calculate_bond_lengths_direction_wise_for_cluster(int axis)
 {
 
@@ -462,11 +741,9 @@ void postprocessing::calculate_bond_lengths_direction_wise_for_cluster(int axis)
         index_j = index_to_particles[j];
 
         if (bond_map_status[{index_i,index_j}] == 1){
-            //bond_lengths(index) = get_periodic_image(pos(i,axis)-pos(j,axis), axis) * get_periodic_image(pos(i,axis)-pos(j,axis), axis);
             bond_lengths_direction_wise(index, axis)  = (modified_folded_x(i, axis) - modified_folded_x(j, axis));
             bond_lengths_direction_wise(index, axis) -= (L(axis) * round(bond_lengths_direction_wise(index, axis)/L(axis)));
-            //bond_lengths_direction_wise(index,axis)  -= L(axis) * over_the_boundary[index];
-            bond_lengths_direction_wise(index, axis) *= bond_lengths_direction_wise(index, axis); 
+            bond_lengths_direction_wise(index, axis) *= bond_lengths_direction_wise(index, axis);
         }
 
         else {
@@ -496,11 +773,77 @@ void postprocessing::calculate_bond_lengths_for_cluster()
         }
 
         bond_lengths(i) = sqrt(bond_lengths(i));
+        
 
     }
 
 
 }
 
+void postprocessing::calculate_bond_lengths_for_cluster(int axis)
+{
+
+    //bond_distance.setZero();
+    int i,j;
+    int index_i, index_j;
+
+    for (int index = 0; index < num_bonds_for_cluster; index++){
+
+        i = unique_bonds[index].first;
+        j = unique_bonds[index].second;
+
+        index_i = index_to_particles[i];
+        index_j = index_to_particles[j];
+
+        if (bond_map_status[{index_i,index_j}] == 1){
+            bond_lengths(index)  = (modified_folded_x(i, axis) - modified_folded_x(j, axis));
+            bond_lengths(index) -= (L(axis) * round(bond_lengths(index)/L(axis)));
+            bond_lengths(index)  = abs(bond_lengths(index));
+        }
+
+        else {
+            bond_lengths(index)  = 0.;
+        }
+
+        //std::cout<<index_i<<"-"<<index_j<<" = "<<bond_lengths[index]<<std::endl;
+
+    }    
+
+    //std::cout<<"-----------------------------------------------------"<<std::endl;
+
+
+}
+
+
+void postprocessing::dump_xyz_stepwise(char *filename, int file_num)
+{
+
+    std::string ext_filename;
+
+    ext_filename  = filename;
+    ext_filename += "_" + std::to_string(file_num) + ".csv";
+
+    std::ofstream test_f;
+    test_f.open(ext_filename);
+
+    for (int axis = 0; axis < dim(); axis++){
+        if (axis != (dim()-1))
+            test_f <<"x"+std::to_string(axis)+",";
+        else
+            test_f <<"x"+std::to_string(axis)+"\n";
+    }
+
+    for (int i = 0; i < numParticles(); i++){
+        for (int axis = 0; axis < dim(); axis++){
+            if (axis != (dim()-1))
+                test_f <<std::to_string(modified_folded_x(i,axis))+",";
+            else
+                test_f <<std::to_string(modified_folded_x(i,axis))+"\n";
+        }
+    }
+
+    test_f.close();
+}
     
+
 }

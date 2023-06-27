@@ -396,6 +396,9 @@ void postprocessing::determine_LB_bonds()
 
         if (max_length > 1e-10){
 
+            for (int print_i = 0; print_i < unique_bonds.size(); print_i++)
+                std::cout<<bond_lengths[print_i]<<std::endl;
+
             switch_off_bonds(unique_bonds[max_row]);
             std::cout<<unique_bonds[max_row].first<<"-"<<unique_bonds[max_row].second<<std::endl;
             total_lbp++;

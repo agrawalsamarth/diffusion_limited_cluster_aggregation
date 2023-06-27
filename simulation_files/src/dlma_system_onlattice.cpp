@@ -245,10 +245,10 @@ void dlma_system_onlattice<type>::build_site_vector()
         }
         //}
 
-        if (neighbour_flag == 0){
+        //if (neighbour_flag == 0){
             available_sites.push_back(i);
             this->box->add_particle_to_cell(i, temp_pos_arr);
-        }
+        //}
                 
     }
 

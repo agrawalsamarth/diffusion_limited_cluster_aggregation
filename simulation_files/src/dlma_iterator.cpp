@@ -235,10 +235,11 @@ void dlma_iterator<type>::run_system()
 {
     //std::cout<<"1"<<std::endl;
 
-    while (sys_state->total_aggregates() != final_aggregate_number){
+    while (sys_state->total_aggregates() > final_aggregate_number){
         //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
         iteration_step();
     }
+    //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
     sys_state->build_attachment_list();
 
     /*std::cout<<"aggregate choosing time = "<<time_1<<"(s)";

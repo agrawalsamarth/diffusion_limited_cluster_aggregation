@@ -37,6 +37,7 @@ void postprocessing::dump_unfolded_file()
 void postprocessing::dump_unfolded_file(char *filename)
 {
     bool percolation_test;
+    reset_bond_map(true);
 
     if (max_attachments_ > 0){
         percolation_test = check_percolation();

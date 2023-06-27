@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <bits/stdc++.h>
 #include <Eigen/Sparse>
+#include <chrono>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -68,6 +69,8 @@ class postprocessing
     int& attachment(const int i, const int j);
     bool  is_placed(const int i) const;
     bool& is_placed(const int i);
+    bool  attachments_placed(const int i) const;
+    bool& attachments_placed(const int i);
     double  unfolded_coords(const int i, const int axis) const;
     double& unfolded_coords(const int i, const int axis);
     double  delta_coords(const int i, const int axis) const;
@@ -154,6 +157,7 @@ class postprocessing
     void modify_coords();
     void modify_coords_after_minimization(int axis);
     void build_A();
+    void build_A(int axis);
     void build_b(int axis);
     void calculate_bond_lengths_direction_wise(int axis);
     void calculate_bond_lengths();
@@ -163,16 +167,19 @@ class postprocessing
     void copy_positions_for_cluster();
     void unfold_for_clusterwise(int prev, int next);
     void determine_LB_bonds_clusterwise(char *filename);
+    void determine_LB_bonds_clusterwise_directionwise(char *filename);
     void determine_LB_bonds_clusterwise_via_cg(char *filename);
     bool check_if_particles_placed();
     void modify_coords_for_cluster();
     void modify_coords_after_minimization_for_cluster(int axis);
     void build_A_for_cluster();
+    void build_A_for_cluster(int axis);
     void build_b_for_cluster(int axis);
     void build_A_for_cluster_for_cg();
     void build_b_for_cluster_for_cg(int axis);
     void calculate_bond_lengths_direction_wise_for_cluster(int axis);
     void calculate_bond_lengths_for_cluster();
+    void calculate_bond_lengths_for_cluster(int axis);
     void dump_lb_bonds_for_cluster_via_invA(char *filename);
     void dump_lb_bonds_for_cluster_via_cg(char *filename);
 
@@ -189,6 +196,21 @@ class postprocessing
     void increase_stiffness();
     void copy_b();
     void calculate_b_diff();
+    void put_particles_back_in_box(int axis);
+    void dump_xyz_stepwise(char *filename, int file_num);
+
+    void set_lbb_params(char *filename);
+    void init_lbb_unfolding();
+    void init_lbb_cluster_matrices();
+    void print_lbb_info();
+    void modify_A_matrix();
+
+
+    void switch_off_transverse_forces(int axis);
+    void print_minimized_coords(char *filename, int filenum);
+
+    void init_lbb_unfolding_without_recursion();
+    void unfold_for_clusterwise_without_recursion(int i);
     
 
     private:
@@ -224,6 +246,7 @@ class postprocessing
     double *r_ij_hist_;
     int    *rho_hist_;
     bool   *is_placed_;
+    bool   *attachments_placed_;
     double *unfolded_coords_;
     int     temp_next;
     double *delta_coords_;
@@ -319,6 +342,39 @@ class postprocessing
     double inv_stiffness_coef;
 
     int *over_the_boundary;
+    double max_length;
+    int max_row;
+    int max_col;
+    double lbp_tolerance;
+    int nnz;
+    int a_i;
+    int a_j;
+
+    FILE *f_lbp;
+
+    /*std::chrono::steady_clock::time_point cp_1;
+    std::chrono::steady_clock::time_point cp_2;
+    std::chrono::steady_clock::time_point cp_3;
+    std::chrono::steady_clock::time_point cp_4;
+    std::chrono::steady_clock::time_point cp_5;*/
+
+    std::chrono::steady_clock::time_point cp_A1;
+    std::chrono::steady_clock::time_point cp_A2;
+    std::chrono::steady_clock::time_point cp_A3;
+    std::chrono::steady_clock::time_point cp_A4;
+
+    double time_A1 = 0.;
+    double time_A2 = 0.;
+
+    //Eigen::Triplet<double> T;
+    std::vector<Eigen::Triplet<double>> tripleList;
+    int n_lbb = 0;
+    int particle_counter;
+    std::vector<int> to_build_list;
+
+    int i_map;
+    int j_map;
+
 
 
 };

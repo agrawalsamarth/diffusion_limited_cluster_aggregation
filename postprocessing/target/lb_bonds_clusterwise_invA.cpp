@@ -3,7 +3,24 @@
 
 int main(int argc, char *argv[])
 {
+    /*std::chrono::steady_clock::time_point cp_1;
+    std::chrono::steady_clock::time_point cp_2;
+    std::chrono::steady_clock::time_point cp_3;
+    std::chrono::steady_clock::time_point cp_4;
+
+    double total_time = 0.;
+    double read_time = 0.;
+
+    cp_1 = std::chrono::steady_clock::now();
+
+    cp_3 = std::chrono::steady_clock::now();*/
     post_p::postprocessing *test = new post_p::postprocessing(argv[1]);
+    /*cp_4 = std::chrono::steady_clock::now();
+
+    read_time  += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_4 - cp_3).count();
+
+    std::cout<<"read time = "<<read_time * 1e-9<<std::endl;*/
+
     FILE *f_time;
     clock_t begin;
     clock_t end;
@@ -13,21 +30,15 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    else if (argc == 3)
-        test->determine_LB_bonds_clusterwise(argv[2]);
+    else
+        test->dump_lb_bonds_for_cluster_via_invA(argv[2]);
 
-    else{
+    /*cp_2 = std::chrono::steady_clock::now();
+    
+    total_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
 
-        begin = clock();
-        test->determine_LB_bonds_clusterwise(argv[2]);
-        end = clock();
-
-        f_time = fopen(argv[3],"w");
-        fprintf(f_time, "cpu_time\n");
-        fprintf(f_time, "%lf\n", double(end - begin)/CLOCKS_PER_SEC);
-        fclose(f_time);
-
-    }
+    std::cout<<"total time = "<<total_time * 1e-9<<std::endl;*/
+    
 
     return 0;
 }

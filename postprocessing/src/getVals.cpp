@@ -124,6 +124,13 @@ namespace post_p
   postprocessing::is_placed(const int i)
   { return is_placed_[i]; }
 
+  bool
+  postprocessing::attachments_placed(const int i) const
+  { return attachments_placed_[i]; }
+  bool&
+  postprocessing::attachments_placed(const int i)
+  { return attachments_placed_[i]; }
+
   double
   postprocessing::unfolded_coords(const int i, const int axis) const
   { return unfolded_coords_[axis+D_*i]; }

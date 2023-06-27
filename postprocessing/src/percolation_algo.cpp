@@ -140,6 +140,7 @@ void postprocessing::reset_unfolding_params()
     for (int j = 0; j < numParticles(); j++){
 
         is_placed(j) = false;
+        attachments_placed(j) = false;
 
         for (int axis = 0; axis < dim(); axis++)
             unfolded_coords(j,axis) = 0.;
@@ -419,7 +420,11 @@ void postprocessing::unfold_for_lbp(const int prev, const int next, bool build_p
                     if ((posDiff(axis) > halfL(axis)) || (posDiff(axis) < -halfL(axis))){
                         cluster_percolation(total_lbp,axis) = 1;
                         temp_lbp_[axis]++;
-                        path_percolation = true;
+
+                        //if (axis == per_axis){
+                            path_percolation = true;
+                            //std::cout<<"axis = "<<axis<<"per_axis = "<<per_axis<<std::endl;
+                        //}
                     }
 
                 }
@@ -448,8 +453,10 @@ void postprocessing::martin_test(char *lb_file)
     while (getline(parser,str)){
 
         results = split_string_by_delimiter(str, ',');
-        str = results[1];
+        str = results[0];
+        //std::cout<<str<<std::endl;
         results = split_string_by_delimiter(str, '-');
+        std::cout<<stoi(results[0])<<"\t"<<(results[1])<<std::endl;
         lb_bonds_str.push_back(str);
         lb_bonds.push_back({stoi(results[0]), stoi(results[1])});
 
@@ -491,6 +498,9 @@ void postprocessing::martin_test(char *lb_file)
 void postprocessing::makeCombiUtil(int n, int left, int k)
 {
 	// Pushing this vector to a vector of vector
+
+    //std::cout<<"axis = "<<axis<<std::endl;
+
 	if (k == 0) {
 
         if (path_percolation){
@@ -573,22 +583,30 @@ void postprocessing::lbp_brute_force()
 
     path_percolation = true;
 
-    for (int i = 1; i < num_bonds; i++) {
+    std::cout<<"bond"<<std::endl;
 
-        makeCombi(num_bonds, i);
+    //for (int axis = 0; axis < dim(); axis++){
 
-        if (!path_percolation){
+        reset_bond_map(true);
+        path_percolation = true;
+        ans.clear();
 
-            std::cout<<"bonds"<<std::endl;
+        for (int i = 1; i < num_bonds; i++) {
 
-            for (int k = 0; k < ans.size(); k++)
-                std::cout<<unique_bonds[ans[k]].first<<"-"<<unique_bonds[ans[k]].second<<"\n";
+            makeCombi(num_bonds, i);
 
-            break;
+            if (!path_percolation){
+
+                for (int k = 0; k < ans.size(); k++)
+                    std::cout<<unique_bonds[ans[k]].first<<"-"<<unique_bonds[ans[k]].second<<"\n";
+
+                break;
+
+            }
 
         }
 
-    }
+    //}
 
 
 
