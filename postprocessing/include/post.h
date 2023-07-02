@@ -211,6 +211,7 @@ class postprocessing
 
     void init_lbb_unfolding_without_recursion();
     void unfold_for_clusterwise_without_recursion(int i);
+    void calc_total_bonds();
     
 
     private:
@@ -374,7 +375,24 @@ class postprocessing
 
     int i_map;
     int j_map;
+    int total_num_bonds;
 
+    std::chrono::steady_clock::time_point unf_cp_1;
+    std::chrono::steady_clock::time_point unf_cp_2;
+    std::chrono::steady_clock::time_point unf_cp_3;
+    std::chrono::steady_clock::time_point unf_cp_4;
+    std::chrono::steady_clock::time_point unf_cp_5;
+    std::chrono::steady_clock::time_point unf_cp_6;
+    std::chrono::steady_clock::time_point unf_cp_7;
+
+    double unf_time_1 = 0.;
+    double unf_time_2 = 0.;
+    double unf_time_3 = 0.;
+    double unf_time_4 = 0.;
+    double unf_time_5 = 0.;
+    double unf_time_6 = 0.;
+
+    int unf_checkpoint = 0;
 
 
 };

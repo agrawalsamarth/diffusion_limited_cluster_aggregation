@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    /*std::chrono::steady_clock::time_point cp_1;
+    std::chrono::steady_clock::time_point cp_1;
     std::chrono::steady_clock::time_point cp_2;
     std::chrono::steady_clock::time_point cp_3;
     std::chrono::steady_clock::time_point cp_4;
@@ -13,13 +13,13 @@ int main(int argc, char *argv[])
 
     cp_1 = std::chrono::steady_clock::now();
 
-    cp_3 = std::chrono::steady_clock::now();*/
+    cp_3 = std::chrono::steady_clock::now();
     post_p::postprocessing *test = new post_p::postprocessing(argv[1]);
-    /*cp_4 = std::chrono::steady_clock::now();
+    cp_4 = std::chrono::steady_clock::now();
 
     read_time  += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_4 - cp_3).count();
 
-    std::cout<<"read time = "<<read_time * 1e-9<<std::endl;*/
+    std::cout<<"read time = "<<read_time * 1e-9<<std::endl;
 
     FILE *f_time;
     clock_t begin;
@@ -33,11 +33,11 @@ int main(int argc, char *argv[])
     else
         test->dump_lb_bonds_for_cluster_via_invA(argv[2]);
 
-    /*cp_2 = std::chrono::steady_clock::now();
+    cp_2 = std::chrono::steady_clock::now();
     
     total_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
 
-    std::cout<<"total time = "<<total_time * 1e-9<<std::endl;*/
+    std::cout<<"total time = "<<total_time * 1e-9<<std::endl;
     
 
     return 0;
