@@ -284,32 +284,6 @@ void postprocessing::init_lbb_cluster_matrices()
 
 }
 
-void postprocessing::modify_A_matrix()
-{
-    a_i = unique_bonds[max_row].first;
-    a_j = unique_bonds[max_row].second;
-
-    if (a_i == (num_particles_for_cluster-1)){
-        A.coeffRef(a_j,a_j) += 1;
-    }
-
-    else if (a_j == (num_particles_for_cluster-1)){
-        A.coeffRef(a_i, a_i) += 1;
-    }
-
-    else{
-
-        A.coeffRef(a_i,a_j)  = 0;
-        A.coeffRef(a_j,a_i)  = 0;
-        A.coeffRef(a_i,a_i) += 1;
-        A.coeffRef(a_j,a_j) += 1;
-
-    }
-
-
-
-}
-
 void postprocessing::print_lbb_info()
 {
 
@@ -423,27 +397,27 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
         //cp_7 = std::chrono::steady_clock::now();
 
-        cp_1 = std::chrono::steady_clock::now();
+        //cp_1 = std::chrono::steady_clock::now();
         init_lbb_unfolding_without_recursion();
         //init_lbb_unfolding();
-        cp_2 = std::chrono::steady_clock::now();
+        //cp_2 = std::chrono::steady_clock::now();
 
-        unf_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
+        //unf_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
 
 
         if (num_particles_for_cluster >= min_cluster_size) {
 
             //std::cout<<"cluster size = "<<num_particles_for_cluster<<"\t num bonds = "<<num_bonds_for_cluster<<"\t time = "<<(unf_time * 1e-9)<<std::endl;
 
-            cp_3 = std::chrono::steady_clock::now();
+            //cp_3 = std::chrono::steady_clock::now();
             init_lbb_cluster_matrices();
-            num_A_constructions++;
-            cp_4 = std::chrono::steady_clock::now();
+            //num_A_constructions++;
+            //cp_4 = std::chrono::steady_clock::now();
 
-            A_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_4 - cp_3).count();
+            //A_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_4 - cp_3).count();
 
 
-            cp_5 = std::chrono::steady_clock::now();
+            //cp_5 = std::chrono::steady_clock::now();
 
             do {
 
@@ -455,6 +429,9 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
                 solver.analyzePattern(A);
                 solver.factorize(A);
+
+
+                //std::cout<<"lbb = "<<n_lbb<<std::endl;
 
                 for (int axis = 0; axis < dim(); axis++){
 
@@ -475,9 +452,9 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
             } while(max_length > lbp_tolerance);
 
-            cp_6 = std::chrono::steady_clock::now();
+            //cp_6 = std::chrono::steady_clock::now();
 
-            invA_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_6 - cp_5).count();
+            //invA_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_6 - cp_5).count();
 
 
 
@@ -495,10 +472,10 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
     fclose(f_lbp);
 
-    std::cout<<"unfolding time = "<<unf_time * 1e-9<<std::endl;
-    std::cout<<"A time = "<<A_time * 1e-9<<std::endl;
-    std::cout<<"invA time = "<<invA_time * 1e-9<<std::endl;
-    std::cout<<"n_lbb = "<<n_lbb<<std::endl;
+    //std::cout<<"unfolding time = "<<unf_time * 1e-9<<std::endl;
+    //std::cout<<"A time = "<<A_time * 1e-9<<std::endl;
+    //std::cout<<"invA time = "<<invA_time * 1e-9<<std::endl;
+    //std::cout<<"n_lbb = "<<n_lbb<<std::endl;
     //std::cout<<"num_A_constructions = "<<num_A_constructions<<std::endl;
     //std::cout<<"num_invAb_ops = "<<num_invAb_ops<<std::endl;
 
@@ -582,65 +559,6 @@ void postprocessing::put_particles_back_in_box(int axis)
 
 }
 
-/*void postprocessing::build_A_for_cluster()
-{
-
-    int i,j;
-    //int index_i, index_j;
-
-    for (int index = 0; index < num_bonds_for_cluster; index++){
-
-        cp_A1 = std::chrono::steady_clock::now();
-
-        i = unique_bonds[index].first;
-        j = unique_bonds[index].second;
-
-        cp_A2 = std::chrono::steady_clock::now();
-
-        time_A1 += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_A2 - cp_A1).count();
-
-        //index_i = index_to_particles[i];
-        //index_j = index_to_particles[j];
-
-        /*if (bond_map_status.count({index_i,index_j}) == 0){
-            std::cout<<"problem with A"<<std::endl;
-        }
-
-        //if (bond_map_status[{index_i,index_j}] == 1){
-
-        cp_A3 = std::chrono::steady_clock::now();
-
-            if (i == (num_particles_for_cluster-1)){
-                A.coeffRef(j,j) -= 1;
-            }
-
-            else if (j == (num_particles_for_cluster-1)){
-                A.coeffRef(i,i) -= 1;
-            }
-
-            else{
-
-                A.coeffRef(i,j) += 1;
-                A.coeffRef(j,i) += 1;
-                A.coeffRef(i,i) -= 1;
-                A.coeffRef(j,j) -= 1;
-
-            }
-
-        cp_A4 = std::chrono::steady_clock::now();
-
-        time_A2 += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_A4 - cp_A3).count();
-
-
-        //}
-
-
-    }
-
-    //std::cout<<"old method"<<std::endl;
-
-}*/
-
 void postprocessing::build_A_for_cluster()
 {
 
@@ -701,12 +619,6 @@ void postprocessing::build_A_for_cluster()
 
 }
 
-
-void postprocessing::switch_off_transverse_forces(int axis)
-{    
-    return;
-}
-
 void postprocessing::build_b_for_cluster(int axis)
 {
 
@@ -749,6 +661,31 @@ void postprocessing::build_b_for_cluster(int axis)
     }
 
 }
+
+void postprocessing::modify_A_matrix()
+{
+    a_i = unique_bonds[max_row].first;
+    a_j = unique_bonds[max_row].second;
+
+    if (a_i == (num_particles_for_cluster-1)){
+        A.coeffRef(a_j,a_j) += 1;
+    }
+
+    else if (a_j == (num_particles_for_cluster-1)){
+        A.coeffRef(a_i, a_i) += 1;
+    }
+
+    else{
+
+        A.coeffRef(a_i,a_j)  = 0;
+        A.coeffRef(a_j,a_i)  = 0;
+        A.coeffRef(a_i,a_i) += 1;
+        A.coeffRef(a_j,a_j) += 1;
+
+    }
+
+}
+
 
 void postprocessing::copy_b()
 {
