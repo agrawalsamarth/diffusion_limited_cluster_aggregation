@@ -50,18 +50,6 @@ on_lattice<type>::on_lattice(const int dim, type *box_lengths, std::vector<bound
 }
 
 template <typename type>
-on_lattice<type>::~on_lattice()
-{
-
-    free(temp_pos);
-    free(neighbour_pos);
-    free(L_eff);
-    free(grid);
-    //free(agg_grid);
-
-}
-
-template <typename type>
 type on_lattice<type>::get_L(const int axis)
 { return L[axis]; }
 
@@ -220,6 +208,26 @@ void on_lattice<type>::clear_cell_field()
 template <typename type>
 int on_lattice<type>::get_periodicity(const int axis)
 {return periodic[axis];}
+
+template <typename type>
+on_lattice<type>::~on_lattice()
+{
+
+    free(temp_pos);
+    free(neighbour_pos);
+    free(L_eff);
+    free(grid);
+    free(L);
+    free(temp_pos);
+    free(neighbour_pos);
+    free(L_eff);
+    free(periodic);
+    box_bc.resize(0);
+    box_bc.shrink_to_fit();
+
+    //free(agg_grid);
+
+}
 
 template class on_lattice<int>;
 template class on_lattice<double>;

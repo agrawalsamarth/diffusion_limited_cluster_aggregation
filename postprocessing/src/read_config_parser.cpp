@@ -6,6 +6,13 @@ namespace post_p
 void postprocessing::read_config_parser(char *config_filename)
 {
 
+    /*struct rusage myusage;
+    getrusage(RUSAGE_SELF, &myusage);
+
+    long baseline = myusage.ru_maxrss;
+
+    std::cout<<"baseline = "<<baseline<<std::endl;*/
+
     std::ifstream parser(config_filename, std::ifstream::in);
     int count = 0;
 
@@ -107,6 +114,10 @@ void postprocessing::read_config_parser(char *config_filename)
 
     for (int axis = 0; axis < dim(); axis++)
         temp_lbp_[axis] = 0;
+
+    
+    //getrusage(RUSAGE_SELF, &myusage);
+    //std::cout<<"extra = "<<(myusage.ru_maxrss - baseline)<<std::endl;
 
 }
 

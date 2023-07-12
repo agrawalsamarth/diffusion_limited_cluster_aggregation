@@ -24,6 +24,7 @@ class dlma_system_offlattice: public dlma_system<type>{
         std::vector<coll_deets> build_collision_list(int i, double alpha, type *dr);
         coll_deets calc_quad_eqn(type *dr, double alpha, constituent<type> *ref_particle, constituent<type> *nb_particle);
         type fix_overlap(const int i, type *dr);
+        void init_erdos_renyi();
         constituent<type> *image;
         std::vector<int>   actual_list;
         std::vector<int>   image_list;

@@ -3,9 +3,18 @@
 namespace post_p
 {
 
+void postprocessing::print_mem_usage()
+{
+    getrusage(RUSAGE_SELF, &myusage);
+    std::cout<<" = "<<(1. * myusage.ru_maxrss)/1e3<<std::endl;
+}
+
 void postprocessing::dump_lb_bonds_for_cluster_via_invA(char *filename)
 {
     //std::cout<<"1 new"<<std::endl;
+    //getrusage(RUSAGE_SELF, &myusage);
+    //baseline = myusage.ru_maxrss;
+    //std::cout<<"on entering dump function = "<<(1. * baseline)/1e3<<std::endl;;
     determine_LB_bonds_clusterwise(filename);
     //std::cout<<"2"<<std::endl;
 }
@@ -344,17 +353,21 @@ void postprocessing::print_minimized_coords(char *filename, int filenum)
 
     for (int i = 0; i < num_particles_for_cluster; i++){
 
-        p_index = particles_to_index[i];
-        f_coords<<i<<",";
+        //p_index = particles_to_index[i];
+        p_index = index_to_particles[i];
+        //std::cout<<"i = "<<i<<"\t p_index = "<<std::endl;
+        f_coords<<p_index<<",";
 
         for (int axis = 0; axis < dim(); axis++){
 
             if (axis == (dim()-1)){
-                f_coords<<modified_folded_x(p_index,axis)<<"\n";
+                //f_coords<<modified_folded_x(p_index,axis)<<"\n";
+                f_coords<<modified_folded_x(i,axis)<<"\n";
             }
 
             else{
-                f_coords<<modified_folded_x(p_index,axis)<<",";
+                //f_coords<<modified_folded_x(p_index,axis)<<",";
+                f_coords<<modified_folded_x(i,axis)<<",";
             }
 
         }
@@ -366,7 +379,7 @@ void postprocessing::print_minimized_coords(char *filename, int filenum)
 
 void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 {
-
+    
     std::chrono::steady_clock::time_point cp_1;
     std::chrono::steady_clock::time_point cp_2;
     std::chrono::steady_clock::time_point cp_3;
@@ -376,21 +389,29 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
     std::chrono::steady_clock::time_point cp_7;
     std::chrono::steady_clock::time_point cp_8;
 
+    //std::cout<<"on entering determine function";print_mem_usage();
+
     double unf_time = 0.;
     double A_time = 0.;
     double invA_time = 0.;
     double while_loop_time = 0.;
 
-    int min_cluster_size = L(0);
+    int min_cluster_size = 3;
 
     set_lbb_params(filename);
 
     int num_A_constructions = 0;
     int num_invAb_ops = 0;
 
+    //std::cout<<"before to_build_list";print_mem_usage();
     to_build_list.resize(numParticles());
+    //std::cout<<"after to_build_list";print_mem_usage();
     calc_total_bonds();
+    //std::cout<<"before unique bonds";print_mem_usage();
     unique_bonds.resize(total_num_bonds);
+    //std::cout<<"after unique bonds";print_mem_usage();
+
+    //std::cout<<"after init bullshit";print_mem_usage();
 
     
     while (!check_if_particles_placed()) {
@@ -398,7 +419,9 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
         //cp_7 = std::chrono::steady_clock::now();
 
         //cp_1 = std::chrono::steady_clock::now();
+        //std::cout<<"before unfolding";print_mem_usage();
         init_lbb_unfolding_without_recursion();
+        //std::cout<<"after unfolding";print_mem_usage();
         //init_lbb_unfolding();
         //cp_2 = std::chrono::steady_clock::now();
 
@@ -410,7 +433,9 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
             //std::cout<<"cluster size = "<<num_particles_for_cluster<<"\t num bonds = "<<num_bonds_for_cluster<<"\t time = "<<(unf_time * 1e-9)<<std::endl;
 
             //cp_3 = std::chrono::steady_clock::now();
+            //std::cout<<"before init lbb matrices";print_mem_usage();
             init_lbb_cluster_matrices();
+            //std::cout<<"after init lbb matrices";print_mem_usage();
             //num_A_constructions++;
             //cp_4 = std::chrono::steady_clock::now();
 
@@ -419,17 +444,22 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
             //cp_5 = std::chrono::steady_clock::now();
 
+            
             do {
 
-                
+                //std::cout<<"before modify coords";print_mem_usage();
                 modify_coords_for_cluster();
+                //std::cout<<"after modify coords";print_mem_usage();
                 
-                if (!A.isCompressed())
+                if (!A.isCompressed()){
                     A.makeCompressed();
+                    //std::cout<<"test"<<std::endl;
+                }
 
+                //std::cout<<"before analyze pattern";print_mem_usage();
                 solver.analyzePattern(A);
                 solver.factorize(A);
-
+                //std::cout<<"after analyze pattern";print_mem_usage();
 
                 //std::cout<<"lbb = "<<n_lbb<<std::endl;
 
@@ -443,6 +473,7 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
                 }
                 
+                //std::cout<<"after solving pattern";print_mem_usage();
 
                 calculate_bond_lengths_for_cluster();
 
@@ -455,6 +486,7 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
             //cp_6 = std::chrono::steady_clock::now();
 
             //invA_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_6 - cp_5).count();
+            
 
 
 

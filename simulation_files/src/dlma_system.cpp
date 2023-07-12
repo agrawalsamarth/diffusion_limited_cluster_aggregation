@@ -2,20 +2,6 @@
 
 namespace simulation{
 
-/*template<typename type>
-std::vector<std::string> dlma_system<type>::split_string_by_delimiter(const std::string& s, char delimiter)
-{
-   std::vector<std::string> tokens;
-   std::string token;
-   std::istringstream tokenStream(s);
-   while (std::getline(tokenStream, token, delimiter))
-   {
-      tokens.push_back(token);
-   }
-   return tokens;
-}*/
-
-
 template<typename type>
 void dlma_system<type>::read_params_parser(char *params_name)
 {
@@ -89,6 +75,10 @@ void dlma_system<type>::read_params_parser(char *params_name)
         if (results[0] == "system"){
             //strcpy(system_type.c_str(), results[1].c_str());
             system_type = results[1];
+        }
+
+        if (results[0] == "distance_metric_rgg"){
+            distance_metric_rgg = stoi(results[1]);
         }
 
     }
@@ -177,8 +167,11 @@ void dlma_system<type>::read_params_parser(char *params_name)
     else if (system_type == "random_site_percolation")
         check_for_percolation_params();
 
+    else if (system_type == "erdos_renyi")
+        check_for_erdos_renyi_params();
+
     else{
-        std::cout<<system_type<<"is an unknown system type"<<std::endl;
+        std::cout<<system_type<<" is an unknown system type"<<std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -366,6 +359,10 @@ void dlma_system<type>::check_for_percolation_params()
     seed_mass = 1.;
 
 }
+
+template<typename type>
+void dlma_system<type>::check_for_erdos_renyi_params()
+{return;}
 
 template<typename type>
 void dlma_system<type>::calculate_propensity()
@@ -610,6 +607,22 @@ type dlma_system<type>::get_interparticle_distance(constituent<type> *p_1, const
 }
 
 template<typename type>
+double dlma_system<type>::get_manhattan_distance(constituent<type> *p_1, constituent<type> *p_2)
+{
+    r2 = 0.;
+
+    for (int axis = 0; axis < D; axis++){
+        temp_r = box->get_periodic_distance(p_1->pos(axis), p_2->pos(axis), axis);
+        r2    += fabs(temp_r);
+    }
+
+    
+    return r2;
+
+
+}
+
+template<typename type>
 constituent<type>* dlma_system<type>::get_particle_by_index(const int i)
 {
     return all_particles[i];
@@ -641,6 +654,27 @@ void dlma_system<type>::build_idx_map_for_agg()
     }
 
     //print_agg_map();
+
+}
+
+template<typename type>
+dlma_system<type>::~dlma_system()
+{
+    free(L_flag);
+    free(periodic_flag);
+    free(L);
+    free(halfL);
+
+    for (auto temp_delete_p : all_particles)
+        delete temp_delete_p;
+
+    for (auto temp_delete_p : aggregates)
+        delete temp_delete_p;
+
+    delete box;
+
+    //std::cout<<"aaya to yahaan"<<std::endl;
+
 
 }
 

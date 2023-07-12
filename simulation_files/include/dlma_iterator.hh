@@ -12,12 +12,14 @@ class dlma_iterator: public system_iterator<type>{
     public:
 
         dlma_iterator(char *filename);
+        ~dlma_iterator();
         void run_system();
         void iteration_step();
         void save_config_file();
         void save_config_file(char *filename);
         void create_movie_files(char *filename);
         void run_system_for_percolation();
+        void run_system_for_erdos_renyi();
 
 
 
@@ -31,7 +33,6 @@ class dlma_iterator: public system_iterator<type>{
         check_aggregation<type> *aggregation_check_obj;
         particle_movement<type> *movement_test;
         save_config<type> *save_obj;
-
         iterator_factory<type> *factory;
 
 

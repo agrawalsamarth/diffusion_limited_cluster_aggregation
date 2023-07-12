@@ -160,6 +160,8 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
     int random_index;
     int pos_index;
 
+    //std::cout<<"1 init"<<std::endl;
+
     for (int i = 0; i < this->N; i++){
 
         //if (this->dis(this->generator) < this->phi){
@@ -187,6 +189,10 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
 
     }
 
+    //std::cout<<"size of = "<<sizeof(&temp)<<std::endl;
+
+    //std::cout<<"2 init"<<std::endl;
+
     name_type = "cluster";
 
     for (int i = 0; i < this->N; i++){
@@ -200,6 +206,8 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
 
     }
 
+    //std::cout<<"3 init"<<std::endl;
+
     /*for (int i = 0; i < this->aggregates.size(); i++){
         this->aggregates[i]->add_agg_to_cell();
     }*/
@@ -209,6 +217,8 @@ void dlma_system_onlattice<type>::initialize_system_for_percolation()
 
     for (int i = 0; i < this->N; i++)
         this->add_attachment(this->aggregates[i]);
+
+    //std::cout<<"4 init"<<std::endl;
     
 
 }
@@ -398,6 +408,18 @@ void dlma_system_onlattice<type>::print_grid()
         std::cout<<"\n"<<std::endl;
     }
 
+}
+
+template<typename type>
+dlma_system_onlattice<type>::~dlma_system_onlattice()
+{
+    free(L_eff);
+    free(temp_arr);
+    free(axis_arr);
+    free(neighbour_pos);
+    //std::cout<<"yahaan bhi"<<std::endl;
+
+    delete this->box;
 }
 
 template class dlma_system_onlattice<int>;

@@ -42,6 +42,10 @@ postprocessing::~postprocessing()
         free(unfolded_coords_);
         free(unfolded_num_attachments_);
         free(cluster_percolation_);
+        free(radius_);
+        free(attachments_placed_);
+        free(load_bearing_paths_);
+        free(temp_lbp_);
 
 }
 

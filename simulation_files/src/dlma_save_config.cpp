@@ -308,6 +308,13 @@ void dlma_save_config<type>::save_configuration()
 
 }
 
+template<typename type>
+dlma_save_config<type>::~dlma_save_config()
+{
+    print_data.resize(0);
+    print_data.shrink_to_fit();
+}
+
 template class dlma_save_config<int>;
 template class dlma_save_config<double>;
 

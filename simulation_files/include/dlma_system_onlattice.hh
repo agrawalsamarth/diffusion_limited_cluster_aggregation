@@ -11,6 +11,7 @@ class dlma_system_onlattice: public dlma_system<type>{
     public:
 
         dlma_system_onlattice(char *params_name);
+        ~dlma_system_onlattice();
         void initialize_system();
         bool check_viability(constituent<type> *c_1, type *dr);
         void move_aggregate(int i, type *dr);
@@ -28,6 +29,7 @@ class dlma_system_onlattice: public dlma_system<type>{
         int  get_index_from_array(type *arr);
         void build_site_vector_for_rsp();
 
+        
         std::vector<int> available_sites;
 
         int *L_eff;

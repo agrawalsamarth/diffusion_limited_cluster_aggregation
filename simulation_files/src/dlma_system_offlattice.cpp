@@ -4,12 +4,24 @@ namespace simulation{
 
 template <typename type>
 dlma_system_offlattice<type>::dlma_system_offlattice(char *params_name)
-{
+{ 
+    //std::cout<<"offlattice 1"<<std::endl;
     this->read_params_parser(params_name);
-    initialize_system();
+    //std::cout<<"offlattice 2"<<std::endl;
 
-    int N_pair = (this->N * (this->N - 1))/2; 
-    rij = (double*)malloc(sizeof(double)*N_pair);
+    if (this->system_type == "dlma"){
+        initialize_system();
+        int N_pair = (this->N * (this->N - 1))/2; 
+        rij = (double*)malloc(sizeof(double)*N_pair);
+    }
+
+    else if (this->system_type == "erdos_renyi"){
+        init_erdos_renyi();
+    }
+
+    else {
+        std::cout<<"please check system type"<<std::endl;
+    }
 
 
 }
@@ -89,6 +101,107 @@ void dlma_system_offlattice<type>::initialize_system()
     this->calculate_propensity();
     this->build_idx_map_for_agg();
     
+}
+
+template <typename type>
+void dlma_system_offlattice<type>::init_erdos_renyi()
+{
+    constituent<type> *temp;
+    std::string name_type = "particle";
+
+    type distance;
+    bool is_placed;
+
+    double temp_r;
+    double temp_phi;
+
+    for (int i = 0; i < this->N; i++){
+
+        temp = this->factory.create_constituent(i, this->lattice, this->D, name_type, this->box);
+        temp->set_diameter(1.);    
+        temp->set_mass(1.);
+        temp->set_original_seed_status(1);
+        temp->set_current_seed_status(1);
+
+        is_placed = false;
+    
+        while (!is_placed){
+
+            //for (int axis = 0; axis < this->D; axis++)
+            temp_r   = this->dis(this->generator);
+            temp_phi = 2. * M_PI *  this->dis(this->generator);
+            /*temp->pos(0)  = this->L[0] * temp_r * sin(temp_phi) * 0.5;
+            temp->pos(1)  = this->L[1] * temp_r * cos(temp_phi) * 0.5;
+            temp->pos(0) += 0.5 * this->L[0];
+            temp->pos(1) += 0.5 * this->L[1];*/
+
+            for (int axis = 0; axis < this->D; axis++)
+                temp->pos(axis) = this->L[axis] * this->dis(this->generator);
+
+
+            //std::cout<<temp->pos(0)<<"\t"<<temp->pos(1)<<std::endl;
+
+            is_placed = true;
+            
+            /*for (int j = 0; j < i; j++){
+        
+                distance = this->get_interparticle_distance(temp, this->all_particles[j]);
+
+                if (distance < ((1.+this->tolerance) * 0.5 * (temp->get_diameter() + this->all_particles[j]->get_diameter()))){
+                    is_placed = false;
+                    break;
+                }
+
+            }*/           
+
+        }
+
+        //temp->add_constituent_to_cell();
+        this->all_particles.push_back(temp);
+
+    }
+
+    //for (int i = 0; i < this->N; i++)
+        //std::cout<<this->all_particles[i]->pos(0)<<"\t"<<this->all_particles[i]->pos(1)<<std::endl;
+
+    //std::cout<<"size = "<<this->attachments.size()<<std::endl;
+    this->attachments.resize(this->N);
+
+    double rcg_distance = 0.;
+
+    if (this->distance_metric_rgg == 1){
+
+        for (int i = 0; i < this->N; i++){
+            for (int j = i+1; j < this->N; j++){
+
+                
+                    rcg_distance = this->get_interparticle_distance(this->all_particles[i], this->all_particles[j]);
+
+                    if (rcg_distance < this->phi)
+                        this->add_attachment(i, j);
+                
+
+            }
+        }
+
+    }
+
+    else {
+
+        for (int i = 0; i < this->N; i++){
+            for (int j = i+1; j < this->N; j++){
+
+                    rcg_distance = this->get_manhattan_distance(this->all_particles[i], this->all_particles[j]);
+                    //std::cout<<"rcg_distance = "<<rcg_distance<<std::endl;
+                
+                    if (rcg_distance < this->phi)
+                        this->add_attachment(i, j);
+                
+            }
+        }
+
+    }
+
 }
 
 /*template <typename type>

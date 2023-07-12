@@ -322,6 +322,26 @@ void dlma_iterator<type>::run_system_for_percolation()
     return;
 }
 
+template <typename type>
+void dlma_iterator<type>::run_system_for_erdos_renyi()
+{
+    return;
+}
+
+template <typename type>
+dlma_iterator<type>::~dlma_iterator()
+{
+
+    delete sys_state;
+    delete binding_obj;
+    delete agg_condition;
+    delete aggregation_check_obj;
+    delete movement_test;
+    delete save_obj;
+    delete factory;
+
+
+}
 
 template class dlma_iterator<int>;
 template class dlma_iterator<double>;

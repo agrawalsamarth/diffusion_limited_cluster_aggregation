@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     //cp_2 = std::chrono::steady_clock::now();    
     //total_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
     //std::cout<<"total time = "<<total_time * 1e-9<<std::endl;
-    
 
+    delete test;
     return 0;
 }

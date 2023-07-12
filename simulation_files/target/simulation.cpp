@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
             test->save_config_file();
         else
             test->save_config_file(argv[2]);
+
+        delete test;
         
     }
 
@@ -59,6 +61,8 @@ int main(int argc, char *argv[])
             test->save_config_file();
         else
             test->save_config_file(argv[2]);
+
+        delete test;
     }
 
     else if((sys_name == "random_site_percolation") && (lattice_val == 1)){
@@ -70,6 +74,20 @@ int main(int argc, char *argv[])
         else
             test->save_config_file(argv[2]);
 
+        delete test;
+    }
+
+    else if(sys_name == "erdos_renyi"){
+        system_iterator<double> *test = new dlma_iterator<double>(argv[1]);
+        test->run_system_for_erdos_renyi();
+
+        if (argc < 3)
+            test->save_config_file();
+
+        else
+            test->save_config_file(argv[2]);
+
+        delete test;
     }
 
     else{

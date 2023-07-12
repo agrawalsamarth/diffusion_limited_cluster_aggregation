@@ -50,6 +50,8 @@ save_config<type>* iterator_factory<type>::create_save_config(std::string name_t
     if (strcmp(name_type.c_str(), "dlma")==0)
         return new dlma_save_config<type>(ref_sys, ref_box);
     else if (strcmp(name_type.c_str(), "random_site_percolation")==0)
+        return new dlma_save_config<type>(ref_sys, ref_box);
+    else if (strcmp(name_type.c_str(), "erdos_renyi")==0)
         return new dlma_save_config<type>(ref_sys, ref_box);        
     else{
         std::cout<<"unknown system type"<<std::endl;
@@ -80,6 +82,8 @@ system<type>* iterator_factory<type>::create_new_system(std::string name_type, i
     if ((strcmp(name_type.c_str(), "dlma")==0) && (lattice == 1))
         return new dlma_system_onlattice<type>(filename);
     else if ((strcmp(name_type.c_str(), "dlma")==0) && (lattice == 0))
+        return new dlma_system_offlattice<type>(filename);
+    else if ((strcmp(name_type.c_str(), "erdos_renyi")==0))
         return new dlma_system_offlattice<type>(filename);
     else if ((strcmp(name_type.c_str(), "random_site_percolation")==0) && (lattice == 1))
         return new dlma_system_onlattice<type>(filename);

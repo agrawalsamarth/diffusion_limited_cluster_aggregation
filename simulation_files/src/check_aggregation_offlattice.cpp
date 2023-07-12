@@ -65,7 +65,15 @@ void check_aggregation_offlattice<type>::check_for_aggregation(constituent<type>
     }
 
 
-} 
+}
+
+template<typename type>
+check_aggregation_offlattice<type>::~check_aggregation_offlattice()
+{
+    delete temp;
+    delete particle_1;
+    delete particle_2;
+}
 
 template class check_aggregation_offlattice<int>;
 template class check_aggregation_offlattice<double>;

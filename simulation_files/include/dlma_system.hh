@@ -11,6 +11,7 @@ class dlma_system: public system<type>{
     public:
 
         //virtual std::vector<std::string> split_string_by_delimiter(const std::string& s, char delimiter);
+        virtual ~dlma_system();
         virtual void read_params_parser(char *params_name);
         virtual void initialize_system() {};
 
@@ -103,11 +104,14 @@ class dlma_system: public system<type>{
         int     latest_cluster_id=0;
         double  tolerance;
         bool    tolerance_flag=false;
+        int     distance_metric_rgg=0;
 
         bool    is_viable;
         type    temp_r;
         type    r2;
         std::string system_type = "none";
+
+        double get_manhattan_distance(constituent<type> *p_1, constituent<type> *p_2);
 
     
     private:
@@ -116,6 +120,8 @@ class dlma_system: public system<type>{
         void check_for_percolation_params();
         int agg_id;
         void print_agg_map();
+        void check_for_erdos_renyi_params();
+        
 
 };
 

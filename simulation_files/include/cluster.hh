@@ -11,6 +11,7 @@ class cluster: public constituent<type>{
     public:
 
         cluster(const int cluster_id, const int dim, simulation_box<type> *system_box);
+        ~cluster();
 
         void move(type *delta_x);
 

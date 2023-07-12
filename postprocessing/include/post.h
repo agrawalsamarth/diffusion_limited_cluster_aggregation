@@ -14,6 +14,7 @@
 #include <bits/stdc++.h>
 #include <Eigen/Sparse>
 #include <chrono>
+#include <sys/resource.h>
 
 #ifndef POSTPROCESSING_H
 #define POSTPROCESSING_H
@@ -212,6 +213,8 @@ class postprocessing
     void init_lbb_unfolding_without_recursion();
     void unfold_for_clusterwise_without_recursion(int i);
     void calc_total_bonds();
+
+    void print_mem_usage();
     
 
     private:
@@ -393,6 +396,8 @@ class postprocessing
     double unf_time_6 = 0.;
 
     int unf_checkpoint = 0;
+    struct rusage myusage;
+    long baseline;
 
 
 };

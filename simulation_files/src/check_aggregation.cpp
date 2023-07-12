@@ -90,7 +90,15 @@ void check_aggregation_onlattice<type>::check_for_aggregation(constituent<type> 
     }
 
 
-} 
+}
+
+template<typename type>
+check_aggregation_onlattice<type>::~check_aggregation_onlattice()
+{
+    delete temp;
+    delete particle_1;
+    delete particle_2;
+}
 
 template class check_aggregation_onlattice<int>;
 template class check_aggregation_onlattice<double>;
