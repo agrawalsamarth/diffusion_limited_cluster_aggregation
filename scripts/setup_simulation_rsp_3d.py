@@ -101,58 +101,14 @@ def run_simulation(phi, L, seed_pct, rng_seed):
     command = 'rm ' + config_filename
     os.system(command)
     
-def create_dirs_for_mk_table(dim):
-
-    global D
-    
-    D = dim
-
-    global params_dir
-    
-    
-    params_dir = './mk_table/params/'
-    path = Path(params_dir)
-    
-    try:
-        path.mkdir(parents=True, exist_ok=True) 
-    except OSError:
-        pass
-    else:
-        pass
-    
-    
-    global results_dir
-    
-    results_dir = './mk_table/results/'
-    path = Path(results_dir)
-    
-    try:
-        path.mkdir(parents=True, exist_ok=True) 
-    except OSError:
-        pass
-    else:
-        pass
-    
-    global config_files_dir
-    
-    config_files_dir = './mk_table/config_files/'
-    path = Path(config_files_dir)
-    
-    try:
-        path.mkdir(parents=True, exist_ok=True) 
-    except OSError:
-        pass
-    else:
-        pass     
 
 #phi=0.15    
 seeds=100
 seed_pct=100
 dim = 3
 
-#L_range = [1000, 2000, 5000]
-#L_range = [100,125,150,200]
-L_range = [10,20]
+
+L_range = [10,20,40,60,80,100,150,200]
 
 phi_min = 0.005
 phi_max = 0.05
@@ -161,16 +117,17 @@ phi_c = 0.311608
 phi_min += phi_c
 phi_max += phi_c
 
-d_phi   = 0.1 * (phi_max - phi_min)
+total_steps = 15
+d_phi   = (np.log(phi_max/phi_min))/(total_steps)
 
 phi_range = []
 
-for i in range(10):
+for i in range(total_steps):
     
     temp_phi  = phi_min * np.exp(i * (d_phi))
     phi_range.append(temp_phi)
 
-for i in phi_range:
-    for L in L_range:
+for L in L_range:
+    for i in phi_range:
         create_dirs(i, L, seed_pct, dim)
         Parallel(n_jobs=10)(delayed(run_simulation)(i, L, seed_pct, rng_seed) for rng_seed in range(seeds))

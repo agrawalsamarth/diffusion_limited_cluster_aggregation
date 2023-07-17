@@ -150,7 +150,7 @@ seeds=100
 seed_pct=100
 dim = 2
 
-L_range = [1000, 2000, 5000]
+L_range = [50, 75, 100, 200, 500, 1000, 2000]
 
 phi_min = 0.005
 phi_max = 0.05
@@ -159,11 +159,12 @@ phi_c = 0.5927462
 phi_min += phi_c
 phi_max += phi_c
 
-d_phi   = 0.1 * (phi_max - phi_min)
+total_steps = 15
+d_phi   = (np.log(phi_max/phi_min))/(total_steps)
 
 phi_range = []
 
-for i in range(10):
+for i in range(total_steps):
     
     temp_phi  = phi_min * np.exp(i * (d_phi))
     phi_range.append(temp_phi)

@@ -377,6 +377,22 @@ void postprocessing::print_minimized_coords(char *filename, int filenum)
     f_coords.close();
 }
 
+void postprocessing::print_cluster_vals(char *filename)
+{
+    std::string file_test(filename);
+    file_test = file_test.substr(0, file_test.size()-4);
+    std::string full_filename = file_test + "_clusters.csv";
+
+    std::ofstream f_coords;
+    f_coords.open(full_filename, std::ios_base::app);
+
+    for (int i = 0; i < num_particles_for_cluster; i++)
+        f_coords<<to_build_list[i]<<","<<totalClusters_<<"\n";
+
+    f_coords.close();
+
+}
+
 void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 {
     
@@ -388,6 +404,16 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
     std::chrono::steady_clock::time_point cp_6;
     std::chrono::steady_clock::time_point cp_7;
     std::chrono::steady_clock::time_point cp_8;
+
+    std::string file_test(filename);
+    file_test = file_test.substr(0, file_test.size()-4);
+    std::string full_filename = file_test + "_clusters.csv";
+
+    std::ofstream f_coords;
+    f_coords.open(full_filename);
+    f_coords << "id,clusterNumber\n";
+    f_coords.close();
+
 
     //std::cout<<"on entering determine function";print_mem_usage();
 
@@ -413,6 +439,7 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
     //std::cout<<"after init bullshit";print_mem_usage();
 
+    totalClusters_ = 0;
     
     while (!check_if_particles_placed()) {
 
@@ -492,6 +519,7 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
         }
 
+        print_cluster_vals(filename);
         totalClusters_++;
         //cp_8 = std::chrono::steady_clock::now();
         //while_loop_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_8 - cp_7).count();

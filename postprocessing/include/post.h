@@ -215,7 +215,7 @@ class postprocessing
     void calc_total_bonds();
 
     void print_mem_usage();
-    
+    void print_cluster_vals(char *filename);
 
     private:
 
