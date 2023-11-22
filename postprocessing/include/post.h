@@ -168,6 +168,7 @@ class postprocessing
     void copy_positions_for_cluster();
     void unfold_for_clusterwise(int prev, int next);
     void determine_LB_bonds_clusterwise(char *filename);
+    void determine_LB_bonds_network(char *filename);
     void determine_LB_bonds_clusterwise_directionwise(char *filename);
     void determine_LB_bonds_clusterwise_via_cg(char *filename);
     bool check_if_particles_placed();
@@ -216,6 +217,21 @@ class postprocessing
 
     void print_mem_usage();
     void print_cluster_vals(char *filename);
+    void unfold_for_lbp_without_recursion(int i);
+    void comb(int N, int K);
+
+    void set_lbb_params_for_network(char *filename);
+    void print_lbb_info_for_network(char *filename);
+    void dump_LB_bonds_for_network(char *filename);
+    void reset_unfolding_for_network();
+    void add_ghost_particle_to_network_cluster();
+    void fix_A_for_network_cluster();
+    void fix_b_for_network_cluster();
+    void build_A_for_network_cluster();
+    void build_b_for_network_cluster();
+    void init_lbb_cluster_matrices_for_network_cluster();
+    void calculate_bond_lengths_for_network_cluster();
+    bool check_sink_and_source();
 
     private:
 

@@ -40,8 +40,6 @@ bool postprocessing::check_if_particles_placed()
             return false;
     }
 
-    //std::cout<<"bool values = "<<all_particles_placed<<std::endl;
-
     return true;
 
 }
@@ -82,12 +80,7 @@ void postprocessing::set_lbb_params(char *filename)
 
     fprintf(f_lbp,"bond_length\n");
 
-    /*if (!A.isCompressed()){
-        A.makeCompressed();
-    }*/
-
     lbp_tolerance = 1e-6;
-
 
 }
 
@@ -116,20 +109,12 @@ void postprocessing::init_lbb_unfolding()
 
 void postprocessing::init_lbb_unfolding_without_recursion()
 {
-    //unf_cp_1 = std::chrono::steady_clock::now();
-
     num_bonds_for_cluster = 0;
     num_particles_for_cluster = 0;
     unique_bonds.clear();
     index_to_particles.clear();
     particles_to_index.clear();
     to_build_list.clear();
-
-    //unf_cp_2 = std::chrono::steady_clock::now();
-
-    //unf_time_1 += std::chrono::duration_cast<std::chrono::nanoseconds>(unf_cp_2 - unf_cp_1).count();
-
-    //unf_cp_3 = std::chrono::steady_clock::now();
 
     for (int i = unf_checkpoint; i < numParticles(); i++){
         if (is_placed(i) == false){
@@ -150,44 +135,30 @@ void postprocessing::init_lbb_unfolding_without_recursion()
             break;
         }
     }
-
-    //unf_cp_4 = std::chrono::steady_clock::now();
-
-    //unf_time_2 += std::chrono::duration_cast<std::chrono::nanoseconds>(unf_cp_4 - unf_cp_3).count();
-
-    //std::cout<<"num_particles_for_cluster = "<<num_particles_for_cluster<<"\t num_bonds = "<<num_bonds_for_cluster<<std::endl;
-
 }
 
 void postprocessing::unfold_for_clusterwise_without_recursion(int i)
 {
     for (int att = 0; att < numAttachments(i); att++)
     {
-
         index_j = attachment(i, att);
 
-        if (attachments_placed(index_j) == false)
+        if ((attachments_placed(index_j) == false) && (bond_map_status[{i,index_j}] == 1))
         {
 
             if (is_placed(index_j) == false){
                 particles_to_index[index_j] = num_particles_for_cluster;
                 index_to_particles[num_particles_for_cluster] = index_j;
                 is_placed(index_j) = true;
-                //to_build_list.push_back(index_j);
                 to_build_list[num_particles_for_cluster] = index_j;
                 num_particles_for_cluster++;
-
-                //std::cout<<"index_i = "<<i<<"\t index_j = "<<index_j<<std::endl;
             }
 
             i_map = particles_to_index[i];
             j_map = particles_to_index[index_j];
 
-            //unique_bonds.push_back({i_map,j_map});
             unique_bonds[num_bonds_for_cluster] = {i_map,j_map};
             num_bonds_for_cluster += 1;
-
-            //std::cout<<"i = "<<i<<"\t j = "<<index_j<<std::endl;
 
 
         }
@@ -405,14 +376,14 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
     std::chrono::steady_clock::time_point cp_7;
     std::chrono::steady_clock::time_point cp_8;
 
-    std::string file_test(filename);
+    /*std::string file_test(filename);
     file_test = file_test.substr(0, file_test.size()-4);
     std::string full_filename = file_test + "_clusters.csv";
 
     std::ofstream f_coords;
     f_coords.open(full_filename);
     f_coords << "id,clusterNumber\n";
-    f_coords.close();
+    f_coords.close();*/
 
 
     //std::cout<<"on entering determine function";print_mem_usage();
@@ -519,7 +490,7 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
         }
 
-        print_cluster_vals(filename);
+        //print_cluster_vals(filename);
         totalClusters_++;
         //cp_8 = std::chrono::steady_clock::now();
         //while_loop_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_8 - cp_7).count();
@@ -547,8 +518,6 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
 
 }
-
-
 
 void postprocessing::copy_positions_for_cluster()
 {

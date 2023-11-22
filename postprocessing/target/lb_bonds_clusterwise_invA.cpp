@@ -28,8 +28,10 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    else
-        test->dump_lb_bonds_for_cluster_via_invA(argv[2]);
+    else{
+        //test->dump_lb_bonds_for_cluster_via_invA(argv[2]);
+        test->dump_LB_bonds_for_network(argv[2]);
+    }
 
     //cp_2 = std::chrono::steady_clock::now();    
     //total_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();

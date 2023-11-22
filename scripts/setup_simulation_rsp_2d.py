@@ -169,7 +169,7 @@ for i in range(total_steps):
     temp_phi  = phi_min * np.exp(i * (d_phi))
     phi_range.append(temp_phi)
 
-for i in phi_range:
-    for L in L_range:
+for L in L_range:
+    for i in phi_range:
         create_dirs(i, L, seed_pct, dim)
         Parallel(n_jobs=10)(delayed(run_simulation)(i, L, seed_pct, rng_seed) for rng_seed in range(seeds))
