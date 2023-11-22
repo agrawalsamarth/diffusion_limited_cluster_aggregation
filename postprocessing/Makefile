@@ -1,8 +1,8 @@
 IDIR =./include
 CXX=g++
 #CPPFLAGS=-g -I$(IDIR) -I/home/samarth/codes/voronoi/include -std=c++11 -O3 -w -Wall
-CPPFLAGS=-g -I$(IDIR) -O3
-#CPPFLAGS=-I$(IDIR) -O3
+#CPPFLAGS=-g -I$(IDIR) -O3
+CPPFLAGS=-I$(IDIR) -O3
 #LDFLAGS=-O3
 POSTFIX=-L/home/samarth/codes/voronoi/lib/ -lvoro++
 
