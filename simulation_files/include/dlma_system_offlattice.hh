@@ -12,6 +12,7 @@ class dlma_system_offlattice: public dlma_system<type>{
     public:
 
         dlma_system_offlattice(char *params_name);
+        ~dlma_system_offlattice();
         void initialize_system();
         void move_aggregate(int i, type *dr);
         void add_attachment(const int i, const int j);

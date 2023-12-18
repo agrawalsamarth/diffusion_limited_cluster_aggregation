@@ -41,6 +41,10 @@ template <typename type>
 double brownian_movement_offlattice<type>::get_rand()
 { return dis(generator); }
 
+template <typename type>
+brownian_movement_offlattice<type>::~brownian_movement_offlattice()
+{ free(dr); }
+
 template class brownian_movement_offlattice<int>;
 template class brownian_movement_offlattice<double>;
 

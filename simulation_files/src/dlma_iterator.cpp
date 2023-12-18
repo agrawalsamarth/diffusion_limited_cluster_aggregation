@@ -338,8 +338,6 @@ dlma_iterator<type>::~dlma_iterator()
     delete aggregation_check_obj;
     delete movement_test;
     delete save_obj;
-    delete factory;
-
 
 }
 

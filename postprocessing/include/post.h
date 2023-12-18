@@ -304,6 +304,7 @@ class postprocessing
     int     *type_dis;
     int      max_psd_iters;
     int      total_lbp;
+    double   stiffness_inv_new;
 
     std::map<std::pair<int,int>, int> bond_map_status;
     std::vector<std::pair<int,int>> percolating_bonds;

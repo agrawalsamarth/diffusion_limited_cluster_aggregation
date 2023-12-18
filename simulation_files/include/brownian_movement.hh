@@ -11,6 +11,7 @@ class brownian_movement: public particle_movement<type>{
     public:
 
         brownian_movement(int dim, int rng_seed);
+        ~brownian_movement();
         type*   delta_x();
         double get_rand();
 

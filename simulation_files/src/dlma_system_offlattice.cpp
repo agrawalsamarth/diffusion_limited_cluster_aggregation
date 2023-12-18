@@ -714,6 +714,27 @@ void dlma_system_offlattice<type>::build_attachment_list()
 
 }
 
+template<typename type>
+dlma_system_offlattice<type>::~dlma_system_offlattice()
+{
+    free(this->L_flag);
+    free(this->periodic_flag);
+    free(this->L);
+    free(rij);
+    free(this->halfL);
+
+    delete this->box;
+
+    for (int i = 0; i < this->N; i++)
+        delete this->all_particles[i];
+
+    for (int i = 0; i < this->aggregates.size(); i++)
+        delete this->aggregates[i];
+
+    delete image;
+
+}
+
 template class dlma_system_offlattice<int>;
 template class dlma_system_offlattice<double>;
 

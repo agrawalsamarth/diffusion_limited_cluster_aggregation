@@ -657,13 +657,10 @@ void dlma_system<type>::build_idx_map_for_agg()
 
 }
 
-template<typename type>
+/*template<typename type>
 dlma_system<type>::~dlma_system()
 {
-    free(L_flag);
-    free(periodic_flag);
-    free(L);
-    free(halfL);
+
 
     for (auto temp_delete_p : all_particles)
         delete temp_delete_p;
@@ -676,7 +673,7 @@ dlma_system<type>::~dlma_system()
     //std::cout<<"aaya to yahaan"<<std::endl;
 
 
-}
+}*/
 
 template class dlma_system<int>;
 template class dlma_system<double>;

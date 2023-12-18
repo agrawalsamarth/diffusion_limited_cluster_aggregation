@@ -121,12 +121,12 @@ void cluster<type>::set_current_seed_status(const int seed)
 
 }
 
-template<typename type>
+/*template<typename type>
 cluster<type>::~cluster()
 {
     for (auto temp_delete_p : elements)
         delete temp_delete_p;
-}
+}*/
 
 template class cluster<int>;
 template class cluster<double>;

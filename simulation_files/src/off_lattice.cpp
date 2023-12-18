@@ -67,7 +67,17 @@ template <typename type>
 off_lattice<type>::~off_lattice()
 {
 
+    free(L);
+    free(halfL);
+    free(inv_deltax);
+    free(periodic);
+    free(num_grid);
+    free(nx);
+    free(neighbour_x);
     free(L_eff);
+
+    for (int i = 0; i < box_bc.size(); i++)
+        delete box_bc[i];
 
 }
 

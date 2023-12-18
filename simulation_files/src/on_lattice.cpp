@@ -45,8 +45,6 @@ on_lattice<type>::on_lattice(const int dim, type *box_lengths, std::vector<bound
 
     for (int axis = 0; axis < D; axis++)
         periodic[axis] = 1;
-
- 
 }
 
 template <typename type>
@@ -212,20 +210,15 @@ int on_lattice<type>::get_periodicity(const int axis)
 template <typename type>
 on_lattice<type>::~on_lattice()
 {
-
-    free(temp_pos);
     free(neighbour_pos);
     free(L_eff);
     free(grid);
     free(L);
     free(temp_pos);
-    free(neighbour_pos);
-    free(L_eff);
     free(periodic);
-    box_bc.resize(0);
-    box_bc.shrink_to_fit();
-
-    //free(agg_grid);
+    
+    for (int i = 0; i < box_bc.size(); i++)
+        delete box_bc[i];
 
 }
 

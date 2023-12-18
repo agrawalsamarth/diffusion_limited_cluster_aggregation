@@ -37,6 +37,10 @@ template <typename type>
 double brownian_movement<type>::get_rand()
 { return dis(generator); }
 
+template <typename type>
+brownian_movement<type>::~brownian_movement()
+{free(dr);}
+
 template class brownian_movement<int>;
 template class brownian_movement<double>;
 

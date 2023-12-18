@@ -13,6 +13,8 @@ class simulation_box{
 
     public:
 
+        virtual ~simulation_box() = default;
+
         virtual void add_bc(boundary_conditions<type> *bc) {};
         virtual void set_L(const type L_val, const int axis) {};
         virtual type get_L(const int axis) {};

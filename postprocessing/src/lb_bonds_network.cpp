@@ -56,7 +56,7 @@ void postprocessing::print_lbb_info_for_network(char *filename)
 
 }
 
-void postprocessing::build_A_for_network_cluster()
+/*void postprocessing::build_A_for_network_cluster()
 {
 
     int i,j;
@@ -76,7 +76,44 @@ void postprocessing::build_A_for_network_cluster()
     A.setFromTriplets(tripleList.begin(), tripleList.end());
     tripleList.clear();
 
+}*/
+
+void postprocessing::build_A_for_network_cluster()
+{
+
+    int i,j;
+
+    for (int index = 0; index < num_bonds_for_cluster; index++){
+
+        i = unique_bonds[index].first;
+        j = unique_bonds[index].second;
+
+        if ((current_seed(index_to_particles[i]) == 0) && (current_seed(index_to_particles[j]) == 0)){
+            tripleList.push_back(Eigen::Triplet<double>(i,j,1));
+            tripleList.push_back(Eigen::Triplet<double>(j,i,1));
+            tripleList.push_back(Eigen::Triplet<double>(i,i,-1));
+            tripleList.push_back(Eigen::Triplet<double>(j,j,-1));
+        }
+
+        else{
+            tripleList.push_back(Eigen::Triplet<double>(i,j,stiffness_inv_new));
+            tripleList.push_back(Eigen::Triplet<double>(j,i,stiffness_inv_new));
+            tripleList.push_back(Eigen::Triplet<double>(i,i,(-1.*stiffness_inv_new)));
+            tripleList.push_back(Eigen::Triplet<double>(j,j,(-1.*stiffness_inv_new)));
+        }
+
+        /*tripleList.push_back(Eigen::Triplet<double>(i,j,1));
+        tripleList.push_back(Eigen::Triplet<double>(j,i,1));
+        tripleList.push_back(Eigen::Triplet<double>(i,i,-1));
+        tripleList.push_back(Eigen::Triplet<double>(j,j,-1));*/
+
+    }
+
+    A.setFromTriplets(tripleList.begin(), tripleList.end());
+    tripleList.clear();
+
 }
+
 
 void postprocessing::build_b_for_network_cluster()
 {
@@ -118,7 +155,7 @@ void postprocessing::fix_A_for_network_cluster()
     for (int i = 0; i < num_particles_for_cluster; i++){
 
         if (current_seed(index_to_particles[i]) != 0)
-            A.coeffRef(i,i) -= 1;
+            A.coeffRef(i,i) -= 1.;
 
     }
 
@@ -147,33 +184,29 @@ void postprocessing::init_lbb_cluster_matrices_for_network_cluster()
 
     fix_A_for_network_cluster();
 
-    double temp;
-
-    /*for (int i = 0; i < num_particles_for_cluster; i++){
-        for (int j = 0; j < num_particles_for_cluster; j++){
-            std::cout<<A.coeff(i,j)<<"\t";
-        }
-        std::cout<<"\n";
-    }*/
-
-    //for (int i = 0; i < num_particles_for_cluster; i++)
-        //std::cout<<b.coeff(i)<<"\n";
-
-    //std::cout<<num_particles_for_cluster<<std::endl;
-    //std::cout<<num_bonds_for_cluster<<std::endl;
-
-
 }
 
 void postprocessing::calculate_bond_lengths_for_network_cluster()
 {
 
     int i, j;
+    int index_i, index_j;
 
     for (int index = 0; index < num_bonds_for_cluster; index++){
 
         i = unique_bonds[index].first;
         j = unique_bonds[index].second;
+
+        index_i = index_to_particles[i];
+        index_j = index_to_particles[j];
+
+        /*if ((current_seed(index_i) != 0) || (current_seed(index_j) != 0)){
+            bond_lengths[index] = stiffness_inv_new * (x(i) - x(j)) * (x(i) - x(j));
+            //bond_lengths[index] = 0.;
+        }
+
+        else
+            bond_lengths[index] = (x(i) - x(j)) * (x(i) - x(j));*/
 
         bond_lengths[index] = (x(i) - x(j)) * (x(i) - x(j));
 

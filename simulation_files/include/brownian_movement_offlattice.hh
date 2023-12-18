@@ -11,6 +11,7 @@ class brownian_movement_offlattice: public particle_movement<type>{
     public:
 
         brownian_movement_offlattice(int dim, int rng_seed);
+        ~brownian_movement_offlattice();
         type*   delta_x();
         double get_rand();
 

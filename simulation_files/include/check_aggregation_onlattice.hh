@@ -12,7 +12,6 @@ class check_aggregation_onlattice: public check_aggregation<type>{
     public:
 
         check_aggregation_onlattice(system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition);
-        ~check_aggregation_onlattice();
         void check_for_aggregation(constituent<type> *c_1);
         void display_compute_times();
 

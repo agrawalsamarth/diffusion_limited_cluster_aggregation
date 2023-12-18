@@ -11,6 +11,7 @@ class particle_movement{
 
     public:
 
+        virtual ~particle_movement() = default;
         virtual type*   delta_x() {};
         virtual double  get_rand() {};
 

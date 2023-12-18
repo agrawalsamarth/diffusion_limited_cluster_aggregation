@@ -417,9 +417,19 @@ dlma_system_onlattice<type>::~dlma_system_onlattice()
     free(temp_arr);
     free(axis_arr);
     free(neighbour_pos);
-    //std::cout<<"yahaan bhi"<<std::endl;
-
+    free(this->L_flag);
+    free(this->periodic_flag);
+    free(this->L);
+    free(this->halfL);
+    
     delete this->box;
+
+    for (int i = 0; i < this->N; i++)
+        delete this->all_particles[i];
+
+    for (int i = 0; i < this->aggregates.size(); i++)
+        delete this->aggregates[i];
+
 }
 
 template class dlma_system_onlattice<int>;

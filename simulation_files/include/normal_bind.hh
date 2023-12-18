@@ -11,7 +11,6 @@ template<typename type>
 class normal_bind{
 
     public:
-
         normal_bind(system<type> *system_ptr);
         constituent<type>* bind_aggregates(constituent<type> *c_1, constituent<type> *c_2);
 

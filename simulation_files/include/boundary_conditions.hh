@@ -10,6 +10,8 @@ class boundary_conditions{
 
     public:
 
+        virtual ~boundary_conditions() = default;
+
         virtual type refill(type x, type L) {};
         virtual type refill(type old_pos, type new_pos, type L) {};
 };

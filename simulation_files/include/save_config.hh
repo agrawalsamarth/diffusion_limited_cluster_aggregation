@@ -10,6 +10,8 @@ class save_config{
 
     public:
 
+        virtual ~save_config() = default;
+
         virtual void save_configuration() {};
         virtual void save_configuration(char *filename) {};
 

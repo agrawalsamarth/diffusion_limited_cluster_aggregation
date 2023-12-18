@@ -11,6 +11,8 @@ class system_iterator{
 
     public:
 
+        virtual ~system_iterator() {};
+
         virtual void run_system() {};
         virtual void iteration_step() {};
         virtual void save_config_file() {};

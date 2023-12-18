@@ -19,6 +19,7 @@ class iterator_factory{
 
     public:
 
+        virtual ~iterator_factory() = default;
         particle_movement<type>* create_movement(std::string name_type, int dim, int rng_seed, int lattice);
         aggregation_condition<type>* create_aggregation_condition(std::string name_type, system<type> *system_state); 
         check_aggregation<type>* create_check_aggregation(std::string name_type, int lattice, system<type> *system_state, normal_bind<type> *bind_system, aggregation_condition<type> *ref_condition

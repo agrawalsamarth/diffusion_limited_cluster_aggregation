@@ -12,6 +12,8 @@ class constituent{
 
     public:
 
+        virtual ~constituent() = default;
+
         virtual void   set_mass(const double constituent_mass) {}; 
         virtual double get_mass() {};
 

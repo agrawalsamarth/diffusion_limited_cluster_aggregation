@@ -73,6 +73,10 @@ void postprocessing::read_params_parser(char *config_filename)
             seed_mass_flag_ = true;
         }
 
+        if (results[0] == "stiffness"){
+            stiffness_inv_new = stod(results[1]);
+        }
+
 
         count++;
 

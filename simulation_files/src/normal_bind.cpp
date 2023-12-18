@@ -32,6 +32,8 @@ constituent<type>* normal_bind<type>::bind_aggregates(constituent<type> *c_1, co
 
     sys_state->remove_aggregate(c_1->get_id());
     sys_state->remove_aggregate(c_2->get_id());
+    delete c_1;
+    delete c_2;
     sys_state->add_aggregate(temp);
     sys_state->build_id_map();
     sys_state->build_idx_map_for_agg();
@@ -40,6 +42,7 @@ constituent<type>* normal_bind<type>::bind_aggregates(constituent<type> *c_1, co
     return temp;
 
 }
+
 
 template class normal_bind<int>;
 template class normal_bind<double>;
