@@ -644,8 +644,6 @@ void dlma_system<type>::print_agg_map()
 template<typename type>
 void dlma_system<type>::build_idx_map_for_agg()
 {
-    //std::cout<<"here"<<std::endl;
-
     agg_id_map.clear();
 
     for (int i = 0; i < aggregates.size(); i++){
