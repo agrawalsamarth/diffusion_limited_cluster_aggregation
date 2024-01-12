@@ -67,11 +67,8 @@ void postprocessing::calc_rij()
         for (int i = 0; i < numParticles(); i++) {
             for (int j = i+1; j < numParticles(); j++){
 
-                for (int axis = 0; axis < dim(); axis++)
-                    posDiff(axis) = 0.;
-
                 for (int axis = 0; axis < dim(); axis++){
-                    posDiff(axis) += get_periodic_image(1.*(pos(i,axis) - pos(j,axis)), axis);
+                    posDiff(axis) = get_periodic_image(1.*(pos(i,axis) - pos(j,axis)), axis);
                 }
 
                 r_temp = 0.;
@@ -94,11 +91,8 @@ void postprocessing::calc_rij()
         for (int i = 0; i < numParticles(); i++) {
             for (int j = i+1; j < numParticles(); j++){
 
-                for (int axis = 0; axis < dim(); axis++)
-                    posDiff(axis) = 0.;
-
                 for (int axis = 0; axis < dim(); axis++){
-                    posDiff(axis) += 1.*(pos(i,axis) - pos(j,axis));
+                    posDiff(axis) = 1.*(pos(i,axis) - pos(j,axis));
                 }
 
                 r_temp = 0.;

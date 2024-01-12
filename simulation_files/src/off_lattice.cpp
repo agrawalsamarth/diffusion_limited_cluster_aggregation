@@ -78,7 +78,6 @@ off_lattice<type>::~off_lattice()
 
     for (int i = 0; i < box_bc.size(); i++)
         delete box_bc[i];
-
 }
 
 template <typename type>

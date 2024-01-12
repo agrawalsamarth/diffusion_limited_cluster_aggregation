@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
     }
 
     else{
-        //test->dump_lb_bonds_for_cluster_via_invA(argv[2]);
-        test->dump_LB_bonds_for_network(argv[2]);
+        test->dump_lb_bonds_for_cluster_via_invA(argv[2]);
+        //test->dump_LB_bonds_for_network(argv[2]);
     }
 
     //cp_2 = std::chrono::steady_clock::now();    
