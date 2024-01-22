@@ -12,7 +12,7 @@
 #include <map>
 #include <algorithm>
 #include <bits/stdc++.h>
-#include <Eigen/Sparse>
+#include </home/mkroeger/PC/vsandra/C4SCIENCE/dlma/eigen-3.4.0/Eigen/Sparse>
 #include <chrono>
 #include <sys/resource.h>
 

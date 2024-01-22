@@ -64,7 +64,7 @@ def create_dirs(phi, dim):
 
 def run_simulation(phi, L, rng_seed):
     
-    lattice=1
+    lattice=0
     alpha=0.5
     seedMass=1e12
     
@@ -95,11 +95,11 @@ def run_simulation(phi, L, rng_seed):
     print("phi = {}, rng_seed={} simulation".format(phi,rng_seed))
 
     config_filename=config_files_dir+str(rng_seed)+'.csv'
-    command = 'simulation '+params_file+' '+config_filename        
+    command = '/home/mkroeger/PC/vsandra/C4SCIENCE/dlma/simulation_files/bin/simulation '+params_file+' '+config_filename        
     os.system(command)
     
     results_filename=results_dir+str(rng_seed)+'.csv'
-    command = "long_range_scattering "+config_filename+" 1000 0.02 10 1000 "+ results_filename
+    command = "/home/mkroeger/PC/vsandra/C4SCIENCE/dlma/postprocessing/bin/long_range_scattering "+config_filename+" 1000 0.02 10 1000 "+ results_filename
     os.system(command)
     
 
@@ -114,4 +114,4 @@ phi_range = [(100-96.21)/100, (100-94.83)/100, (100-93.01)/100, (100-91.08)/100,
 
 for phi in phi_range:
     create_dirs(phi, dim)
-    Parallel(n_jobs=10)(delayed(run_simulation)(phi, L, rng_seed) for rng_seed in range(seeds))
+    Parallel(n_jobs=50)(delayed(run_simulation)(phi, L, rng_seed) for rng_seed in range(seeds))
