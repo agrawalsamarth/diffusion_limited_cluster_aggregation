@@ -233,6 +233,10 @@ class postprocessing
     void calculate_bond_lengths_for_network_cluster();
     bool check_sink_and_source();
 
+    void bulltest(int num);
+    void calc_long_range_iq(int dr_steps, double q_min, double q_max, int num_q, char *filename);
+    
+
     private:
 
     std::mt19937 generator;
@@ -270,10 +274,10 @@ class postprocessing
     double *unfolded_coords_;
     int     temp_next;
     double *delta_coords_;
-    double  q_min;
-    double  q_max;
-    double  dq;
-    int     num_q;
+    //double  q_min;
+    //double  q_max;
+    //double  dq;
+    //int     num_q;
     double *sq_;
     double *lr_sq_;
     int    *unfolded_num_attachments_;
@@ -302,6 +306,7 @@ class postprocessing
     double  *radius_dis;
     double  *centres;
     int     *type_dis;
+    double  *rdf;
     int      max_psd_iters;
     int      total_lbp;
     double   stiffness_inv_new;

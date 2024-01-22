@@ -202,8 +202,7 @@ void dlma_system<type>::check_for_dlma_params()
 
         for (int axis = 0; axis < D; axis++){
             L[axis] = (type)(pow((1.*N)/(1.*phi), 1./(1.*D)));
-        }
-       
+        }       
 
         if (lattice == 1) {
 
@@ -234,6 +233,29 @@ void dlma_system<type>::check_for_dlma_params()
                 L_total *= L[axis];
 
             phi = (1.*N)/(1.*L_total);
+
+        }
+
+        else if (lattice == 0){
+
+            if(D==2){
+                double shape_factor = pow(M_PI/4., 1./2.);
+
+                for (int axis = 0; axis < D; axis++)
+                    L[axis] *= shape_factor;
+            }
+
+            else if(D==3){
+                double shape_factor = pow(M_PI/6., 1./3.);
+
+                for (int axis = 0; axis < D; axis++)
+                    L[axis] *= shape_factor;
+            }
+
+            else{
+                std::cout<<"code works only for D=2,3"<<std::endl;
+                exit(EXIT_FAILURE);
+            }          
 
         }
 
@@ -324,11 +346,55 @@ void dlma_system<type>::check_for_dlma_params()
     }
 
     if (phi_flag == false){
-        phi = (1.*N)/(1.*L_total);
+        if (lattice == 1)
+            phi = (1.*N)/(1.*L_total);
+
+        else if (lattice == 0){
+
+            if (D==2)
+                phi = (1.*M_PI*N)/(4.*L_total);
+
+            else if (D==3)
+                phi = (1.*M_PI*N)/(6.*L_total);
+
+            else{
+                std::cout<<"code works only for D=2,3"<<std::endl;
+                exit(EXIT_FAILURE);
+            }
+
+        }
+
+        else{
+            std::cout<<"lattice value is incorrect"<<std::endl;
+            exit(EXIT_FAILURE);            
+        }
     }
 
     if (N_flag == false){
-        N = (int)(phi*L_total);
+        if (lattice == 1)
+            N = (int)(phi*L_total);
+
+        else if (lattice == 0){
+
+            if (D==2){
+                N = (int)((4.*phi*L_total)/(1.*M_PI));
+            }
+
+            else if (D==3){
+                N = (int)((6.*phi*L_total)/(1.*M_PI));
+            }
+
+            else{
+                std::cout<<"code works only for D=2,3"<<std::endl;
+                exit(EXIT_FAILURE);
+            }
+
+        }
+
+        else{
+            std::cout<<"lattice value is incorrect"<<std::endl;
+            exit(EXIT_FAILURE);
+        }
     }
 
     if (N_s_flag == false){

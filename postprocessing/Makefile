@@ -80,6 +80,10 @@ lr_iq: $(OBJ_FILES) | $(BIN_DIR)
 lbp_bfs: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o lbp_bfs.o target/lbp_bfs.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ lbp_bfs.o
+	
+long_range_scattering: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o long_range_scattering.o target/long_range_scattering.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ long_range_scattering.o
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
