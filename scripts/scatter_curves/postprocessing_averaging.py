@@ -22,8 +22,8 @@ import subprocess
    
 def calc_ave(phi, seeds):
 
-    phi_str = format(phi, '.3f')
-    results_dir = './test/results/phi='+phi_str+'/'    
+    phi_str = format(phi, '.4f')
+    results_dir = './act_values/results/phi='+phi_str+'/'    
     filename = results_dir+'0.csv'
     
     df = pd.DataFrame()
@@ -41,15 +41,20 @@ def calc_ave(phi, seeds):
     return df[['q', 'Sq']]
 
 
-seeds=20
-phi_range = [0.025, 0.05]
+seeds=50
+phi_range = [(100-96.21)/100, (100-94.83)/100, (100-93.01)/100, (100-91.08)/100, (100-88.20)/100]
 
+"""plt.figure(figsize=(6,6), dpi=300)
 plt.xscale('log')
 plt.yscale('log')
+plt.xlabel(r'$q$')
+plt.ylabel(r'$I(q)$')"""
 
 for phi in phi_range:
     
     df = calc_ave(phi, seeds)
-    plt.plot(df['q'], df['Sq'], label='phi='+format(phi,'.3f'))
+    #plt.plot(df['q'], df['Sq'], label='phi='+format(phi,'.3f'))
+    filename = './act_values/'+format(phi, '.4f') 
+    df.to_csv(filename)
     
-plt.legend()
+#plt.legend()
