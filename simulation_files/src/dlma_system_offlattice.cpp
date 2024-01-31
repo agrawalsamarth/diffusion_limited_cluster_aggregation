@@ -379,7 +379,7 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     return fraction;
 
-}*/
+}
 
 template<typename type>
 type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
@@ -494,7 +494,95 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     return fraction;
 
+}*/
+
+template<typename type>
+type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
+{
+    hs = build_collision_list(i, 0., dr);
+
+    double t_c = 1.;
+    double fraction = 1.;
+
+    bool hs_coll = false;
+
+    int hs_index_i;
+    int hs_index_j;
+
+    for (int index = 0; index < hs.size(); index++) {
+
+        if ((hs[index].min_time < t_c) && (hs[index].min_time > 0)) {
+            t_c = hs[index].min_time;
+            hs_index_i = hs[index].i;
+            hs_index_j = hs[index].j;
+
+            hs_coll = true;
+        }
+
+    }
+
+    bonds = build_collision_list(i, this->tolerance, dr);
+
+    //int index_first_i;
+    //int index_second_i;
+    //int index_first_j;
+    //int index_second_j;
+
+    double min_i;
+    double max_i;
+
+    double min_j;
+    double max_j;
+
+    double start_zone = t_c;
+    double end_zone = t_c;
+
+    bool tbc = false;
+
+    for (int i = 0 ; i < bonds.size(); i++){
+
+        min_i = bonds[i].min_time;
+        max_i = bonds[i].max_time;
+
+        if (min_i > 0.){
+        
+            for (int j = i+1; j < bonds.size(); j++){
+
+                min_j = bonds[j].min_time;
+                max_j = bonds[j].max_time;
+
+                if ((bonds[i].i == bonds[j].i) && (min_j > 0.)){
+
+                    if ((max_i < max_j) && (max_i > min_j) && (max_i < t_c)){
+                        tbc = true;
+
+                        if ((min_i < min_j) && (min_i < start_zone)){
+                            start_zone = min_i;
+                            end_zone   = max_i;
+                        }
+
+                        if ((min_j < min_i) && (min_j < start_zone)){
+                            start_zone = min_j;
+                            end_zone   = max_j;
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+
+        }
+
+    }
+
+
+    return fraction;
+
 }
+
 
 template<typename type>
 std::vector<coll_deets> dlma_system_offlattice<type>::build_collision_list(int i, double alpha, type *dr)
@@ -597,8 +685,16 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
 
     beta = (q * q) - diff_2 + dia_distance;
 
-    t_c[0] = q - sqrt(beta);
-    t_c[1] = q + sqrt(beta);
+    if (beta >= 0)
+    {
+        t_c[0] = q - sqrt(beta);
+        t_c[1] = q + sqrt(beta);
+    }
+
+    else{
+        t_c[0] = -1.;
+        t_c[1] = -1.;
+    }
 
     if (t_c[0] >= 0.){
 
@@ -619,8 +715,8 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
 
     else {
 
-        temp_coll.min_time = 1e8;
-        temp_coll.max_time = 1e8;
+        temp_coll.min_time = -1.;
+        temp_coll.max_time = -1.;
 
     }
 

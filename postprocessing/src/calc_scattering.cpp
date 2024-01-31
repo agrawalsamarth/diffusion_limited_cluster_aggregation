@@ -106,10 +106,12 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
     }
 
     double q;
+    double *iq_;
     double sq_lr_temp;
     double dq = log(q_max/q_min)/(1 * num_q);
 
     sq_ = (double*)malloc(sizeof(double)*num_q);
+    iq_ = (double*)malloc(sizeof(double)*num_q);
 
     double g0;
     double num_val = 0.;
@@ -138,7 +140,7 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
         sq_[i]  = 1. + (prefactor*sq_lr_temp);
         
         form_factor = (24. * (sin(0.5*q) - ((0.5*q)*cos(0.5*q))))/(q*q*q);
-        sq_[i] *= (form_factor*form_factor);
+        iq_[i]  = (sq_[i]*form_factor*form_factor);
     }
 
 
@@ -146,10 +148,10 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
     FILE *f;
     f = fopen(filename, "w");
 
-    fprintf(f,"q,Sq\n");
+    fprintf(f,"q,Sq,Iq\n");
 
     for (int i = 0; i < num_q; i++)
-        fprintf(f, "%lf,%lf\n", exp((1.*i*dq)+log(q_min)), sq_[i]);
+        fprintf(f, "%lf,%lf,%lf\n", exp(0.5*dq+(1.*i*dq)+log(q_min)), sq_[i], iq_[i]);
 
     //fprintf(f,"r,g(r)\n");
 
@@ -162,6 +164,7 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
 
     fclose(f);
     free(sq_);
+    free(iq_);
     free(rdf);
 
 
