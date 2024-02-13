@@ -523,6 +523,12 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     bonds = build_collision_list(i, this->tolerance, dr);
 
+    /*for (auto x:bonds){
+        std::cout<<"i = "<<i<<" j = "<<x.j<<" min_time = "<<x.min_time<<" max_time = "<<x.max_time<<"\n";
+    }
+
+    std::cout<<"tc = "<<t_c<<std::endl;*/
+
     //int index_first_i;
     //int index_second_i;
     //int index_first_j;
@@ -553,33 +559,63 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
                 if ((bonds[i].i == bonds[j].i) && (min_j > 0.)){
 
-                    if ((max_i < max_j) && (max_i > min_j) && (max_i < t_c)){
+                    if ((min_i > min_j) && (min_i < max_j)){
                         tbc = true;
 
-                        if ((min_i < min_j) && (min_i < start_zone)){
-                            start_zone = min_i;
-                            end_zone   = max_i;
-                        }
-
-                        if ((min_j < min_i) && (min_j < start_zone)){
+                        if (min_j < start_zone){
                             start_zone = min_j;
-                            end_zone   = max_j;
+
+                            if (max_i < max_j)
+                                end_zone   = max_i;
+
+                            else
+                                end_zone   = max_j;
                         }
 
                     }
 
 
+                    if ((min_j > min_i) && (min_j < max_i)){
+                        tbc = true;
+
+                        if (min_i < start_zone){
+                            start_zone = min_i;
+
+                            if (max_i < max_j)
+                                end_zone   = max_i;
+
+                            else
+                                end_zone   = max_j;
+                        }
+
+                    }                
                 }
-
-
             }
 
         }
 
     }
 
+    if (start_zone > t_c){
+        tbc = false;
+    }
 
-    return fraction;
+    if (end_zone > t_c){
+        end_zone = t_c;
+    }
+
+    //std::cout<<"tbc = "<<tbc<<" hs = "<<hs_coll<<std::endl;
+
+    if (tbc){
+        fraction = start_zone + (this->dis(this->generator) * (end_zone-start_zone));
+        return fraction;
+    }
+
+    if (hs_coll){
+        return t_c;
+    }
+        
+    return 1.;
 
 }
 
@@ -670,6 +706,15 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
     for (int axis = 0; axis < this->D; axis++)
         q += diff[axis] * dr[axis];
 
+    double d_mag_2 = 0.;
+
+    for (int axis = 0; axis < this->D; axis++)
+        d_mag_2 += (dr[axis] * dr[axis]);
+
+    double d_mag = sqrt(d_mag_2);
+
+    //std::cout<<"ref = "<<ref_particle->get_id()<<" nb = "<<nb_particle->get_id()<<" d_mag = "<<d_mag<<" d_mag_2 = "<<d_mag_2<<std::endl;
+
     double diff_2 = 0.;
 
     for (int axis = 0; axis < this->D; axis++)
@@ -683,12 +728,11 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
     double beta = 0.;
     double t_c[2];
 
-    beta = (q * q) - diff_2 + dia_distance;
+    beta = (q * q) - (d_mag_2*(diff_2 - dia_distance));
 
-    if (beta >= 0)
-    {
-        t_c[0] = q - sqrt(beta);
-        t_c[1] = q + sqrt(beta);
+    if (beta >= 0){
+        t_c[0] = (q - sqrt(beta))/d_mag_2;
+        t_c[1] = (q + sqrt(beta))/d_mag_2;
     }
 
     else{
@@ -696,28 +740,27 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
         t_c[1] = -1.;
     }
 
+    //if (nb_particle->get_id() == 0){
+        //std::cout<<"q = "<<q<<" beta = "<<beta<<std::endl;
+    //}
+
     if (t_c[0] >= 0.){
 
-        if (fabs(t_c[0]) < 1e-10){
-            
+        if (fabs(t_c[0]) < 1e-6){            
             temp_coll.min_time = 0.;
             temp_coll.max_time = 0.;
         }
 
         else{
-
             temp_coll.min_time = t_c[0];
             temp_coll.max_time = t_c[1];
-
         }
 
     }
 
     else {
-
         temp_coll.min_time = -1.;
         temp_coll.max_time = -1.;
-
     }
 
     return temp_coll;
