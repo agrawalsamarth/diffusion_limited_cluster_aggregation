@@ -38,8 +38,8 @@ void check_aggregation_offlattice<type>::check_for_aggregation(constituent<type>
 
             if (neighbour_cluster_id != cluster_id){
 
-                particle_1 = sys_state->get_particle_by_id(particle_id);
-                particle_2 = sys_state->get_particle_by_id(neighbour_id);
+                particle_1 = sys_state->get_particle_by_index(particle_id);
+                particle_2 = sys_state->get_particle_by_index(neighbour_id);
 
                 distance = sys_state->get_interparticle_distance(particle_1, particle_2);
 

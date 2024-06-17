@@ -3,8 +3,9 @@
 
 int main(int argc, char *argv[])
 {
-    /*std::chrono::steady_clock::time_point cp_1;
+    std::chrono::steady_clock::time_point cp_1;
     std::chrono::steady_clock::time_point cp_2;
+    /*std::chrono::steady_clock::time_point cp_2;
     std::chrono::steady_clock::time_point cp_3;
     std::chrono::steady_clock::time_point cp_4;
 
@@ -22,6 +23,8 @@ int main(int argc, char *argv[])
     //std::cout<<"read time = "<<read_time * 1e-9<<std::endl;
 
     FILE *f_time;
+
+    cp_1 = std::chrono::steady_clock::now();
     
     if (argc < 3){
         std::cout<<"please provide config_filename results_filename"<<std::endl;
@@ -33,8 +36,8 @@ int main(int argc, char *argv[])
         //test->dump_LB_bonds_for_network(argv[2]);
     }
 
-    //cp_2 = std::chrono::steady_clock::now();    
-    //total_time += std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
+    cp_2 = std::chrono::steady_clock::now();    
+    double total_time = std::chrono::duration_cast<std::chrono::nanoseconds>(cp_2 - cp_1).count();
     //std::cout<<"total time = "<<total_time * 1e-9<<std::endl;
 
     delete test;

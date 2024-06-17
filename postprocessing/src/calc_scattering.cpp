@@ -68,11 +68,33 @@ void postprocessing::bulltest(int num)
 
 void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max, int num_q, char *filename)
 {
-    calc_rij();
 
-    /*double dr    = (0.5*L(0))/(1.*dr_steps);
-    double r_min = 0.5*dr;
-    double r_max = L(0)+0.5*dr;*/
+    /*double min_r = 10.;
+    double temp_r;
+
+    for (int i = 0; i < numParticles(); i++){
+        for (int j = 0; j < numAttachments(i); j++){
+
+            temp_r = 0.;
+
+            for (int axis = 0; axis < dim(); axis++){
+                posDiff(axis) = get_periodic_image(1.*(pos(i,axis) - pos(attachment(i,j),axis)), axis);
+                temp_r += (posDiff(axis) * posDiff(axis));
+            }
+
+            temp_r = sqrt(temp_r);
+
+            if (temp_r < min_r)
+                min_r = temp_r;
+
+        }
+    }
+
+    std::cout<<min_r<<std::endl;
+    exit(EXIT_FAILURE);*/
+
+
+    calc_rij();
 
     double dr;
     double r_min=0.;
@@ -95,6 +117,20 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
         }
 
     }
+
+    /*FILE *f;
+    f = fopen(filename, "w");
+    double r_val;
+    double prefactor;
+    fprintf(f,"r,gr\n");
+    
+    for (int i = 0; i < steps; i++){
+        r_val = r_min+(1.*i*dr)+0.5*dr; 
+        prefactor = 12.*phi_*r_val*r_val*dr*numParticles();        
+        fprintf(f, "%lf,%lf\n", r_val, rdf[i]/prefactor);
+    }
+
+    fclose(f);*/
 
     double prefactor;
     double r_val;
@@ -152,15 +188,6 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
 
     for (int i = 0; i < num_q; i++)
         fprintf(f, "%lf,%lf,%lf\n", exp(0.5*dq+(1.*i*dq)+log(q_min)), sq_[i], iq_[i]);
-
-    //fprintf(f,"r,g(r)\n");
-
-    //for (int i = 0; i < steps; i++)
-        //fprintf(f, "%lf,%lf\n", r_min+(1.*i*dr)+0.5*dr, rdf[i]);
-
-    //for (int i = 0; i < N_pairs_; i++)
-        //fprintf(f, "%lf\n", r_ij_[i]);
-
 
     fclose(f);
     free(sq_);

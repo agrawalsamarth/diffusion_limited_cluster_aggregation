@@ -164,7 +164,9 @@ dlma_iterator<type>::dlma_iterator(char *filename)
     }
 
     //std::cout<<"1"<<std::endl;
+    //std::cout<<"creating system"<<std::endl;
     sys_state   = factory->create_new_system(save_config_name, lattice, filename);
+    //std::cout<<"system created"<<std::endl;
     //std::cout<<"2"<<std::endl;
     binding_obj = factory->create_bind_system(bind_name, sys_state);
     //std::cout<<"3"<<std::endl;
@@ -240,7 +242,9 @@ void dlma_iterator<type>::run_system()
         iteration_step();
     }
     //std::cout<<"aggregates="<<sys_state->total_aggregates()<<std::endl;
+    //std::cout<<"here"<<std::endl;
     sys_state->build_attachment_list();
+    //std::cout<<"and then here"<<std::endl;
 
     /*std::cout<<"aggregate choosing time = "<<time_1<<"(s)";
     std::cout<<"get constituent time = "<<time_2<<"(s)";
@@ -276,15 +280,17 @@ void dlma_iterator<type>::create_movie_files(char *filename)
     std::string temp_s;
     std::string ext = ".csv";
 
+    int freq = 25;
+
     while (sys_state -> total_aggregates() != 1)
     {
         iteration_step();
 
-        if (itr % 100 == 0){
+        if (itr % freq == 0){
 
             //std::cout<<"here1"<<std::endl;
 
-            index   = itr/100;
+            index   = itr/freq;
             index_s = std::to_string(index);
             filename_m = (char*)malloc(1 + strlen(filename)+ index_s.length() + ext.length());
             strcpy(filename_m, filename);

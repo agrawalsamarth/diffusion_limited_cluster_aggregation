@@ -631,12 +631,14 @@ template<typename type>
 constituent<type>* dlma_system<type>::get_particle_by_id(const int id)
 {
 
-    for (int i = 0; i < N; i++){
+    /*for (int i = 0; i < N; i++){
         if (all_particles[i]->get_id() == id)
             return all_particles[i];
     }
 
-    return NULL;
+    return NULL;*/
+
+    return all_particles[id];
 
 }
 

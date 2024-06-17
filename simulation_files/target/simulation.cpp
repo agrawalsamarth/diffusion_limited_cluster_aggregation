@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     else if((sys_name == "dlma") && (lattice_val == 0)){
         system_iterator<double> *test = new dlma_iterator<double>(argv[1]);;
         test->run_system();
+        //test->create_movie_files(argv[2]);
 
         if (argc < 3)
             test->save_config_file();

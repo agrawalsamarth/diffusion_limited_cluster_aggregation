@@ -29,13 +29,21 @@ dlma_system_offlattice<type>::dlma_system_offlattice(char *params_name)
 template <typename type>
 void dlma_system_offlattice<type>::initialize_system()
 {
-
     bool is_placed;
     constituent<type> *temp;
 
     std::string name_type = "particle";
 
     type distance;
+
+    pos_arr_for_particle = (int*)malloc(sizeof(int)*this->D);
+    delta_L_temp         = (double*)malloc(sizeof(double)*this->D);
+    L_eff_temp           = (int*)malloc(sizeof(int)*this->D);
+    pos_pop_temp         = (int*)malloc(sizeof(int)*this->D);
+    neigh_pop_temp       = (int*)malloc(sizeof(int)*this->D);
+    pop_arr              = (int*)malloc(sizeof(int)*this->D);
+
+    build_site_vector();
 
     for (int i = 0; i < this->N; i++){
 
@@ -57,7 +65,7 @@ void dlma_system_offlattice<type>::initialize_system()
             temp->set_current_seed_status(0);
         }
 
-        while (is_placed == false){
+        /*while (is_placed == false){
 
             for (int axis = 0; axis < this->D; axis++)
                 temp->pos(axis) = (this->dis(this->generator) * this-> L[axis]);
@@ -75,7 +83,12 @@ void dlma_system_offlattice<type>::initialize_system()
 
                 }            
 
-        }
+        }*/
+
+        get_array_from_index_map(available_sites_temp[i], pos_arr_for_particle);
+
+        for (int axis = 0; axis < this->D; axis++)
+            temp->pos(axis) = (1.*pos_arr_for_particle[axis]*delta_L_temp[axis]) + (0.5*delta_L_temp[axis]);
 
         temp->add_constituent_to_cell();
         this->all_particles.push_back(temp);
@@ -100,6 +113,7 @@ void dlma_system_offlattice<type>::initialize_system()
 
     this->calculate_propensity();
     this->build_idx_map_for_agg();
+
     
 }
 
@@ -301,6 +315,112 @@ void dlma_system_offlattice<type>::move_aggregate(int i, type *dr)
     this->aggregates[i]->move(dr);
     this->aggregates[i]->add_constituent_to_cell();
 
+
+}
+
+template <typename type>
+void dlma_system_offlattice<type>::build_site_vector()
+{
+    double  L_total_temp;
+    L_disc   = (int)(this->L[0]/((1.+this->tolerance)));
+
+    if (L_disc%2 == 1){
+        L_disc -= 1;
+    }
+
+    L_total_temp = 1;
+
+    for (int axis = 0; axis < this->D; axis++)
+        L_total_temp *= L_disc;
+
+    //int    *nx_temp;
+    nx_temp = (int*)malloc(sizeof(int)*L_total_temp);
+
+    for (int i = 0; i < L_total_temp; i++)
+        nx_temp[i] = -1;
+
+    for (int axis = 0; axis < this->D; axis++){
+        delta_L_temp[axis] = (this->L[axis]/(1.*L_disc));
+    }  
+
+    for (int axis = 0; axis < this->D; axis++){
+        L_eff_temp[axis] = 1;
+    }
+
+    for (int axis = 0; axis < this->D; axis++)
+    {
+        for (int itr = axis+1; itr < this->D; itr++)
+            L_eff_temp[itr] *= L_disc;
+    }
+
+    available_sites_temp.clear();
+
+    //int temp_counter;
+    int neighbour_counter_temp;
+    bool adj_flag;
+
+    for (int i = 0; i < L_total_temp; i++){
+
+        get_array_from_index_map(i, pos_pop_temp);
+        adj_flag = true;
+
+        for (int axis = 0; axis < this->D; axis++){
+            for (int j = 0; j < 2; j++){
+
+                neighbour_counter_temp = i + (L_eff_temp[axis] * (2*j - 1));
+                get_array_from_index_map(neighbour_counter_temp, neigh_pop_temp);
+
+                for (int axis_2 = 0; axis_2 < this->D; axis_2++){
+                    neigh_pop_temp[axis_2] += L_disc*(neigh_pop_temp[axis_2]<0) - L_disc*(neigh_pop_temp[axis_2] >= L_disc); 
+                }
+
+                neighbour_counter_temp = get_index_from_array_map(neigh_pop_temp);
+                
+                if (nx_temp[neighbour_counter_temp] != -1)
+                    adj_flag = false;
+
+            }
+        }
+
+        if (adj_flag)
+            available_sites_temp.push_back(i);
+
+    }
+
+    if (this->N > available_sites_temp.size()){
+        std::cout<<"phi,N,L is not appropriate for initialization"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    std::random_shuffle(available_sites_temp.begin(), available_sites_temp.end());
+
+    //free(pos_pop_temp);
+    //free(neigh_pop_temp);
+   
+}
+
+template<typename type>
+void dlma_system_offlattice<type>::get_array_from_index_map(int pop_i, int* for_pop_arr){
+
+    for (int axis = 0; axis < this->D; axis++){
+        pop_div           = pop_i/L_eff_temp[axis];
+        for_pop_arr[axis] = pop_div%L_disc; 
+    }
+
+    //return pop_arr;
+
+}
+
+template<typename type>
+int dlma_system_offlattice<type>::get_index_from_array_map(int* temp_arr_for_pop){
+
+    pop_counter = 0;
+
+    for (int axis = 0; axis < this->D; axis++){
+        pop_counter += temp_arr_for_pop[axis] * L_eff_temp[axis];
+    }
+
+    return pop_counter;
 
 }
 
@@ -511,7 +631,7 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     for (int index = 0; index < hs.size(); index++) {
 
-        if ((hs[index].min_time < t_c) && (hs[index].min_time > 0)) {
+        if ((fabs(hs[index].min_time) < t_c) && (hs[index].min_time >= 0.)) {
             t_c = hs[index].min_time;
             hs_index_i = hs[index].i;
             hs_index_j = hs[index].j;
@@ -550,14 +670,14 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
         min_i = bonds[i].min_time;
         max_i = bonds[i].max_time;
 
-        if (min_i > 0.){
+        if ((min_i > 0.) && (min_i < t_c)){
         
             for (int j = i+1; j < bonds.size(); j++){
 
                 min_j = bonds[j].min_time;
                 max_j = bonds[j].max_time;
 
-                if ((bonds[i].i == bonds[j].i) && (min_j > 0.)){
+                if ((min_j > 0.)){
 
                     if ((min_i > min_j) && (min_i < max_j)){
                         tbc = true;
@@ -608,6 +728,8 @@ type dlma_system_offlattice<type>::fix_overlap(int i, type *dr)
 
     if (tbc){
         fraction = start_zone + (this->dis(this->generator) * (end_zone-start_zone));
+        //std::cout<<fraction<<std::endl;
+        //std::cout<<"t_c = "<<t_c<<" start = "<<start_zone<<" end_zone = "<<end_zone<<" fraction = "<<fraction<<std::endl;
         return fraction;
     }
 
@@ -671,9 +793,7 @@ std::vector<coll_deets> dlma_system_offlattice<type>::build_collision_list(int i
 
                 nb_particle = this->get_particle_by_id(neighbour_id);
                 t_c = calc_quad_eqn(dr, alpha, ref_particle, nb_particle);
-
                 list_coll.push_back(t_c);
-
 
             }
 
@@ -736,8 +856,8 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
     }
 
     else{
-        t_c[0] = -1.;
-        t_c[1] = -1.;
+        t_c[0] = -2.;
+        t_c[1] = -2.;
     }
 
     //if (nb_particle->get_id() == 0){
@@ -746,7 +866,7 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
 
     if (t_c[0] >= 0.){
 
-        if (fabs(t_c[0]) < 1e-6){            
+        if (fabs(t_c[0]) < 1e-4){            
             temp_coll.min_time = 0.;
             temp_coll.max_time = 0.;
         }
@@ -759,8 +879,8 @@ coll_deets dlma_system_offlattice<type>::calc_quad_eqn(type *dr, double alpha, c
     }
 
     else {
-        temp_coll.min_time = -1.;
-        temp_coll.max_time = -1.;
+        temp_coll.min_time = -2.;
+        temp_coll.max_time = -2.;
     }
 
     return temp_coll;
@@ -853,6 +973,11 @@ void dlma_system_offlattice<type>::build_attachment_list()
 
 }
 
+
+
+
+
+
 template<typename type>
 dlma_system_offlattice<type>::~dlma_system_offlattice()
 {
@@ -871,6 +996,14 @@ dlma_system_offlattice<type>::~dlma_system_offlattice()
         delete this->aggregates[i];
 
     delete image;
+
+    free(pos_arr_for_particle);
+    free(delta_L_temp);
+    free(L_eff_temp);
+    free(pos_pop_temp);
+    free(neigh_pop_temp);
+    free(pop_arr); 
+    free(nx_temp);   
 
 }
 

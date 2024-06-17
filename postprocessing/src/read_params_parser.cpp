@@ -140,7 +140,7 @@ void postprocessing::read_params_parser(char *config_filename)
         halfL(axis) = 0.5 * L(axis); 
     }
 
-    N_pairs_ = (numParticles() * (numParticles() -1))/2;
+    N_pairs_ = (0.5 * numParticles() * (numParticles() -1));
 
 }
 
