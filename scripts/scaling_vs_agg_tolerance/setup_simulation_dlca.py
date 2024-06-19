@@ -23,7 +23,7 @@ def create_dirs(phi, agg_distance):
     
     D = dim
 
-    global params_dir
+    # global params_dir
     
     phi_str = format(phi, '.5f')
     agg_str = format(agg_distance, '.3f')
@@ -39,7 +39,7 @@ def create_dirs(phi, agg_distance):
         pass
     
     
-    global results_dir
+    # global results_dir
     
     results_dir = './scaling/results/phi='+phi_str+'/'+agg_str+'/'
     path = Path(results_dir)
@@ -51,7 +51,7 @@ def create_dirs(phi, agg_distance):
     else:
         pass
     
-    global config_files_dir
+    # global config_files_dir
     
     config_files_dir = './scaling/config_files/phi='+phi_str+'/'+agg_str+'/'
     path = Path(config_files_dir)
@@ -64,6 +64,13 @@ def create_dirs(phi, agg_distance):
         pass     
 
 def run_simulation(phi, agg_distance, rng_seed):
+
+    phi_str = format(phi, '.5f')
+    agg_str = format(agg_distance, '.3f')
+
+    params_dir = './scaling/params/phi='+phi_str+'/'+agg_str+'/'
+    results_dir = './scaling/results/phi='+phi_str+'/'+agg_str+'/'
+    config_files_dir = './scaling/config_files/phi='+phi_str+'/'+agg_str+'/'
     
     lattice=0
     alpha=0.5
@@ -108,11 +115,11 @@ os.system('cd ../../simulation_files; make simulation')
 os.system('cd ../../postprocessing/; make all')
 
 seed(1)
-seeds=50
+seeds=100
 seed_pct_range=[100]
-dim = 3
+dim=3
 
-agg_dist_tolerance_range = [0.15, 0.2, 0.25]
+agg_dist_tolerance_range = [0.15, 0.2, 0.25, 0.175, 0.225]
 
 phi_min   = 0.1
 phi_max   = 0.3
@@ -136,14 +143,23 @@ for param in all_params:
     create_dirs(param[0], param[1])
 
 all_params.clear()
+agg_dist_tolerance_range_short = [0.15, 0.2, 0.25]
+
+# 50 x 3 * 10 = 1500
 
 for phi in phi_range:
-    for agg_dist_tolerance in agg_dist_tolerance_range:
+    for agg_dist_tolerance in agg_dist_tolerance_range_short:
+        for i in range(50, seeds):
+            all_params.append([phi, agg_dist_tolerance, i])
+
+agg_dist_tolerance_range_ext = [0.175, 0.225]
+
+for phi in phi_range:
+    for agg_dist_tolerance in agg_dist_tolerance_range_ext:
         for i in range(seeds):
             all_params.append([phi, agg_dist_tolerance, i])
 
-
-num_processors = 10
+num_processors = 80
 Parallel(n_jobs=num_processors)(delayed(run_simulation)(param[0], param[1], param[2]) for param in all_params)
 
 os.system('cd ../../simulation_files/; make clean')
