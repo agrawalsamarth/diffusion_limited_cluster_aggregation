@@ -14,7 +14,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 
-all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA chemical_distance lb_bonds_clusterwise_invA lbp_bfs
+all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA chemical_distance lb_bonds_clusterwise_invA lbp_bfs long_range_scattering
 #all: psd_test
 
 density_correlation: $(OBJ_FILES) | $(BIN_DIR)

@@ -109,6 +109,10 @@ def run_simulation(phi, agg_distance, rng_seed):
     command="../../postprocessing/bin/lb_bonds_clusterwise_invA "+config_filename+" "+ results_filename
     os.system(command)
     
+    results_filename=results_dir+'sq_'+str(rng_seed)+'.csv'
+    command = "../../postprocessing/bin/long_range_scattering "+config_filename+" 1000 0.01 50 2000 "+ results_filename
+    os.system(command)    
+    
 
     
 os.system('cd ../../simulation_files; make simulation')
