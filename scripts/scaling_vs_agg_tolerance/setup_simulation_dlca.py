@@ -158,6 +158,9 @@ for phi in phi_range:
     for agg_dist_tolerance in agg_dist_tolerance_range_ext:
         for i in range(seeds):
             all_params.append([phi, agg_dist_tolerance, i])
+            
+for i in range(50):
+    all_params.append([phi_range[-1], agg_dist_tolerance_range_short[-1], i])
 
 num_processors = 80
 Parallel(n_jobs=num_processors)(delayed(run_simulation)(param[0], param[1], param[2]) for param in all_params)
