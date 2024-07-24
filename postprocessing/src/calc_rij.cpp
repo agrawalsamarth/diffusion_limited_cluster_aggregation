@@ -35,7 +35,7 @@ void postprocessing::dump_rij_hist_file(double bin_size)
     printf("r,F(r)\n");
 
     for (int i = 0; i < r_ij_hist_bins_; i++){
-        printf("%lf,%lf\n", (1.*i*bin_size + 0.5 * bin_size), r_ij_hist_[i]/(1. * N_pairs_));
+        printf("%lf,%lf\n", (1.*(i+1)*bin_size), r_ij_hist_[i]/(1. * N_pairs_));
     }
 
     free(r_ij_hist_);
@@ -49,13 +49,32 @@ void postprocessing::dump_rij_hist_file(double bin_size, char *filename)
     f= fopen(filename,"w");
     fprintf(f, "r,F(r)\n");
 
-    for (int i = 0; i < r_ij_hist_bins_; i++){
-        fprintf(f, "%lf,%lf\n", (1.*i*bin_size + 0.5 * bin_size), r_ij_hist_[i]/(1. * N_pairs_));
+    for (int i = 0; i < (r_ij_hist_bins_-1); i++){
+        //fprintf(f, "%lf,%lf\n", 0.5*(r_values[i]+r_values[i+1]), r_ij_hist_[i]/(1. * N_pairs_));
+        fprintf(f, "%lf,%lf\n", (1.*i*bin_size)+(0.5*bin_size), r_ij_hist_[i]/(1. * N_pairs_));
     }
 
     fclose(f);
     free(r_ij_hist_);
 }
+
+/*void postprocessing::dump_rij_hist_file(double bin_size, char *filename)
+{
+
+    FILE *f;
+    f= fopen(filename,"w");
+    fprintf(f, "x,y\n");
+
+    for (int i = 0; i < numParticles(); i++){
+        for (int j = i+1; j < numParticles(); j++){
+            fprintf(f, "%lf,%lf\n", get_periodic_image(pos(i,0)-pos(j,0), 0), get_periodic_image(pos(i,1)-pos(j,1), 1));
+        }
+    }
+    
+
+    fclose(f);
+    //free(r_ij_hist_);
+}*/
 
 void postprocessing::calc_rij()
 {
@@ -135,31 +154,100 @@ void postprocessing::calc_rij_hist(double bin_size)
 
     }
 
-    r_ij_hist_bins_ = (((int)(r_max/bin_size))+1);
-    r_ij_hist_      = (double*)malloc(sizeof(double)*r_ij_hist_bins_);
+    r_ij_hist_bins_  = (int)(r_max/bin_size);
+    r_ij_hist_bins_ += 1;
+    r_ij_hist_       = (double*)malloc(sizeof(double)*r_ij_hist_bins_);
 
     for (int i = 0; i < r_ij_hist_bins_; i++)
         r_ij_hist_[i] = 0.;
 
     int bin;
-    r_max=r_max+(0.5*bin_size);
 
     for (int i = 0; i < N_pairs_; i++){
 
         if (r_ij_[i] < r_max){
-            bin              = r_ij_[i]/bin_size;
+            bin              = (int)(r_ij_[i]/bin_size);
             r_ij_hist_[bin] += 1.;
         }
 
 
     }
 
-    //for (int i = 1; i < r_ij_hist_bins_; i++)
-        //r_ij_hist_[i] += r_ij_hist_[i-1];
-
-
 
 }
+
+/*int postprocessing::binary_search_for_rij(double val)
+{
+
+    int left = 0;
+    int right = r_ij_hist_bins_;
+    int mid;
+
+    while (left < right){
+
+        mid = (left+right)/2;
+
+        //std::cout<<val<<" "<<left<<" "<<right<<" "<<mid<<"\n";
+
+        if ((val >= r_values[mid-1]) && (val <= r_values[mid]))
+            return (mid-1);
+
+        else if (val > r_values[mid])
+            left=mid;
+
+        else
+            right=mid;
+
+    }
+
+    return 0;
+
+}
+
+void postprocessing::calc_rij_hist(double bin_size)
+{
+    calc_rij();
+    double r_max = halfL(0);
+    double r0 = 1.;
+    double sum_r = bin_size;
+    double delta_r = sum_r - r0;
+    double new_delta_r;
+    int    count=1;
+
+    r_values.push_back(0.);
+    r_values.push_back(r0);
+
+
+    while (sum_r < r_max){
+
+        new_delta_r = ((1.*count)*(std::pow(r0+delta_r,3.))) - (((1.*count)-1.)*std::pow(r0,3.));
+        sum_r       = std::pow(new_delta_r,1./3.);
+        r_values.push_back(sum_r);
+        count++;
+
+    }
+
+    r_ij_hist_bins_ = r_values.size();
+    r_ij_hist_      = (double*)malloc(sizeof(double)*r_ij_hist_bins_);
+
+    for (int i = 0;  i < r_ij_hist_bins_; i++)
+        r_ij_hist_[i] = 0.;
+
+
+    for (int i = 0; i < N_pairs_; i++){
+
+        if (r_ij_[i] <= r_max){
+            r_ij_hist_[binary_search_for_rij(r_ij_[i])] += 1.;
+        }
+
+        //std::cout<<i<<"\n";
+
+    }
+
+    
+
+
+}*/
 
 void postprocessing::dump_lr_scattering_function(double q_min, double q_max, int num_q, double bin_size, char *filename)
 {

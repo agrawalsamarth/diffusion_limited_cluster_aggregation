@@ -17,18 +17,22 @@ from sklearn.linear_model import LinearRegression
 from random import random, seed
 import subprocess
 
-def create_dirs(phi, agg_distance):
+def create_dirs(phi, agg_distance, ns):
 
     global D
     
     D = dim
+
+    global N
+
+    N = 100000
 
     # global params_dir
     
     phi_str = format(phi, '.5f')
     agg_str = format(agg_distance, '.3f')
     
-    params_dir = './scaling/params/phi='+phi_str+'/'+agg_str+'/'
+    params_dir = './high_porosity_scaling/params/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
     path = Path(params_dir)
     
     try:
@@ -41,7 +45,7 @@ def create_dirs(phi, agg_distance):
     
     # global results_dir
     
-    results_dir = './scaling/results/phi='+phi_str+'/'+agg_str+'/'
+    results_dir = './high_porosity_scaling/results/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
     path = Path(results_dir)
     
     try:
@@ -53,7 +57,7 @@ def create_dirs(phi, agg_distance):
     
     # global config_files_dir
     
-    config_files_dir = './scaling/config_files/phi='+phi_str+'/'+agg_str+'/'
+    config_files_dir = './high_porosity_scaling/config_files/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
     path = Path(config_files_dir)
     
     try:
@@ -63,19 +67,18 @@ def create_dirs(phi, agg_distance):
     else:
         pass     
 
-def run_simulation(phi, agg_distance, rng_seed):
+def run_simulation(phi, agg_distance, ns, rng_seed):
 
     phi_str = format(phi, '.5f')
     agg_str = format(agg_distance, '.3f')
 
-    params_dir = './scaling/params/phi='+phi_str+'/'+agg_str+'/'
-    results_dir = './scaling/results/phi='+phi_str+'/'+agg_str+'/'
-    config_files_dir = './scaling/config_files/phi='+phi_str+'/'+agg_str+'/'
+    params_dir = './high_porosity_scaling/params/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
+    results_dir = './high_porosity_scaling/results/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
+    config_files_dir = './high_porosity_scaling/config_files/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
     
     lattice=0
     alpha=0.5
     seedMass=1e12
-    N=25000
     
     params_file  = params_dir+'params_'+str(rng_seed)+'.csv'
         
@@ -87,9 +90,9 @@ def run_simulation(phi, agg_distance, rng_seed):
     file.write("aggregation_condition=mass\n")
     file.write("bind=normal\n")
     file.write("movement=brownian\n")
-    file.write("agg_dist_tolerance="+format(agg_distance,'.2f')+"\n")
+    file.write("agg_dist_tolerance="+format(agg_distance,'.3f')+"\n")
     file.write("D="+str(D)+"\n")
-    file.write("seed_pct=100\n")
+    file.write("seed_pct="+str(ns)+"\n")
     for axis in range(D):
         file.write("x"+str(axis)+"_bc=periodic\n")
     file.write("N="+str(N)+"\n")
@@ -99,7 +102,7 @@ def run_simulation(phi, agg_distance, rng_seed):
     file.write("rng_seed="+str(rng_seed)+"\n")        
     file.close()
     
-    print("phi = {}, agg_dist = {}, rng_seed={}, simulation".format(phi,agg_distance,rng_seed))
+    print("phi = {}, ns = {}, rng_seed={}, simulation".format(phi,ns,rng_seed))
 
     config_filename=config_files_dir+str(rng_seed)+'.csv'
     command = '../../simulation_files/bin/simulation '+params_file+' '+config_filename        
@@ -109,9 +112,9 @@ def run_simulation(phi, agg_distance, rng_seed):
     command="../../postprocessing/bin/lb_bonds_clusterwise_invA "+config_filename+" "+ results_filename
     os.system(command)
     
-    results_filename=results_dir+'sq_'+str(rng_seed)+'.csv'
+    """results_filename=results_dir+'sq_'+str(rng_seed)+'.csv'
     command = "../../postprocessing/bin/long_range_scattering "+config_filename+" 1000 0.01 50 2000 "+ results_filename
-    os.system(command)    
+    os.system(command)"""    
     
 
     
@@ -123,10 +126,11 @@ seeds=100
 seed_pct_range=[100]
 dim=3
 
-agg_dist_tolerance_range = [0.15, 0.2, 0.25, 0.175, 0.225]
+ns_range = [100]
+agg_dist_tolerance_range = [0.2,0.25,0.3]
 
-phi_min   = 0.1
-phi_max   = 0.3
+phi_min   = 0.05
+phi_max   = 0.15
 num_i     = 10
 delta_phi = np.log(phi_max/phi_min)/(1.*num_i)
 
@@ -141,33 +145,24 @@ all_params = []
 
 for phi in phi_range:
     for agg_dist_tolerance in agg_dist_tolerance_range:
-        all_params.append([phi, agg_dist_tolerance])
+        for ns in ns_range:
+            all_params.append([phi, agg_dist_tolerance, ns])
         
 for param in all_params:
-    create_dirs(param[0], param[1])
+    create_dirs(param[0], param[1], param[2])
 
 all_params.clear()
-agg_dist_tolerance_range_short = [0.15, 0.2, 0.25]
 
-# 50 x 3 * 10 = 1500
 
 for phi in phi_range:
-    for agg_dist_tolerance in agg_dist_tolerance_range_short:
-        for i in range(50, seeds):
-            all_params.append([phi, agg_dist_tolerance, i])
-
-agg_dist_tolerance_range_ext = [0.175, 0.225]
-
-for phi in phi_range:
-    for agg_dist_tolerance in agg_dist_tolerance_range_ext:
-        for i in range(seeds):
-            all_params.append([phi, agg_dist_tolerance, i])
+    for agg_dist_tolerance in agg_dist_tolerance_range:
+        for ns in ns_range:
+            for i in range(seeds):
+                all_params.append([phi, agg_dist_tolerance, ns, i])
             
-for i in range(50):
-    all_params.append([phi_range[-1], agg_dist_tolerance_range_short[-1], i])
 
 num_processors = 80
-Parallel(n_jobs=num_processors)(delayed(run_simulation)(param[0], param[1], param[2]) for param in all_params)
+Parallel(n_jobs=num_processors)(delayed(run_simulation)(param[0], param[1], param[2], param[3]) for param in all_params)
 
 os.system('cd ../../simulation_files/; make clean')
 os.system('cd ../../postprocessing/; make clean')

@@ -393,9 +393,6 @@ void dlma_system_offlattice<type>::build_site_vector()
     }
 
     std::random_shuffle(available_sites_temp.begin(), available_sites_temp.end());
-
-    //free(pos_pop_temp);
-    //free(neigh_pop_temp);
    
 }
 
@@ -406,8 +403,6 @@ void dlma_system_offlattice<type>::get_array_from_index_map(int pop_i, int* for_
         pop_div           = pop_i/L_eff_temp[axis];
         for_pop_arr[axis] = pop_div%L_disc; 
     }
-
-    //return pop_arr;
 
 }
 

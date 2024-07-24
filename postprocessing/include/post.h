@@ -236,6 +236,7 @@ class postprocessing
 
     void bulltest(int num);
     void calc_long_range_iq(int dr_steps, double q_min, double q_max, int num_q, char *filename);
+    int  binary_search_for_rij(double val);
     
 
     private:
@@ -421,6 +422,7 @@ class postprocessing
     int unf_checkpoint = 0;
     struct rusage myusage;
     long baseline;
+    std::vector<double> r_values;
 
 
 };
