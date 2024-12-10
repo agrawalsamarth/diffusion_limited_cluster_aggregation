@@ -98,7 +98,9 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
 
     double dr;
     double r_min=0.;
-    double r_max=(0.5*L(0));    
+    //double r_max=(0.5*L(0));
+    double r_max = calc_r_max();
+    //std::cout<<"r_max = "<<r_max<<"halfL = "<<halfL(0)<<"\n";
 
     dr = (r_max-r_min)/(1.*dr_steps);
     int steps = (int)((r_max-r_min)/(1.*dr));    

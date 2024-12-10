@@ -35,7 +35,7 @@ void postprocessing::dump_rij_hist_file(double bin_size)
     printf("r,F(r)\n");
 
     for (int i = 0; i < r_ij_hist_bins_; i++){
-        printf("%lf,%lf\n", (1.*(i+1)*bin_size), r_ij_hist_[i]/(1. * N_pairs_));
+        //printf("%lf,%lf\n", (1.*(i+1)*bin_size), r_ij_hist_[i]/(1. * N_pairs_));
     }
 
     free(r_ij_hist_);
@@ -51,7 +51,8 @@ void postprocessing::dump_rij_hist_file(double bin_size, char *filename)
 
     for (int i = 0; i < (r_ij_hist_bins_-1); i++){
         //fprintf(f, "%lf,%lf\n", 0.5*(r_values[i]+r_values[i+1]), r_ij_hist_[i]/(1. * N_pairs_));
-        fprintf(f, "%lf,%lf\n", (1.*i*bin_size)+(0.5*bin_size), r_ij_hist_[i]/(1. * N_pairs_));
+        //fprintf(f, "%lf,%lf\n", (1.*i*bin_size)+(0.5*bin_size), r_ij_hist_[i]/(1. * N_pairs_));
+        fprintf(f, "%lf,%lf\n", (1.*i*bin_size)+(0.5*bin_size), r_ij_hist_[i]);
     }
 
     fclose(f);
@@ -131,9 +132,8 @@ void postprocessing::calc_rij()
 
 }
 
-void postprocessing::calc_rij_hist(double bin_size)
+double postprocessing::calc_r_max()
 {
-    calc_rij();
     double r_max = 0.;
 
     for (int i = 0; i < N_pairs_; i++){
@@ -142,18 +142,21 @@ void postprocessing::calc_rij_hist(double bin_size)
         }
     }
 
-    if (folded_ == 1){
-
-        for (int axis = 0; axis < dim(); axis++){
-            if (periodic(axis) == 1){
-                if (halfL(axis) < r_max){
-                    r_max = halfL(axis);
-                }
+    for (int axis = 0; axis < dim(); axis++){
+        if (periodic(axis) == 1){
+            if (halfL(axis) < r_max){
+                r_max = halfL(axis);
             }
         }
-
     }
 
+    //return r_max;
+    return L_[0];
+
+}
+
+void postprocessing::populate_rij_hist(double r_max, double bin_size)
+{
     r_ij_hist_bins_  = (int)(r_max/bin_size);
     r_ij_hist_bins_ += 1;
     r_ij_hist_       = (double*)malloc(sizeof(double)*r_ij_hist_bins_);
@@ -164,95 +167,49 @@ void postprocessing::calc_rij_hist(double bin_size)
     int bin;
 
     for (int i = 0; i < N_pairs_; i++){
-
         if (r_ij_[i] < r_max){
             bin              = (int)(r_ij_[i]/bin_size);
             r_ij_hist_[bin] += 1.;
         }
-
-
     }
-
-
-}
-
-/*int postprocessing::binary_search_for_rij(double val)
-{
-
-    int left = 0;
-    int right = r_ij_hist_bins_;
-    int mid;
-
-    while (left < right){
-
-        mid = (left+right)/2;
-
-        //std::cout<<val<<" "<<left<<" "<<right<<" "<<mid<<"\n";
-
-        if ((val >= r_values[mid-1]) && (val <= r_values[mid]))
-            return (mid-1);
-
-        else if (val > r_values[mid])
-            left=mid;
-
-        else
-            right=mid;
-
-    }
-
-    return 0;
-
 }
 
 void postprocessing::calc_rij_hist(double bin_size)
 {
     calc_rij();
-    double r_max = halfL(0);
-    double r0 = 1.;
-    double sum_r = bin_size;
-    double delta_r = sum_r - r0;
-    double new_delta_r;
-    int    count=1;
+    double r_max = calc_r_max();
+    populate_rij_hist(r_max, bin_size);
+}
 
-    r_values.push_back(0.);
-    r_values.push_back(r0);
+void postprocessing::calc_rij_hist(int bins)
+{
+    calc_rij();
+    double r_max = calc_r_max();
+    double bin_size = r_max/(1.*bins);
+    populate_rij_hist(r_max, bin_size);
+}
 
-
-    while (sum_r < r_max){
-
-        new_delta_r = ((1.*count)*(std::pow(r0+delta_r,3.))) - (((1.*count)-1.)*std::pow(r0,3.));
-        sum_r       = std::pow(new_delta_r,1./3.);
-        r_values.push_back(sum_r);
-        count++;
-
-    }
-
-    r_ij_hist_bins_ = r_values.size();
-    r_ij_hist_      = (double*)malloc(sizeof(double)*r_ij_hist_bins_);
-
-    for (int i = 0;  i < r_ij_hist_bins_; i++)
-        r_ij_hist_[i] = 0.;
-
-
-    for (int i = 0; i < N_pairs_; i++){
-
-        if (r_ij_[i] <= r_max){
-            r_ij_hist_[binary_search_for_rij(r_ij_[i])] += 1.;
-        }
-
-        //std::cout<<i<<"\n";
-
-    }
-
-    
-
-
-}*/
-
-void postprocessing::dump_lr_scattering_function(double q_min, double q_max, int num_q, double bin_size, char *filename)
+void postprocessing::dump_lr_scattering_function(double q_min, double q_max, int num_q, double bins, char *filename)
 {
 
-    calc_rij_hist(bin_size);
+    calc_rij();
+    double r_max = calc_r_max();
+    double bin_size = r_max/bins;
+    populate_rij_hist(r_max, bin_size);
+
+    double r_val;
+
+    /*FILE *f;
+    f = fopen(filename, "w");
+
+
+    for (int i = 0; i < r_ij_hist_bins_; i++){
+        r_val = (i*bin_size)+(0.5*bin_size);
+        fprintf(f, "%lf\n", r_val);
+    }
+
+    fclose(f);*/
+
 
     double q;
     double sq_lr_temp;
@@ -262,15 +219,22 @@ void postprocessing::dump_lr_scattering_function(double q_min, double q_max, int
 
     sq_ = (double*)malloc(sizeof(double)*num_q);
 
-    for (int i = 0; i < r_ij_hist_bins_; i++){
-        r_temp        = 1.*i*bin_size + 0.5 * bin_size;
-        r_ij_hist_[i] = (2. * r_ij_hist_[i])/(1. * N_ * 4. * M_PI * r_temp * r_temp * bin_size);
-    }
-
     FILE *f;
 
     f = fopen(filename, "w");
-    fprintf(f, "q,I(q)\n");
+    fprintf(f, "r,gr\n");
+
+    for (int i = 0; i < r_ij_hist_bins_; i++){
+        r_temp        = 1.*i*bin_size + 0.5 * bin_size;
+        //r_ij_hist_[i] = (2. * r_ij_hist_[i])/(1. * N_ * 4. * M_PI * r_temp * r_temp * bin_size);
+        r_ij_hist_[i] /= (12.*phi_*r_temp*r_temp*bin_size);
+        fprintf(f, "%lf,%lf\n", r_temp, r_ij_hist_[i]);
+    }
+
+    fclose(f);
+    exit(EXIT_FAILURE);
+
+    fprintf(f, "q,S(q),I(q)\n");
 
     for (int i = 0; i < num_q; i++)
     {
@@ -281,17 +245,18 @@ void postprocessing::dump_lr_scattering_function(double q_min, double q_max, int
         for (int j = 0; j < r_ij_hist_bins_; j++) {
 
             r_temp      = 1.*j*bin_size + 0.5 * bin_size;
-            sq_lr_temp += (r_ij_hist_[j] - 1.) * (sin(q * r_temp)/(q * r_temp)) * (4. * M_PI * r_temp * r_temp) * bin_size; 
+            sq_lr_temp += (r_ij_hist_[j] - 1.) * (sin(q*r_temp)/(q*r_temp)) * (4.*M_PI*r_temp*r_temp*bin_size); 
 
         }
 
         sq_lr_temp  = phi_ * sq_lr_temp;
         sq_lr_temp += 1.;
 
+        //form_factor = (24./(q*q*q)) * ((sin(0.5*q) - (q*0.5*cos(0.5*q))));
         form_factor = (24./q*q*q) * ((sin(0.5 * q) - (0.5 * cos(0.5 * q))));
         form_factor = form_factor * form_factor;
 
-        fprintf(f, "%lf,%lf\n", q, sq_lr_temp * form_factor);
+        fprintf(f, "%lf,%lf,%lf\n", q, sq_lr_temp, sq_lr_temp * form_factor);
 
     }
 

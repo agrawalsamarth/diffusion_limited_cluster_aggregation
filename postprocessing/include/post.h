@@ -8,10 +8,10 @@
 #include <sstream>
 #include <fstream>
 #include <random>
-//#include <voro++/voro++.hh>
 #include <map>
 #include <algorithm>
 #include <bits/stdc++.h>
+#include <voro++/include/voro++/voro++.hh>
 //#include </home/mkroeger/PC/vsandra/C4SCIENCE/dlma/eigen-3.4.0/Eigen/Sparse>
 #include <./eigen-3.4.0/Eigen/Sparse>
 #include <chrono>
@@ -96,6 +96,9 @@ class postprocessing
     void dump_rij_hist_file(double bin_size);
     void dump_rij_hist_file(double bin_size, char *filename);
     void calc_rij_hist(double bin_size);
+    void calc_rij_hist(int bins);
+    double calc_r_max();
+    void populate_rij_hist(double r_max, double bin_size);
     void dump_unfolded_file();
     void dump_unfolded_file(char *filename);
     void dump_density_correlation(double bin_size);
@@ -237,6 +240,18 @@ class postprocessing
     void bulltest(int num);
     void calc_long_range_iq(int dr_steps, double q_min, double q_max, int num_q, char *filename);
     int  binary_search_for_rij(double val);
+
+    void dump_eq_energy(char *filename);
+    void calc_eq_energy();
+    void create_dangling_free_config();
+    void determine_dangling_ends();
+    void remove_dangling_ends();
+    void dump_dangling_free_config(char *filename);
+    void save_modified_config(char *filename);
+    void get_modified_attachments();
+
+    void dump_voronoi_volume(char *filename);
+    void calculate_voronoi_volumes();
     
 
     private:
@@ -423,6 +438,14 @@ class postprocessing
     struct rusage myusage;
     long baseline;
     std::vector<double> r_values;
+    double totalEnergy;
+    int    total_bonds;
+    std::vector<std::pair<int,int>> dangling_ends;
+    std::vector<int> modified_num_attachments;
+    std::vector<std::vector<int>> modified_non_dangling_attachments;
+    int modified_max_attachments;
+
+    std::vector<double> voronoi_volumes;
 
 
 };

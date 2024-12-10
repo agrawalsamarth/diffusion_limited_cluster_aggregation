@@ -31,8 +31,9 @@ def create_dirs(phi, agg_distance, ns):
     
     phi_str = format(phi, '.5f')
     agg_str = format(agg_distance, '.3f')
+    ns_str  = format(ns, '.3f')
     
-    params_dir = './high_porosity_scaling/params/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
+    params_dir = './scaling_ns/params/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/ns='+ns_str
     path = Path(params_dir)
     
     try:
@@ -45,7 +46,7 @@ def create_dirs(phi, agg_distance, ns):
     
     # global results_dir
     
-    results_dir = './high_porosity_scaling/results/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
+    results_dir = './scaling_ns/results/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/ns='+ns_str
     path = Path(results_dir)
     
     try:
@@ -57,7 +58,7 @@ def create_dirs(phi, agg_distance, ns):
     
     # global config_files_dir
     
-    config_files_dir = './high_porosity_scaling/config_files/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
+    config_files_dir = './scaling_ns/config_files/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/ns='+ns_str
     path = Path(config_files_dir)
     
     try:
@@ -71,10 +72,11 @@ def run_simulation(phi, agg_distance, ns, rng_seed):
 
     phi_str = format(phi, '.5f')
     agg_str = format(agg_distance, '.3f')
+    ns_str  = format(ns, '.3f')
 
-    params_dir = './high_porosity_scaling/params/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
-    results_dir = './high_porosity_scaling/results/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
-    config_files_dir = './high_porosity_scaling/config_files/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/'
+    params_dir = './scaling_ns/params/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/ns='+ns_str
+    results_dir = './scaling_ns/results/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/ns='+ns_str
+    config_files_dir = './scaling_ns/config_files/phi='+phi_str+'/'+agg_str+'/N='+str(N)+'/ns='+ns_str
     
     lattice=0
     alpha=0.5
@@ -110,12 +112,7 @@ def run_simulation(phi, agg_distance, ns, rng_seed):
         
     results_filename=results_dir+'lb_'+str(rng_seed)+'.csv'
     command="../../postprocessing/bin/lb_bonds_clusterwise_invA "+config_filename+" "+ results_filename
-    os.system(command)
-    
-    """results_filename=results_dir+'sq_'+str(rng_seed)+'.csv'
-    command = "../../postprocessing/bin/long_range_scattering "+config_filename+" 1000 0.01 50 2000 "+ results_filename
-    os.system(command)"""    
-    
+    os.system(command)   
 
     
 os.system('cd ../../simulation_files; make simulation')
@@ -126,8 +123,8 @@ seeds=100
 seed_pct_range=[100]
 dim=3
 
-ns_range = [100]
-agg_dist_tolerance_range = [0.2,0.25,0.3]
+ns_range = [0.1,0.5,1.0]
+agg_dist_tolerance_range = [0.3]
 
 phi_min   = 0.05
 phi_max   = 0.15

@@ -19,6 +19,39 @@ void postprocessing::dump_lb_bonds_for_cluster_via_invA(char *filename)
     //std::cout<<"2"<<std::endl;
 }
 
+void postprocessing::dump_eq_energy(char *filename)
+{
+    calc_eq_energy();
+
+
+    FILE *f;
+    f = fopen(filename, "w");
+
+    fprintf(f, "N=%d\n",  numParticles());
+    fprintf(f, "B=%d\n",  total_bonds);
+    fprintf(f, "D=%ld\n",  dangling_ends.size());
+    fprintf(f, "L=%lf\n", 1.*L_[0]);
+    fprintf(f, "C=%d\n", totalClusters_);
+    fprintf(f, "E=%lf\n", totalEnergy);
+
+    fclose(f);    
+}
+
+void postprocessing::dump_dangling_free_config(char *filename)
+{
+    create_dangling_free_config();
+    get_modified_attachments();
+    save_modified_config(filename);
+}
+
+void postprocessing::create_dangling_free_config()
+{
+    calc_eq_energy();
+    //determine_dangling_ends();
+    remove_dangling_ends();
+
+}
+
 void postprocessing::calc_total_bonds()
 {
     total_num_bonds = 0;
@@ -519,6 +552,83 @@ void postprocessing::determine_LB_bonds_clusterwise(char *filename)
 
 }
 
+void postprocessing::calc_eq_energy()
+{
+    int min_cluster_size = 3;
+
+    reset_unfolding_params();
+    build_bond_map();
+    reset_bond_map(true);
+
+    total_lbp = 0;
+    ref_pos.resize(dim());
+    totalClusters_ = 0;
+    totalEnergy = 0.;
+    total_bonds = 0;
+
+    to_build_list.resize(numParticles());
+    calc_total_bonds();
+    unique_bonds.resize(total_num_bonds);
+
+    
+    while (!check_if_particles_placed()) {
+
+        init_lbb_unfolding_without_recursion();
+
+        if (num_particles_for_cluster >= min_cluster_size) {
+
+            init_lbb_cluster_matrices();
+            
+            //do {
+
+                modify_coords_for_cluster();
+
+                
+                if (!A.isCompressed()){
+                    A.makeCompressed();
+
+                }
+
+
+                solver.analyzePattern(A);
+                solver.factorize(A);
+
+                for (int axis = 0; axis < dim(); axis++){
+
+                    b.setZero();
+                    build_b_for_cluster(axis);
+                    x = solver.solve(b);
+                    modify_coords_after_minimization_for_cluster(axis);
+
+                }
+                
+
+                calculate_bond_lengths_for_cluster();
+
+                for (int i = 0; i < bond_lengths.size(); i++)
+                    totalEnergy += bond_lengths[i] * bond_lengths[i];
+
+                
+                //print_lbb_info();
+                
+
+            //} while(max_length > lbp_tolerance);
+
+
+        }
+
+        totalClusters_++;
+        total_bonds += num_bonds_for_cluster;
+        determine_dangling_ends();
+        //remove_dangling_ends();
+
+    }
+
+
+}
+
+
+
 void postprocessing::copy_positions_for_cluster()
 {
 
@@ -857,6 +967,65 @@ void postprocessing::dump_xyz_stepwise(char *filename, int file_num)
 
     test_f.close();
 }
-    
+
+void postprocessing::determine_dangling_ends()
+{
+    int index_i;
+    int index_j;
+
+    for (int i = 0; i < num_bonds_for_cluster; i++)
+    {
+        if (bond_lengths[i] < 1e-6){
+            index_i = index_to_particles[unique_bonds[i].first];
+            index_j = index_to_particles[unique_bonds[i].second];
+            dangling_ends.push_back({index_i, index_j});
+        }
+    }
+
+}
+
+void postprocessing::remove_dangling_ends()
+{
+   
+    for (int i = 0; i < dangling_ends.size(); i++){
+        switch_off_bonds(dangling_ends[i]);
+    }
+}
+
+
+void postprocessing::get_modified_attachments()
+{
+    modified_num_attachments.resize(numParticles(), 0);
+    std::vector<int> temp_attachments;
+
+    for (int i = 0; i < numParticles(); i++){
+
+        temp_attachments.clear();
+
+        for (int j = 0; j < numAttachments(i); j++){
+
+            /*if ((i==2) || (i==4)){
+                std::cout<<"i = "<<i<<" j = "<<attachment(i,j)<<" status = "<<bond_map_status[{i, attachment(i,j)}]<<" num = "<<numAttachments(i)<<std::endl;
+            }*/
+
+
+            if (bond_map_status[{i, attachment(i, j)}] == 1){
+                modified_num_attachments[i]++;
+                temp_attachments.push_back(attachment(i,j));
+            }
+        }
+
+        modified_non_dangling_attachments.push_back(temp_attachments);
+    }
+
+    modified_max_attachments = 0;
+
+    for (int i = 0; i < numParticles(); i++){
+        if (modified_num_attachments[i] > modified_max_attachments)
+            modified_max_attachments = modified_num_attachments[i];
+    }   
+
+}
+
 
 }
