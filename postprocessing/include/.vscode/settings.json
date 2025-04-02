@@ -73,7 +73,9 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "strstream": "cpp",
+        "hash_map": "cpp"
     },
     "cmake.sourceDirectory": "/home/samarth/codes/postp_module/postprocessing/include/eigen-3.4.0/demos/opengl"
 }

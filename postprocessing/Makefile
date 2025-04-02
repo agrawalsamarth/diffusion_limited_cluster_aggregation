@@ -2,7 +2,8 @@ IDIR =./include
 CXX=g++
 #CPPFLAGS=-g -I$(IDIR) -I/home/samarth/codes/voronoi/include -std=c++11 -O3 -w -Wall
 #CPPFLAGS=-g -I$(IDIR) -O3
-CPPFLAGS=-I$(IDIR) -O3
+#CPPFLAGS=-I$(IDIR) -O3
+CPPFLAGS=-g -I$(IDIR) -O3
 #LDFLAGS=-O3
 POSTFIX=-L/home/samarth/codes/voronoi/lib/ -lvoro++
 VOROFLAG=./include/voro++/lib/libvoro++.a
@@ -14,7 +15,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_SRC_DIR = ./bin_src
 BIN_DIR = ./bin
 
-all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA chemical_distance lb_bonds_clusterwise_invA lbp_bfs long_range_scattering eq_energy create_dangling_free_config
+all: unfold radius_of_gyration sq_vs_q pair_correlation percolation load_bearing_paths lr_iq lbp_brute_force percolation_invA chemical_distance lb_bonds_clusterwise_invA lbp_bfs long_range_scattering eq_energy create_dangling_free_config stochastic_ray_tracing
 #all: psd_test
 
 density_correlation: $(OBJ_FILES) | $(BIN_DIR)
@@ -96,6 +97,10 @@ create_dangling_free_config: $(OBJ_FILES) | $(BIN_DIR)
 voronoi_volumes: $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CPPFLAGS) -c -o voronoi_volumes.o target/voronoi_volumes.cpp
 	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ $(VOROFLAG) voronoi_volumes.o	
+
+stochastic_ray_tracing: $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CPPFLAGS) -c -o stochastic_ray_tracing.o target/stochastic_ray_tracing.cpp
+	$(CXX) $(LDFLAGS) -o $(BIN_DIR)/$@ $^ $(VOROFLAG) stochastic_ray_tracing.o	
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)

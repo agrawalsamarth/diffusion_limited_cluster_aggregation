@@ -47,6 +47,8 @@ postprocessing::~postprocessing()
         free(load_bearing_paths_);
         free(temp_lbp_);
 
+      
+
 }
 
 }

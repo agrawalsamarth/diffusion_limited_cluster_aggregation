@@ -252,6 +252,16 @@ class postprocessing
 
     void dump_voronoi_volume(char *filename);
     void calculate_voronoi_volumes();
+
+    void dump_stochastic_ray_tracing(char *filename, int num_rays);
+    void discretize_domain();
+    void build_neighbour_lists();
+    int  get_idx_from_coords(std::vector<int> val);
+    void get_neighbours(std::vector<int> &all_neighs, int *init_grid);
+    std::pair<double, double> calculate_quad_eqn(double *sph_pos, double *temp_pos);
+    void print_chord_lengths(char *filename, std::vector<std::pair<double, double>> tc_list);
+    void stochastic_ray_tracing(char* filename, int num_rays);
+
     
 
     private:
@@ -446,6 +456,16 @@ class postprocessing
     int modified_max_attachments;
 
     std::vector<double> voronoi_volumes;
+
+    double *delta_x;
+    double *inv_delta_x;
+    int    *nx;
+    int    *idx_multiplicator;
+    std::vector<std::vector<int>> particles_in_volume;
+
+    FILE *f_srt;
+    std::vector<std::vector<int>> grid_config;
+
 
 
 };
