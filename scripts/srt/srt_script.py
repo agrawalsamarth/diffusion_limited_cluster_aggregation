@@ -28,7 +28,7 @@ import subprocess
 def run_simulation(config_filename, result_filename, num_rays):
     
     command = "../../postprocessing/bin/stochastic_ray_tracing " + config_filename + " " + result_filename + " " + format(num_rays, ".0f")
-    print(command)
+    os.system(command)
 
 
 os.system('cd ../../postprocessing/; make stochastic_ray_tracing')
