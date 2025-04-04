@@ -258,7 +258,7 @@ class postprocessing
     void build_neighbour_lists();
     int  get_idx_from_coords(std::vector<int> val);
     void get_neighbours(std::vector<int> &all_neighs, int *init_grid);
-    std::pair<double, double> calculate_quad_eqn(double *sph_pos, double *temp_pos);
+    bool calculate_quad_eqn(double *sph_pos, double *temp_pos, std::pair<double, double> &tc);
     void print_chord_lengths(char *filename, std::vector<std::pair<double, double>> tc_list);
     void stochastic_ray_tracing(char* filename, int num_rays);
 

@@ -76,6 +76,13 @@ void postprocessing::build_neighbour_lists()
         grid_config[index].push_back(i);
     }
 
+    /*for (int i = 0; i < grid_config.size(); i++){
+        std::cout<<"index="<<i<<"\n";
+        for (int j = 0; j < grid_config[i].size(); j++)
+            std::cout<<grid_config[i][j]<<std::endl;
+        std::cout<<"----------------------\n";
+    }*/
+
 }
 
 void postprocessing::get_neighbours(std::vector<int> &all_neighs, int *init_grid)
@@ -88,6 +95,12 @@ void postprocessing::get_neighbours(std::vector<int> &all_neighs, int *init_grid
     int x_temp;
     int y_temp;
     int idx;
+
+    /*std::cout<<"---------init_grid----------------\n";
+    std::cout<<init_grid[0]<<" "<<init_grid[1]<<" "<<init_grid[2]<<"\n";
+    //std::cout<<x_temp<<" "<<y_temp<<" "<<k<<"\n";
+    std::cout<<"----------finit grid-----------------\n";*/
+
 
     for (int x_diff = -1; x_diff <= 1; x_diff++){
 
@@ -110,6 +123,24 @@ void postprocessing::get_neighbours(std::vector<int> &all_neighs, int *init_grid
                 idx = get_idx_from_coords(temp_coords);
                 all_neighs.insert(all_neighs.end(), grid_config[idx].begin(), grid_config[idx].end());
 
+                //std::cout<<temp_coords[0]<<" "<<temp_coords[1]<<" "<<temp_coords[2]<<"\n";
+                //std::cout<<idx<<"\n";
+
+                /*std::cout<<"-----------------------------------\n";
+                std::cout<<x_diff<<" "<<y_diff<<" "<<k<<"\n"; 
+                std::cout<<x_temp<<" "<<y_temp<<" "<<k<<"\n";               
+                std::cout<<"-----------------------------------\n";*/
+
+
+                /*for (int tmp_idx = 0; tmp_idx < grid_config[idx].size(); tmp_idx++){
+                    grid_config
+                    all_neighs.push_back(grid_config[idx][tmp_idx]);
+                }*/
+
+                /*for (int tmp_idx = 0; tmp_idx < all_neighs.size(); tmp_idx++){
+                    
+                }*/
+
 
             }
 
@@ -123,9 +154,9 @@ void postprocessing::get_neighbours(std::vector<int> &all_neighs, int *init_grid
 
 }
 
-std::pair<double, double> postprocessing::calculate_quad_eqn(double *sph_pos, double *temp_pos)
+bool postprocessing::calculate_quad_eqn(double *sph_pos, double *temp_pos, std::pair<double, double> &tc)
 {
-    std::pair<double, double> tc;
+    //std::pair<double, double> tc;
     double discriminant = 0.;
     double q = 0.;
     double p = 0.;
@@ -140,16 +171,20 @@ std::pair<double, double> postprocessing::calculate_quad_eqn(double *sph_pos, do
     discriminant = (q*q) - diff + 0.25;
 
     if (discriminant < 0.){
-        tc.first  = -10.0;
-        tc.second = -10.0;
+        return false;
     }
 
     else{
         tc.first  = q - sqrt(discriminant);
-        tc.second = q + sqrt(discriminant); 
+        tc.second = q + sqrt(discriminant);
+        return true;
+        
+        //if (tc.first > tc.second)
+            //std::cout<<"kya hagg ke rakho ho bhai"<<std::endl;
+
     }
 
-    return tc;
+    //return tc;
 
 }
 
@@ -166,7 +201,7 @@ void postprocessing::print_chord_lengths(char *filename, std::vector<std::pair<d
     else {
 
 
-        std::sort(tc_list.begin(), tc_list.end(), [](const std::pair<double, double>& a, const std::pair<double, double>& b) {return a.first < b.first;});
+        //std::sort(tc_list.begin(), tc_list.end(), [](const std::pair<double, double>& a, const std::pair<double, double>& b) {return a.first < b.first;});
 
         if (tc_list[0].first < 0.){
             tmp_offset = tc_list[0].first;
@@ -179,11 +214,14 @@ void postprocessing::print_chord_lengths(char *filename, std::vector<std::pair<d
         for (int i = 0; i < (tc_list.size()-1); i++){
             //fprintf(f_srt, "%lf,", tc_list[i+1].first-tc_list[i].second);
             //std::cout<<"i="<<i<<std::endl;
-            fprintf(f_srt, "%lf,%lf,", tc_list[i+1].first,tc_list[i].second);
+            //fprintf(f_srt, "%lf,%lf,", tc_list[i].first,tc_list[i].second);
+            fprintf(f_srt, "%lf,", tc_list[i].second-tc_list[i].first);
+
 
         }
 
-        fprintf(f_srt, "%lf,%lf\n", tc_list[tc_list.size()-1].first,tc_list[tc_list.size()-1].second);
+        //fprintf(f_srt, "%lf,%lf\n", tc_list[tc_list.size()-1].first,tc_list[tc_list.size()-1].second);
+        fprintf(f_srt, "%lf\n", tc_list[tc_list.size()-1].second-tc_list[tc_list.size()-1].first);
 
         //std::cout<<"arrey gandu"<<std::endl;
         //std::cout<<tc_list[0].first<<" "<<tc_list[0].second<<std::endl;
@@ -207,6 +245,7 @@ void postprocessing::stochastic_ray_tracing(char *filename, int num_rays)
     double *temp_pos;
     double *sph_pos;
     int    *int_grid;
+    bool    sol;
 
 
     temp_pos = (double*)malloc(sizeof(double)*dim());
@@ -227,16 +266,29 @@ void postprocessing::stochastic_ray_tracing(char *filename, int num_rays)
 
         get_neighbours(all_neighs, int_grid);
 
+
+        /*std::cout<<"size = "<<all_neighs.size()<<std::endl;
+        for (int i = 0; i < all_neighs.size(); i++)
+            std::cout<<all_neighs[i]<<std::endl;
+        std::cout<<"-------------------------------------------\n";*/
+
         for (int id = 0; id < all_neighs.size(); id++){
 
             for (int axis = 0; axis < dim(); axis++)
                 sph_pos[axis] = pos(all_neighs[id], axis);
 
             
-            tc = calculate_quad_eqn(sph_pos, temp_pos);
+            sol = calculate_quad_eqn(sph_pos, temp_pos, tc);
 
-            if (tc.first >= (-0.5*diameter(id)))
+            if (sol){                
                 tc_list.push_back(tc);
+
+                /*for (int axis = 0; axis < dim(); axis++){
+                    std::cout<<(int)(sph_pos[axis]*inv_delta_x[axis])<<" ";
+                }
+                std::cout<<"\n";*/
+            }
+
 
         }
 
