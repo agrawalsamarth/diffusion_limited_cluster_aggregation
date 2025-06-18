@@ -82,6 +82,9 @@ void postprocessing::calc_rij()
     int counter = 0;
     double r_temp;
 
+    r_ij_.clear();
+    double upper_bound = halfL(0) * halfL(0);
+
     if (folded_ == 1) {
 
         for (int i = 0; i < numParticles(); i++) {
@@ -96,10 +99,12 @@ void postprocessing::calc_rij()
                 for (int axis = 0; axis < dim(); axis++)
                     r_temp += (posDiff(axis) * posDiff(axis));
 
-                r_temp = sqrt(r_temp);
+                if (r_temp < upper_bound)
+                    r_ij_.push_back(sqrt(r_temp));
 
-                r_ij_[counter] = r_temp;
-                counter++;
+
+                //r_ij_[counter] = r_temp;
+                //counter++;
 
             }
         }
@@ -120,10 +125,14 @@ void postprocessing::calc_rij()
                 for (int axis = 0; axis < dim(); axis++)
                     r_temp += (posDiff(axis) * posDiff(axis));
 
-                r_temp = sqrt(r_temp);
+                if (r_temp < upper_bound)
+                    r_ij_.push_back(sqrt(r_temp));
+
+
+                /*r_temp = sqrt(r_temp);
 
                 r_ij_[counter] = r_temp;
-                counter++;
+                counter++;*/
 
             }
         }

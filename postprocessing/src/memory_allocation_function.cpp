@@ -27,7 +27,7 @@ namespace post_p
         load_bearing_paths_       = (int*)malloc(sizeof(int) * numParticles() * dim());
         temp_lbp_                 = (int*)malloc(sizeof(int) * dim());
 
-        r_ij_ = (double*)malloc(sizeof(double) * N_pairs_);
+        //r_ij_ = (double*)malloc(sizeof(double) * N_pairs_);
 
     }
 

@@ -293,7 +293,8 @@ class postprocessing
     int    *attachment_;
     int    *original_seed_;
     int    *current_seed_;
-    double *r_ij_;
+    //double *r_ij_;
+    std::vector<double> r_ij_;
     double *r_ij_hist_;
     int    *rho_hist_;
     bool   *is_placed_;

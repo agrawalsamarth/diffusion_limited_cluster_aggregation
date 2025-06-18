@@ -9,7 +9,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    test.calc_long_range_iq(std::stoi(argv[2]), std::stod(argv[3]), std::stod(argv[4]), std::stoi(argv[5]), argv[6]);
+    test.calc_long_range_iq(std::stod(argv[2]), std::stod(argv[3]), std::stod(argv[4]), std::stoi(argv[5]), argv[6]);
+    //test.calc_long_range_iq()
     
     return 0;
 }

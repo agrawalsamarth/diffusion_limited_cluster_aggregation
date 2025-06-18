@@ -94,13 +94,13 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
     exit(EXIT_FAILURE);*/
 
 
-    calc_rij();
+    //calc_rij();
+    //std::cout<<"done"<<std::endl;
 
     double dr;
     double r_min=0.;
-    //double r_max=(0.5*L(0));
-    double r_max = calc_r_max();
-    //std::cout<<"r_max = "<<r_max<<"halfL = "<<halfL(0)<<"\n";
+    double r_max = 0.5*L(0);
+    double r_temp;
 
     dr = (r_max-r_min)/(1.*dr_steps);
     int steps = (int)((r_max-r_min)/(1.*dr));    
@@ -111,14 +111,53 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
     for (int i = 0; i < steps; i++)
         rdf[i] = 0.;
 
-    for (int i = 0; i < N_pairs_; i++){
+    /*for (int i = 0; i < r_ij_.size(); i++){
 
         if (r_ij_[i] < r_max){
             index = (int)((r_ij_[i] - r_min)/dr);
-            rdf[index] += 1.;
+            if (index >= steps){
+                index = steps-1;
+                rdf[index] += 1.;
+            }
         }
 
+    }*/
+
+    for (int i = 0; i < numParticles(); i++) {
+        for (int j = i+1; j < numParticles(); j++){
+
+            for (int axis = 0; axis < dim(); axis++){
+                posDiff(axis) = get_periodic_image(1.*(pos(i,axis) - pos(j,axis)), axis);
+            }
+
+            r_temp = 0.;
+
+            for (int axis = 0; axis < dim(); axis++)
+                r_temp += (posDiff(axis) * posDiff(axis));
+
+            r_temp = sqrt(r_temp);
+
+            if (r_temp < r_max){
+                
+                index = (int)((r_temp - r_min)/dr);
+                
+                if (index >= steps){
+                    //std::cout<<"index = "<<index<<" steps = "<<steps<<" r_temp = "<<r_temp<<" r_max = "<<r_max<<std::endl;
+                    index = steps-1;
+                    rdf[index] += 1.;
+                }
+                
+                rdf[index] += 1.;
+            }
+
+
+            //r_ij_[counter] = r_temp;
+            //counter++;
+
+        }
     }
+
+    //std::cout<<"ho gaya "<<std::endl;
 
     /*FILE *f;
     f = fopen(filename, "w");
@@ -162,6 +201,24 @@ void postprocessing::calc_long_range_iq(int dr_steps, double q_min, double q_max
     }
 
     g0 = (num_val + (M_PI/(6.*phi_)))/denom_val;
+
+    /*std::cout<<"g0 = "<<g0<<std::endl;
+
+    FILE *f_test;
+    f_test = fopen(filename, "w");
+
+    fprintf(f_test, "q,Sq\n");
+
+    for(int i = 0; i < steps; i++){
+        r_val      = r_min+(1.*i*dr)+0.5*dr; 
+        fprintf(f_test, "%lf,%lf\n", r_val, rdf[i]);
+    }
+
+
+    fclose(f_test);
+    exit(EXIT_FAILURE);*/
+
+
     double form_factor;
 
     for (int i = 0; i < num_q; i++)

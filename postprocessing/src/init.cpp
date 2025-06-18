@@ -12,13 +12,6 @@ postprocessing::postprocessing(char *config_filename)
     dis.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 }
 
-postprocessing::postprocessing(char *config_filename, bool build)
-{
-
-    
-
-
-}
 
 
 postprocessing::~postprocessing()
@@ -37,7 +30,7 @@ postprocessing::~postprocessing()
         free(diameter_);
         free(posDiff_);
 
-        free(r_ij_);
+        //free(r_ij_);
         free(is_placed_);
         free(unfolded_coords_);
         free(unfolded_num_attachments_);

@@ -7,6 +7,7 @@ namespace post_p
 void postprocessing::dump_stochastic_ray_tracing(char *filename, int num_rays)
 {
     f_srt = fopen(filename, "w");
+    fprintf(f_srt, "%lf\n", L(2));
     stochastic_ray_tracing(filename, num_rays);
     fclose(f_srt);
 
@@ -201,7 +202,7 @@ void postprocessing::print_chord_lengths(char *filename, std::vector<std::pair<d
     else {
 
 
-        //std::sort(tc_list.begin(), tc_list.end(), [](const std::pair<double, double>& a, const std::pair<double, double>& b) {return a.first < b.first;});
+        std::sort(tc_list.begin(), tc_list.end(), [](const std::pair<double, double>& a, const std::pair<double, double>& b) {return a.first < b.first;});
 
         if (tc_list[0].first < 0.){
             tmp_offset = tc_list[0].first;
@@ -215,13 +216,13 @@ void postprocessing::print_chord_lengths(char *filename, std::vector<std::pair<d
             //fprintf(f_srt, "%lf,", tc_list[i+1].first-tc_list[i].second);
             //std::cout<<"i="<<i<<std::endl;
             //fprintf(f_srt, "%lf,%lf,", tc_list[i].first,tc_list[i].second);
-            fprintf(f_srt, "%lf,", tc_list[i].second-tc_list[i].first);
+            fprintf(f_srt, "%lf,%lf,", tc_list[i].first,tc_list[i].second);
 
 
         }
 
         //fprintf(f_srt, "%lf,%lf\n", tc_list[tc_list.size()-1].first,tc_list[tc_list.size()-1].second);
-        fprintf(f_srt, "%lf\n", tc_list[tc_list.size()-1].second-tc_list[tc_list.size()-1].first);
+        fprintf(f_srt, "%lf,%lf\n", tc_list[tc_list.size()-1].first,tc_list[tc_list.size()-1].second);
 
         //std::cout<<"arrey gandu"<<std::endl;
         //std::cout<<tc_list[0].first<<" "<<tc_list[0].second<<std::endl;
